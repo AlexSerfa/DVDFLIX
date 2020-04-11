@@ -75,6 +75,9 @@
       <height>20</height>
      </rect>
     </property>
+    <property name="text">
+     <string>rambo</string>
+    </property>
    </widget>
    <widget class="QLabel" name="lbl_titre">
     <property name="geometry">

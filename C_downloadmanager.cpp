@@ -69,11 +69,10 @@ QString C_downloadmanager::saveFileName(const QUrl &url)
 void C_downloadmanager::startNextDownload()
 {
     if (downloadQueue.isEmpty()) {
-        //DEBUG
-        qWarning()<<downloadedCount<<"/"<<totalCount<<" fichiers téléchargés correctement\n";
+
         emit finished() ;
         emit emptyQueue();
-
+        totalCount=0;
         return;
     }
 
