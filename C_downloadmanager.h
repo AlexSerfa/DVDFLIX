@@ -47,7 +47,23 @@ public:
      * @param type
      */
     void setDlType(QString type);
-
+    bool m_uniqueFile;
+signals:
+    /**
+     * @brief
+     *
+     */
+    void finished();
+    /**
+     * @brief
+     *
+     */
+    void emptyQueue();
+    /**
+     * @brief
+     *
+     */
+    void startCreateMini();
 private:
 
     /**
@@ -76,17 +92,7 @@ private:
 
 
 
-signals:
-    /**
-     * @brief
-     *
-     */
-    void finished();
-    /**
-     * @brief
-     *
-     */
-    void emptyQueue();
+
 
 private slots:
 

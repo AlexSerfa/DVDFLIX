@@ -12,7 +12,10 @@
 #include <QTextStream>
 #include <QObject>
 #include <QPair>
+#include <QSqlQuery>
+#include <QSqlRecord>			
 #include <C_minifilm.h>
+#include <C_mysqlmanager.h>
 const QString key ="76532a92d48d6e7e7fb5d72eaf2029b3";
 #if QT_CONFIG(ssl)
 const QString defaultUrl = " https://api.themoviedb.org/3/";
@@ -41,8 +44,14 @@ MainWindow::MainWindow(QWidget *parent)
     , httpRequestAborted(false)
     , ui(new Ui::MainWindow)
 {
-    ui->setupUi(this);
-
+     ui->setupUi(this);
+    //on check le bouton locale +distant par defaut pour le recherche
+    ui->rdb_rechDist->setChecked(true);
+    //on connect les signaux de connection a la db
+    connect(&sql,SIGNAL(connected()),this,SLOT(status_dbConnectee()));
+    connect(&sql,SIGNAL(disconnected()),this,SLOT(status_dbDeconnectee()));
+    //on se connect a la db
+    sql.connection("dvdflix","127.0.0.1",3308,"root","coucou256!");															   
 }
 
 MainWindow::~MainWindow()
@@ -300,19 +309,26 @@ void MainWindow::on_btn_rechercher_clicked()
 {
     //! @TODO mettre la partie initialisation dans une fonction
     //on réinitialise les valeurs servant a la gestion de la bibliothèque
+    ui->dvdtek->setCurrentIndex(0);								   
     getsion_prevNext_Btn(); //les bouton previous et next
     m_minifilmMax=0;    //reset des divers membres utilisés
     m_minifilmMini=0;
     m_minifilmCount=0;
     m_totalPage=0;
     m_pageNumber=0;
+	    m_JsonSearch.clear();					 
 
-
+    //suppression du fichier saveMovies.json
+    bool result = QFile::remove(directoryBase+"/saveMovies.json");
+    //DEBUG
+    qWarning()<<"Suppression du fichier: "<<result;
     //on vide le tableau de minifilm
-    for(int i =0;i<80;i++){
+    for(int i =0;i<150;i++){
         if(min2[i]){
-            qWarning()<<i;
+            //DEBUG
+            qWarning()<<"vidage de min2 : "<<i;
             min2[i]->~C_miniFilm();
+
         }
     }
 
@@ -388,7 +404,7 @@ void MainWindow::getPageNumberJson(){
     m_minifilmCount=JsonObj.value(QString("total_results")).toInt();
     //on telecharge les page suivante si il y en a
     //DEBUG
-    qWarning()<<"TOTAL de PAGE a DL: "<< m_totalPage;
+   qWarning()<<"nombre total de film correspondant a la recherche:  "<< m_minifilmCount;
 
     //qstring pour stocker le nom du fichier
     QString filename;
@@ -407,7 +423,7 @@ void MainWindow::getPageNumberJson(){
         }
     }
     //DEBUG
-    qWarning()<<"<-getPageNumber()";
+    qWarning()<<"getPageNumberjson->";
 
 
 }
@@ -469,7 +485,7 @@ bool MainWindow::concatJSON(){
  */
 bool MainWindow::JsonMerge(){
     //DEBUG
-    qWarning()<<"fichier existe";
+      qWarning()<<"->jsonmerge";
     QJsonArray result;
     for(int i =0; i< m_JsonSearch.count();i++){
       result.append(m_JsonSearch[i].value(QString("results")).toArray());
@@ -484,6 +500,7 @@ bool MainWindow::JsonMerge(){
     saveFile.close();
     //DEBUG
     qWarning()<<byteWrite;
+  qWarning()<<"jsonmerge->readjson";									  
     readJson();
     // emit concatEnd();
     return true;
@@ -510,7 +527,7 @@ bool MainWindow::JsonMerge(){
 void MainWindow::readJson()
    {
       //DEBUG
-      qWarning()<<"<-readJson";
+    qWarning()<<"->readJson";
 
       QFile filej;
       filej.setFileName(directoryBase+"/saveMovies.json");
@@ -524,8 +541,7 @@ void MainWindow::readJson()
       QJsonObject JsonObj= doc.object();
       QJsonArray arry= JsonObj.value(QString("results")).toArray();
 
-      //DEBUG
-      qWarning()<<"readJson->jsonArray"<<arry.count();
+
 
 
 //boucle créant les miniature pour chaque film dans le json movie.json
@@ -533,21 +549,29 @@ int counter = 0;
       for(int i =0 ; i<arry.count();i++)
       {
           QJsonArray child =arry[i].toArray();
+          //DEBUG				 
           qWarning()<<"arry"<<i<<" child: " <<child.count();
-         for(int j =0 ; j<child.count();j++){
+          for(int j =0 ; j<child.count();j++){
 
                 //DEBUG
-               qWarning()<<"readJson->boucle: "<<i<<"-"<<j;
+               //qWarning()<<"readJson->boucle: "<<i<<"-"<<j;
 
                //creation d'une fiche de miniature
                C_miniFilm *min3 =new C_miniFilm();
                 //ajout de la fiche a la colletion
                 min2[counter] =min3;
-                //DEBUG
-               qWarning()<<"readJson->creation mini E2";
-             //ajout du titre pour ce film
-                min2[counter]->setTitre(child[j].toObject()["title"].toString());
 
+														
+             //ajout du titre pour ce film
+                qWarning()<<"Ajout des données du film";
+                min2[counter]->setTitre(child[j].toObject()["title"].toString());
+                min2[counter]->setAnnee((child[j].toObject()["release_date"].toString()));
+                min2[counter]->setNote(QString::number(child[j].toObject()["vote_average"].toDouble()));
+               // QJsonArray genreArray = child[j].toObject()["genre_ids"].toArray();
+                //qWarning()<<"genre array 0 : "<<genreArray[0];
+              //  QString genrePrincipal = sql.getGenre(genreArray[0].toInt());
+              //  qWarning()<<"genre :" << genrePrincipal;
+               // min2[counter]->setGenre(sql.getGenre());						  
                 //DEBUG
                qWarning()<< "ajout du titre";
            //telechargement de affiche des films
@@ -575,56 +599,116 @@ int counter = 0;
 
       //DEBUG
       qWarning()<<"fin de la lecture du fichier saveMovie.json";
+      connect(&m_dlmanager,SIGNAL(startCreateMini()),this ,SLOT(createMinifilm()));
       createMinifilm();
 
 
    }
 bool MainWindow::createMinifilm(){
     //DEBUG
-    qWarning()<<"creation de 10 fiches à partir du fichier saveMovie.json";
+  //DEBUG
+   qWarning()<<"<-createminifil";
+   grdt[0]= ui->grd1;
+   grdt[1]= ui->grd2;
+   grdt[2]= ui->grd3;
+   grdt[3]= ui->grd4;
+   grdt[4]= ui->grd5;
+   grdt[5]= ui->grd6;
+   grdt[6]= ui->grd7;
+   grdt[7]= ui->grd8;
+   grdt[8]= ui->grd9;
+   grdt[9]= ui->grd10;
+   grdt[10]= ui->grd11;
+   grdt[11]= ui->grd12;
+   grdt[12]= ui->grd13;
+   grdt[13]= ui->grd14;
+   grdt[14]= ui->grd15;
+   grdt[15]= ui->grd16;
+   grdt[16]= ui->grd17;
+   grdt[17]= ui->grd18;
+   grdt[18]= ui->grd19;
+   grdt[19]= ui->grd20;
+   grdt[20]= ui->grd21;
 
-    //creation des pages contenant 10 miniatures chacune
-
-    QGridLayout *layout = new QGridLayout;
-    layout->setParent(ui->centralwidget);
-    ui->hl_minifilm->setGeometry(QRect(1,1,1150,1000));
-
-    int imax=5;
-    int position=0;
-    for(int i =0; i<imax;i++){
-        if(i<=m_minifilmCount){
-            ui->hl_minifilm->addWidget(min2[i],0,position);
-            position++;
-            //on incremente la variable d'index derniere image affiche dans la vue
-            m_minifilmMax++;
-            //DEBUG
-            qWarning()<<"AFFICHE: "<<min2[i]->getAffiche();
-        }
-        getsion_prevNext_Btn();
+    for(int i = 0 ; i<21; i++){
+        videLayout(grdt[i]);
     }
+   int filmCounter=0;
+   int lastPage = 0;
+    //remplissage des page complet (10 minifilms)
+    for(int i = 0;i<m_minifilmCount/10 && i<200;i++){
+        for(int j =0; j<2;j++){ //pour les lignes
+            for(int k =0; k<5; k++){ //pour les colones
+                min2[filmCounter]->addAffiche();
+                grdt[i]->addWidget(min2[filmCounter],j,k);
+                filmCounter++;
+                lastPage =i+1;
 
-    position=0;
-    if(imax<=m_minifilmCount){
-        for(int i =imax; i<=imax+4;i++){
-            ui->hl_minifilm->addWidget(min2[i],1,position);
-            qWarning()<<"AFFICHE: "<<min2[i]->getAffiche();
-            position++;
-            //on incremente la variable d'index derniere image affiche dans la vue
-            m_minifilmMax++;
+            }
+				   
+							  
+							   
+														   
+					   
+																				  
+							
+				   
+														   
+        }
+							   
+    }
+    for(int j =0; j<2;j++){ //pour les lignes
+			   
+							  
+        for(int k =0; k<5; k++){ //pour les colones
+            if(filmCounter <m_minifilmCount){
+                min2[filmCounter]->addAffiche();
+            grdt[lastPage]->addWidget(min2[filmCounter],j,k);
+            filmCounter++;
+            }
+																				  
+							
         }
     }
+    getsion_prevNext_Btn();
+qWarning()<<"affiche de min2 0:"<<min2[0]->getAffiche();
 
-    //DEBUG 2l
-    qWarning()<<"minifilm maxi:"<<QString::number(m_minifilmMax);
-    qWarning()<<"minifilm compte:"<<QString::number(m_minifilmCount);
+qWarning()<<"affiche de min2 0:"<<min2[1]->getAffiche();
+qWarning()<<"affiche de min2 0:"<<min2[3]->getAffiche();
+min2[0]->addAffiche();
     return true;
 
 }
+
 void MainWindow::on_btn_modifier_clicked()
 {
 
-readJson();
+
 }
+	void MainWindow::status_dbConnectee(){
+
+    qWarning()<<"connecté";
+    ui->lbl_db_status->setText("Database connectée");
+}
+void MainWindow::status_dbDeconnectee(){
+    QMessageBox::warning(this,"Echec de connection","Echec de la connection à la base de données",QMessageBox::Ok);
+    ui->lbl_db_status->setText("Database NON connectée");
+    qWarning()<<"non connecté";
+}
+void MainWindow::videLayout(QLayout *layout)
+{
+    QLayoutItem *item;
+    while ((item = layout->takeAt(0)))
+    {
+        if (item->layout())
+        {
+            videLayout(item->layout());
+        }
+
+        layout -> removeItem(item);
+        delete item;
+    }
+}								  
 
 
 
@@ -632,13 +716,6 @@ void MainWindow::on_btn_supprimer_clicked()
 {
 
 
-/* QGridLayout *minifilm = new QGridLayout(ui->centralwidget);
-ui->setupUi(this);
-ui->hl_minifilm->~QGridLayout();*/
-QGridLayout *hl_page= new QGridLayout();
-hl_page->setGeometry(QRect(1,1,1150,1000));
-hl_page->setParent(ui->hl_minifilm);
-//ui->hl_minifilm = hl_page;
 
 }
 /**
@@ -659,114 +736,67 @@ void MainWindow::getsion_prevNext_Btn(){
 
 }
 
+
+/**
+ * @author: Mercier Laurent
+ * @date 13/04/2020
+ * @brief Affichage de la page suivante des résultats de recherche
+ *
+ */
 void MainWindow::on_btn_next_clicked()
 {
-    int position=0;
-
-    //suppression de minifilm deja affichés
-    for(int i =4;i>=0;i--){
-
-        //delete ui->hl_minifilm->itemAtPosition(1,0);
-        ui->hl_minifilm->itemAtPosition(0,i)->widget()->hide();
-        ui->hl_minifilm->removeWidget(ui->hl_minifilm->itemAtPosition(0,i)->widget());
-        ui->hl_minifilm->itemAtPosition(1,i)->widget()->hide();
-        ui->hl_minifilm->removeWidget(ui->hl_minifilm->itemAtPosition(1,i)->widget());
-        //   ui->hl_minifilm->itemAtPosition(1,i)->widget()->hide();
-
-    }
-
-    //on redefinit m_minifilmMini comme valant m_minifilmMax
-    m_minifilmMini=m_minifilmMax;
-    int imax=m_minifilmMax;
-    //on ajout la ligne du haut
-    for(int i =imax; i<=m_minifilmMax+4;i++){
-        if(imax<m_minifilmCount){
-            ui->hl_minifilm->addWidget(min2[i],0,position);
-            position++;
-            imax++;
-          //  ui->hl_minifilm->itemAtPosition(0,position)->widget()->show();
-        }
-        getsion_prevNext_Btn();
-    }
-
-    m_minifilmMax+=5;
-    position=0;
-
-    for(int i =imax; i<=m_minifilmMax+4;i++){
-        if(imax<m_minifilmCount){
-            ui->hl_minifilm->addWidget(min2[i],1,position);
-            position++;
-            imax++;
-           // ui->hl_minifilm->itemAtPosition(1,position)->widget()->show();
-        }
-        getsion_prevNext_Btn();
-    }
-    m_minifilmMax+=5;
-    qWarning()<<"m_minifilmMini"<<QString::number(m_minifilmMini);
-    qWarning()<<"m_minifilmMax"<<QString::number(m_minifilmMax);
-    getsion_prevNext_Btn();
+    //on passe a la page precedente du stackedWidget dvdtek
+    ui->dvdtek->setCurrentIndex(ui->dvdtek->currentIndex()+1);
+    //DEBUG
+    qWarning()<<"m_totalpage: "<<m_minifilmCount/10+1<<" curentindex: "<<ui->dvdtek->currentIndex();
+    //on gere l'activiter des bouton
+    getsion_prevNext_Btn();					   
 }
 
+/**
+ * @author: Mercier Laurent
+ * @date 13/04/2020
+ * @brief Affichage de la page précédente des résultats de recherche
+ *
+ */
 void MainWindow::on_btn_previous_clicked()
 {
-    qWarning()<<"m_minifilmMini initiale : "<<QString::number(m_minifilmMini);
-    qWarning()<<"m_minifilmMax initiale : "<<QString::number(m_minifilmMax);
-    int position=0;
-
-    //suppression de minifilm deja affichés
-    for(int i =4;i>=0;i--){
-
-        //delete ui->hl_minifilm->itemAtPosition(1,0);
-        ui->hl_minifilm->itemAtPosition(0,i)->widget()->hide();
-        ui->hl_minifilm->removeWidget(ui->hl_minifilm->itemAtPosition(0,i)->widget());
-        ui->hl_minifilm->itemAtPosition(1,i)->widget()->hide();
-        ui->hl_minifilm->removeWidget(ui->hl_minifilm->itemAtPosition(1,i)->widget());
-        //   ui->hl_minifilm->itemAtPosition(1,i)->widget()->hide();
-
-    }
-    //on redefinit m_minifilmMini comme valant m_minifilmMax leur valeur -10
-    m_minifilmMini-=10;
-   m_minifilmMax=m_minifilmMini;
-
-    qWarning()<<min2[2]->getAffiche();
-    qWarning()<<"m_minifilmMini"<<QString::number(m_minifilmMini);
-    qWarning()<<"m_minifilmMax"<<QString::number(m_minifilmMax);
-
-
-    int imax=m_minifilmMini;
-    qWarning()<<"m_minifilmMini avH"<<QString::number(m_minifilmMini);
-    qWarning()<<"m_minifilmMax avH"<<QString::number(m_minifilmMax);
-    qWarning()<<"imax avH : "<<QString::number(imax);
-    //on ajout la ligne du haut
-    for(int i =0; i<=4;i++){
-         qWarning()<<"boucle previous haut: "<<i;
-         qWarning()<<"position : "<<position;
-        ui->hl_minifilm->addWidget(min2[m_minifilmMini+position],0,position);
-        position++;
-        imax++;
-       ui->hl_minifilm->itemAtPosition(0,position)->widget()->show();
-        getsion_prevNext_Btn();
-    }
-    /*
-    m_minifilmMax+=imax;
-    position=0;
-    qWarning()<<"m_minifilmMini apH"<<QString::number(m_minifilmMini);
-    qWarning()<<"m_minifilmMax apH"<<QString::number(m_minifilmMax);
-    qWarning()<<"imax apH: "<<QString::number(imax);
-    qWarning()<<"item count apH"<< ui->hl_minifilm->count();
-    for(int i =imax; i<=m_minifilmMax+4;i++){
-        qWarning()<<"boucle previous bas: "<<i;
-       qWarning()<<"position : "<<position;
-        ui->hl_minifilm->addWidget(min2[m_minifilmMini+position+5],1,position);
-        position++;
-        imax++;
-        //ui->hl_minifilm->itemAtPosition(1,position)->widget()->show();
-        getsion_prevNext_Btn();
-    }
-    */
-   m_minifilmMax+=5;
-   qWarning()<<"m_minifilmMini apB"<<QString::number(m_minifilmMini);
-   qWarning()<<"m_minifilmMax apB"<<QString::number(m_minifilmMax);
-       qWarning()<<"imax apB: "<<QString::number(imax);
+   //on passe a la page precedente du stackedWidget dvdtek
+   ui->dvdtek->setCurrentIndex(ui->dvdtek->currentIndex()-1);
+   qWarning()<<"m_totalpage: "<<m_totalPage<<" curentindex: "<<ui->dvdtek->currentIndex();
+   //on gere l'activiter des bouton
    getsion_prevNext_Btn();
+}
+
+/**
+ * @author: Mercier Laurent
+ * @date 13/04/2020
+ * @brief definit une recherche de type locale
+ *        deconnecte la base de donnée
+ *
+ * @param checked   état du bouton radion rdb_searchLoc
+ */
+void MainWindow::on_rdb_rechLoc_toggled(bool checked)
+{
+    if(checked==true){
+        sql.deconnection();
+        m_searchType =false;
+    }
+}
+					  								
+
+/**
+ * @author: Mercier Laurent
+ * @date 11/04/2020
+ * @brief definit une recherche de type locale et web
+ *        connecte la base de donnée
+ *
+ * @param checked   état du bouton radion rdb_searchLDist
+ */
+void MainWindow::on_rdb_rechDist_toggled(bool checked)
+{
+    if(checked==true)
+    sql.connection("dvdflix","127.0.0.1",3308,"root","coucou256!");
+    m_searchType=true;
+						  
 }

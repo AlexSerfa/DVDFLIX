@@ -13,6 +13,7 @@ const QString directoryBase= "d:/tempo68";
 C_downloadmanager::C_downloadmanager(QObject *parent)
     : QObject(parent)
       ,m_numeroPage(0)
+      ,m_uniqueFile(true)
 {
 
 }
@@ -34,7 +35,8 @@ void C_downloadmanager::append(const QUrl &url, QString filename)
     //DEBUG
     qWarning()<<"qurl dlmanager: "<<url;
     if (downloadQueue.isEmpty()){
-        QTimer::singleShot(0, this,SLOT(startNextDownload()));
+        QTimer::singleShot(3000, this,SLOT(startNextDownload()));
+        qWarning()<<"demarrage telechargement";
     }
 
     downloadQueue.enqueue(url);
@@ -49,7 +51,7 @@ QString C_downloadmanager::saveFileName(const QUrl &url)
     QString path = url.path();
     QString basename = QFileInfo(path).fileName();
     //DEBUG
-    qWarning()<<"fichier de suavegarde: " <<basename;
+    qWarning()<<"fichier de sauvegarde: " <<basename;
     if (basename.isEmpty())
         basename = "download";
 
@@ -71,7 +73,9 @@ void C_downloadmanager::startNextDownload()
     if (downloadQueue.isEmpty()) {
 
         emit finished() ;
-        emit emptyQueue();
+
+
+
         totalCount=0;
         return;
     }
@@ -92,6 +96,7 @@ void C_downloadmanager::startNextDownload()
                 qPrintable(output.errorString());
 
         startNextDownload();
+        qWarning()<<"demarrage telechargement E2 :"<<QString::number(downloadQueue.count());
         return;
     }
 
@@ -125,10 +130,19 @@ void C_downloadmanager::downloadFinished()
         } else {
             qWarning()<<"Succes.\n";
             ++downloadedCount;
+            if(downloadQueue.isEmpty() ){
+                //DEBUG
+                qWarning()<<"EMIT EMPTYQUEUE";
+               emit emptyQueue();
+            }
         }
     }
 
     currentDownload->deleteLater();
+    qWarning()<<"demarrage telechargement E3 :"<<QString::number(downloadQueue.count());
+    if(downloadQueue.count()==0){
+        emit startCreateMini();
+    }
     startNextDownload();
 }
 
