@@ -7,9 +7,13 @@
 
 using namespace std;
 
-
+const QString key ="76532a92d48d6e7e7fb5d72eaf2029b3";
+const QString defaultUrl = " https://api.themoviedb.org/3/";
+const QString urlBaseAffiche="https://image.tmdb.org/t/p/w500";
 const QString directoryBase= "d:/tempo68";
-
+/**
+ * @brief constructuer
+ */
 C_downloadmanager::C_downloadmanager(QObject *parent)
     : QObject(parent)
       ,m_numeroPage(0)
@@ -17,6 +21,39 @@ C_downloadmanager::C_downloadmanager(QObject *parent)
 {
 
 }
+
+/**
+ * @fn formatUrl(QString url)
+ * @brief Formatage de l'url de film pour recherche online, uniquement la premiere page de résultat
+ *
+ * @param[in]   film                QString         titre du film  a recherche
+ * @return      completUrl          QString         url formatées avec la clé de l'API TMBD
+ *
+*/
+QString C_downloadmanager::formatUrl(QString film){
+    QString completUrl;
+       completUrl =defaultUrl+"search/movie?api_key="+key+"&language=fr&query="+film;
+
+
+    return completUrl;
+}
+/**
+ * @fn formatUrl(QString url, int page)
+ * @brief Formatage de l'url de film a recherche online, précisant le numéro de la page de résultat
+ * @warning la page 1 n'existe pas sur TMBD
+ *
+ * @param[in]   film                QString         titre du film  a recherche
+ * @param[in]   page                int             numéro de la page a télécharger
+ * @return      completUrl          QString         url formatées avec la clé de l'API TMBD
+*/
+QString C_downloadmanager::formatUrl(QString film,int page){
+    QString completUrl;
+       completUrl =defaultUrl+"search/movie?api_key="+key+"&language=fr&query="+film+"&page="+QString::number(page);
+ qWarning()<<"fichier pageX: "<<completUrl;
+
+    return completUrl;
+}
+
 void C_downloadmanager::append(const QStringList &urls, QStringList &filename)
 {
     int counter= 0;
@@ -73,13 +110,9 @@ void C_downloadmanager::startNextDownload()
     if (downloadQueue.isEmpty()) {
 
         emit finished() ;
-
-
-
         totalCount=0;
         return;
     }
-
     QUrl url = downloadQueue.dequeue();
     QString m_filename= fileNameQueue.dequeue();
     //QString filename = saveFileName(url);
@@ -96,10 +129,10 @@ void C_downloadmanager::startNextDownload()
                 qPrintable(output.errorString());
 
         startNextDownload();
-        qWarning()<<"demarrage telechargement E2 :"<<QString::number(downloadQueue.count());
+        //DEBUG
+        //qWarning()<<"demarrage telechargement E2 :"<<QString::number(downloadQueue.count());
         return;
     }
-
     QNetworkRequest request(url);
     currentDownload = manager.get(request);
     connect(currentDownload, SIGNAL(finished()),
@@ -115,9 +148,7 @@ void C_downloadmanager::startNextDownload()
 
 void C_downloadmanager::downloadFinished()
 {
-
     output.close();
-
     if (currentDownload->error()) {
         // erreur durant le téléchargement
         qWarning()<<"échec: \n"<< qPrintable(currentDownload->errorString());
@@ -132,14 +163,15 @@ void C_downloadmanager::downloadFinished()
             ++downloadedCount;
             if(downloadQueue.isEmpty() ){
                 //DEBUG
-                qWarning()<<"EMIT EMPTYQUEUE";
+                //qWarning()<<"EMIT EMPTYQUEUE";
                emit emptyQueue();
             }
         }
     }
 
     currentDownload->deleteLater();
-    qWarning()<<"demarrage telechargement E3 :"<<QString::number(downloadQueue.count());
+    //DEBUG
+    //qWarning()<<"demarrage telechargement E3 :"<<QString::number(downloadQueue.count());
     if(downloadQueue.count()==0){
         emit startCreateMini();
     }
@@ -148,7 +180,7 @@ void C_downloadmanager::downloadFinished()
 
 void C_downloadmanager::downloadReadyRead()
 {
-    output.write(currentDownload->readAll());
+    qWarning()<<output.write(currentDownload->readAll());
 
 
 }

@@ -18,7 +18,21 @@ public:
      * @param parent
      */
     explicit C_downloadmanager(QObject *parent = nullptr);
-
+    /**
+     * @brief
+     *
+     * @param film
+     * @return QString
+     */
+    QString formatUrl(QString film);
+    /**
+     * @brief
+     *
+     * @param film
+     * @param page
+     * @return QString
+     */
+    QString formatUrl(QString film,int page);
     /**
      * @brief
      *

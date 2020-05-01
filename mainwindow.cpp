@@ -16,32 +16,27 @@
 #include <QSqlRecord>			
 #include <C_minifilm.h>
 #include <C_mysqlmanager.h>
-const QString key ="76532a92d48d6e7e7fb5d72eaf2029b3";
-#if QT_CONFIG(ssl)
-const QString defaultUrl = " https://api.themoviedb.org/3/";
-const QString urlBaseAffiche="https://image.tmdb.org/t/p/w500";
-#else
-const QString defaultUrl = " http://api.themoviedb.org/3/";
-#endif
-const char defaultFileNameMovie[] = "essaiperso.html";
-const QString directoryBase= "d:/tempo68";
+
+const QString key ="76532a92d48d6e7e7fb5d72eaf2029b3"; /**< clé de l'API themoviedb */
+const QString defaultUrl = " https://api.themoviedb.org/3/"; /**< adresse de l'API themoviedb */
+const QString urlBaseAffiche="https://image.tmdb.org/t/p/w500"; /**< adresse pour la récupération des image */
+const QString directoryBase= "d:/tempo68"; /**< chemin du dossier de stockage */
 
 
+/**
+ * @brief constructeur
+ *
+ * @param parent
+ */
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , m_dlmanager(this)
     , min2()
-    , m_byteWrite(0)
-    , m_hsld_storedValue(0)
     , m_minifilmMini(0)
     , m_minifilmMax(0)
     , m_minifilmCount(0)
     , m_totalPage(0)
-    , m_fileType(0)
     , m_pageNumber(0)
-    , reply(nullptr)
-    , file(nullptr)
-    , httpRequestAborted(false)
     , ui(new Ui::MainWindow)
 {
      ui->setupUi(this);
@@ -54,274 +49,73 @@ MainWindow::MainWindow(QWidget *parent)
     sql.connection("dvdflix","127.0.0.1",3308,"root","coucou256!");															   
 }
 
+/**
+ * @brief destructeur
+ *
+ */
 MainWindow::~MainWindow()
 {
     delete ui;
 }
-/**
- * @fn formatUrl(QString url)
- * @brief Formatage de l'url de film pour recherche online, uniquement la premiere page de résultat
- *
- * @param[in]   film                QString         titre du film  a recherche
- * @return      completUrl          QString         url formatées avec la clé de l'API TMBD
- *
-*/
-QString MainWindow::formatUrl(QString film){
-    QString completUrl;
-       completUrl =defaultUrl+"search/movie?api_key="+key+"&language=fr&query="+film;
 
 
-    return completUrl;
-}
+
+
 
 /**
- * @fn formatUrl(QString url, int page)
- * @brief Formatage de l'url de film a recherche online, précisant le numéro de la page de résultat
- * @warning la page 1 n'existe pas sur TMBD
+ * @fn movieDlFinished()
+ * @author: Mercier Laurent
+ * @date 07/04/2020
  *
- * @param[in]   film                QString         titre du film  a recherche
- * @param[in]   page                int             numéro de la page a télécharger
- * @return      completUrl          QString         url formatées avec la clé de l'API TMBD
+ * @brief SLOT demarant le traitement des fichier après leurs téléchargment
+ *
 */
-QString MainWindow::formatUrl(QString film,int page){
-    QString completUrl;
-       completUrl =defaultUrl+"search/movie?api_key="+key+"&language=fr&query="+film+"&page="+QString::number(page);
- qWarning()<<"fichier pageX: "<<completUrl;
-
-    return completUrl;
-}
-
-/**
- * @fn downloadFile(QString url )
- * @brief fonction de telechargement des rsultat pour un film
- *
- * @param[in]   url                 QString         url de la page à télécharger
- *
- * @deprecated depuis v0.02
-*/
-void MainWindow::downloadFile(QString url )
-{
-
-    const QString urlSpec = url;
-    if (urlSpec.isEmpty())
-        return;
-    //DEBUG permet d'afficher la version ssl de compilation de qt et la version installer sur le pc (pour debug) 1l
-    //qDebug() << QSslSocket::supportsSsl() << QSslSocket::sslLibraryBuildVersionString()<<"+" << QSslSocket::sslLibraryVersionString();
-    const QUrl newUrl = QUrl::fromUserInput(urlSpec);
-    if (!newUrl.isValid()) {
-        QMessageBox::information(this, tr("Error"),
-                                 tr("Invalid URL: %1: %2").arg(urlSpec, newUrl.errorString()));
-        return;
-    }
-
-    QString fileName = newUrl.fileName();
-    // ajout de l'extension au fichier
-    fileName+=QString::number(m_pageNumber)+".json";
-    qWarning()<< "nom du fichier1:"<<fileName;
-    if (fileName.isEmpty())
-        fileName = defaultFileNameMovie;
-
-    QString downloadDirectory = QDir::cleanPath(directoryBase);
-    bool useDirectory = !downloadDirectory.isEmpty() && QFileInfo(downloadDirectory).isDir();
-    if (useDirectory)
-        fileName.prepend(downloadDirectory + '/');
-    //DEBUG affichage du chemin complet 1l
-        qWarning()<< "nom du fichier2:"<<fileName;
-    if (QFile::exists(fileName)) {
-        if (QMessageBox::question(this, tr("Overwrite Existing File"),
-                                  tr("There already exists a file called %1%2."
-                                     " Overwrite?")
-                                     .arg(fileName,
-                                          useDirectory
-                                           ? QString()
-                                           : QStringLiteral(" in the current directory")),
-                                     QMessageBox::Yes | QMessageBox::No,
-                                     QMessageBox::No)
-            == QMessageBox::No) {
-            return;
-        }
-        QFile::remove(fileName);
-    }
-
-    file = openFileForWrite(fileName);
-    if (!file)
-        return;
-
-    // schedule the request
-    startRequest(newUrl);
-}
-/**
- * @fn openFileForWrite(const QString &fileName)
- * @brief ecriture sur hdd du fichier passé en paramètre
- *
- * @param[in]   &fileNAme             QString               nom du fichier à écrire
- *
- * @return      file                  unique_ptr<QFile>     fichier ecrit
- * @deprecated depuis v0.02
-*/
-std::unique_ptr<QFile> MainWindow::openFileForWrite(const QString &fileName)
-{
-      qDebug()<<"openfile"<<endl;
-    std::unique_ptr<QFile> file(new QFile(fileName));
-    if (!file->open(QIODevice::WriteOnly)) {
-        QMessageBox::information(this, tr("Error"),
-                                 tr("Impossible d'enregister le ficher %1: %2.")
-                                 .arg(QDir::toNativeSeparators(fileName),
-                                      file->errorString()));
-        return nullptr;
-    }
-    return file;
-}
-/**
- * @fn startRequest(const QUrl &requestedUrl)
- * @brief execution d'une requete http
- *
- * @param[in]   &requestedUrl         QUrl                  url du fichier à telecharger
- *
- * @warning signal connected
- * @warning &QNetworkReply::finished->&MainWindow::httpFinished
- * @warning &QIODevice::readyRead->&MainWindow::httpReadyRead
- *
- * @deprecated depuis v0.02
-*/
-void MainWindow::startRequest(const QUrl &requestedUrl)
-{
-
-    url = requestedUrl;
-    qWarning()<<"url: "<<url;
-    httpRequestAborted = false;
-
-    reply = qnam.get(QNetworkRequest(url));
-        connect(reply, &QNetworkReply::finished, this, &MainWindow::httpFinished);
-
-        connect(reply, &QIODevice::readyRead, this, &MainWindow::httpReadyRead);
-
-
-}
-/**
- * @fn httpFinished()
- * @brief gestion de la réponse d'une requete http
- *
- * @deprecated depuis v0.02
-*/
-void MainWindow::httpFinished()
-{
-    QFileInfo fi;
-    if (file) {
-        fi.setFile(file->fileName());
-        file->close();
-        file.reset();
-    }
-
-    if (httpRequestAborted) {
-        reply->deleteLater();
-        reply = nullptr;
-        return;
-    }
-
-    if (reply->error()) {
-        QFile::remove(fi.absoluteFilePath());
-        reply->deleteLater();
-        reply = nullptr;
-        return;
-    }
-
-    const QVariant redirectionTarget = reply->attribute(QNetworkRequest::RedirectionTargetAttribute);
-
-    reply->deleteLater();
-    reply = nullptr;
-
-    if (!redirectionTarget.isNull()) {
-        const QUrl redirectedUrl = url.resolved(redirectionTarget.toUrl());
-        if (QMessageBox::question(this, tr("Redirection"),
-                                  tr("Rediriger vers %1 ?").arg(redirectedUrl.toString()),
-                                  QMessageBox::Yes | QMessageBox::No) == QMessageBox::No) {
-            QFile::remove(fi.absoluteFilePath());
-
-
-            return;
-        }
-        file->open(QIODevice::WriteOnly | QIODevice::Text);
-        if (!file) {
-
-            return;
-        }
-        startRequest(redirectedUrl);
-        return;
-    }
-
-}
-/**
-* @fn httpReadyRead()
-* @brief  ecriture des données au  fur et à mesure de leurs arrivée
-*
-* @brief
-* Ce SLOT est appélé chaque fois que QNetworkReply à de nouvelles données.
-* On lit toutes ces données et on les écrite sur le disque..
-* On utilise ainsi moin de RAM qu'en lisant seulement à la fin.
-* signal de QNetworkReply
-*
-* @deprecated depuis v0.02
-*/
-
-void MainWindow::httpReadyRead()
-{
-
-
-    if (file){
-        m_byteWrite=file->write(reply->readAll());
-        //DEBUG
-        qWarning()<<"CLOTURE DU FICHIER:"<<file->fileName();
-        if(m_fileType==0){
-            QTimer::singleShot(200, this, SLOT(movieDlFinished()));
-        }else if (m_fileType==1){
-            QTimer::singleShot(200, this, SLOT(moviePageDlFinished()));
-        }
-    }else{
-        qWarning()<<"erreur de lecture des données reçues";
-    }
-}
-
-/*************************************************************************
- * SLOT lit le fichier movie.json et insere les donné dans les miniatures
- *
- * **********************************************************************/
 void MainWindow::movieDlFinished()
 {
-    //DEBUG
-    qWarning()<<"movieDlFinished()";
-
-    qWarning()<<"lecture du fichier json de la recherche ok";
+    //DEBUG 2l
+    //qWarning()<<"movieDlFinished()";
+    //qWarning()<<"lecture du fichier json de la recherche ok";
     getPageNumberJson();
     readJson();
 
 }
-void MainWindow::moviePageDlFinished()
-{
-
-}
-
-/*************************************************************************
- * Lancement de la recherche en ligne a partir du titre du film
+/**
+ * @fn on_btn_rechercher_clicked()
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  *
- * **********************************************************************/
-void MainWindow::on_btn_rechercher_clicked()
+ * @brief restoration des membres à leur valeur initiales
+ *
+*/
+void MainWindow::restoreValue()
 {
-    //! @TODO mettre la partie initialisation dans une fonction
     //on réinitialise les valeurs servant a la gestion de la bibliothèque
-    ui->dvdtek->setCurrentIndex(0);								   
+    ui->dvdtek->setCurrentIndex(0);
     getsion_prevNext_Btn(); //les bouton previous et next
-    m_minifilmMax=0;    //reset des divers membres utilisés
+     //reset des divers membres utilisés
+    m_minifilmMax=0;
     m_minifilmMini=0;
     m_minifilmCount=0;
     m_totalPage=0;
     m_pageNumber=0;
-	    m_JsonSearch.clear();					 
+    m_JsonSearch.clear();
+}
+/**
+ * @fn on_btn_rechercher_clicked()
+ * @author: Mercier Laurent
+ * @date 07/04/2020
+ *
+ * @brief Lancement de la recherche en ligne a partir du titre du film
+ *
+*/
 
+void MainWindow::on_btn_rechercher_clicked()
+{
+    restoreValue();
     //suppression du fichier saveMovies.json
     bool result = QFile::remove(directoryBase+"/saveMovies.json");
     //DEBUG
-    qWarning()<<"Suppression du fichier: "<<result;
+    //qWarning()<<"Suppression du fichier: "<<result;
     //on vide le tableau de minifilm
     for(int i =0;i<150;i++){
         if(min2[i]){
@@ -333,22 +127,15 @@ void MainWindow::on_btn_rechercher_clicked()
     }
 
     //DEBUG
-    qWarning()<<"ajout movie0.json a DL_MANAGER ok";
+    //qWarning()<<"ajout movie0.json a DL_MANAGER ok";
     //on recupere la premiere page du film correspondant
-    m_dlmanager.append(QUrl::fromUserInput((formatUrl(ui->ln_titre->text()))),"movie0.json");
+    m_dlmanager.append(QUrl::fromUserInput((m_dlmanager.formatUrl(ui->ln_titre->text()))),"movie0.json");
     //DEBUG
-    qWarning()<<"connect au slot getpagenumber() ok";
+    // qWarning()<<"connect au slot getpagenumber() ok";
     connect(&m_dlmanager,SIGNAL(emptyQueue()),SLOT(getPageNumberJson()));
 }
 
-void MainWindow::changePage()
-{
 
-}
-void MainWindow::on_st_result_currentChanged(int arg1)
-{
-
-}
 /**
  * @fn getPageNumberJson()
  * @author: Mercier Laurent
@@ -368,7 +155,7 @@ void MainWindow::getPageNumberJson(){
     //deconnection du signal de fin de telechargement
     disconnect(&m_dlmanager,SIGNAL(emptyQueue()),this,SLOT(getPageNumberJson()));
     //DEBUG
-   qWarning()<<"->getPageNumberJson()";
+    //qWarning()<<"->getPageNumberJson()";
     // reset du compteur de page a dl
     m_pageNumber=0;
     //creation d'un qbyteArray pour le stockage des données lue
@@ -397,14 +184,14 @@ void MainWindow::getPageNumberJson(){
     QJsonObject JsonObj= doc.object();
 
     //DEBUG
-    qWarning() << JsonObj.value(QString("total_pages"));
+    //qWarning() << JsonObj.value(QString("total_pages"));
     //on recupere le nombre de page pour le film recherché
     m_totalPage = JsonObj.value(QString("total_pages")).toInt();
     //on recupere le nombre de film total
     m_minifilmCount=JsonObj.value(QString("total_results")).toInt();
     //on telecharge les page suivante si il y en a
     //DEBUG
-   qWarning()<<"nombre total de film correspondant a la recherche:  "<< m_minifilmCount;
+    //qWarning()<<"nombre total de film correspondant a la recherche:  "<< m_minifilmCount;
 
     //qstring pour stocker le nom du fichier
     QString filename;
@@ -416,14 +203,12 @@ void MainWindow::getPageNumberJson(){
             m_pageNumber++;
             //on format le nom du fichier suivant
             filename= "movie"+QString::number(i-1)+".json";
-
             //on ajoute le telechargement du fichier au downloadManager
-            m_dlmanager.append(QUrl::fromUserInput((formatUrl(ui->ln_titre->text(),i))),filename);
-
+            m_dlmanager.append(QUrl::fromUserInput((m_dlmanager.formatUrl(ui->ln_titre->text(),i))),filename);
         }
     }
     //DEBUG
-    qWarning()<<"getPageNumberjson->";
+    //qWarning()<<"getPageNumberjson->";
 
 
 }
@@ -445,9 +230,7 @@ void MainWindow::getPageNumberJson(){
 bool MainWindow::concatJSON(){
 
     //DEBUG
-    qWarning()<<"concatJson";
-
-  //  QFile::remove(directoryBase+"/saveMovies.json");
+    //qWarning()<<"concatJson";
 
     for(int i=0;i<= m_pageNumber; i++){
         QFile filej;
@@ -458,11 +241,11 @@ bool MainWindow::concatJSON(){
         QJsonDocument doc = QJsonDocument::fromJson(val);
         QJsonObject jsonObj = doc.object();
         m_JsonSearch.append(jsonObj);
+        //traitement a la dernière page
         if(i==m_pageNumber){
             JsonMerge();
             connect(this,SIGNAL(concatEnd()),this,SLOT(readJson()));
         }
-
     }
     disconnect(&m_dlmanager,SIGNAL(emptyQueue()),this,SLOT(concatJSON()));
     return true;
@@ -500,7 +283,7 @@ bool MainWindow::JsonMerge(){
     saveFile.close();
     //DEBUG
     qWarning()<<byteWrite;
-  qWarning()<<"jsonmerge->readjson";									  
+    //qWarning()<<"jsonmerge->readjson";
     readJson();
     // emit concatEnd();
     return true;
@@ -527,7 +310,7 @@ bool MainWindow::JsonMerge(){
 void MainWindow::readJson()
    {
       //DEBUG
-    qWarning()<<"->readJson";
+      //qWarning()<<"->readJson";
 
       QFile filej;
       filej.setFileName(directoryBase+"/saveMovies.json");
@@ -535,7 +318,7 @@ void MainWindow::readJson()
       QByteArray val = filej.readAll();
       filej.close();
       //DEBUG
-      qWarning()<<"readJson->lecture fichier";
+      //qWarning()<<"readJson->lecture fichier";
 
       QJsonDocument doc = QJsonDocument::fromJson(val);
       QJsonObject JsonObj= doc.object();
@@ -550,7 +333,7 @@ int counter = 0;
       {
           QJsonArray child =arry[i].toArray();
           //DEBUG				 
-          qWarning()<<"arry"<<i<<" child: " <<child.count();
+          //qWarning()<<"arry"<<i<<" child: " <<child.count();
           for(int j =0 ; j<child.count();j++){
 
                 //DEBUG
@@ -559,55 +342,60 @@ int counter = 0;
                //creation d'une fiche de miniature
                C_miniFilm *min3 =new C_miniFilm();
                 //ajout de la fiche a la colletion
-                min2[counter] =min3;
-
-														
-             //ajout du titre pour ce film
-                qWarning()<<"Ajout des données du film";
+                min2[counter] =min3;														
+                //ajout des donnés d'un film
+                //qWarning()<<"Ajout des données du film";
                 min2[counter]->setTitre(child[j].toObject()["title"].toString());
                 min2[counter]->setAnnee((child[j].toObject()["release_date"].toString()));
                 min2[counter]->setNote(QString::number(child[j].toObject()["vote_average"].toDouble()));
-               // QJsonArray genreArray = child[j].toObject()["genre_ids"].toArray();
-                //qWarning()<<"genre array 0 : "<<genreArray[0];
-              //  QString genrePrincipal = sql.getGenre(genreArray[0].toInt());
-              //  qWarning()<<"genre :" << genrePrincipal;
-               // min2[counter]->setGenre(sql.getGenre());						  
+                min2[counter]->setPop(child[j].toObject()["popularity"].toString());
+                min2[counter]->setAdult(child[j].toObject()["adult"].toBool());
+                min2[counter]->setId_online( child[j].toObject()["id"].toInt());
+                min2[counter]->setVote(child[j].toObject()["vote_count"].toString());
+                min2[counter]->setResum(child[j].toObject()["overview"].toString());
+                min2[counter]->setLanguage(child[j].toObject()["original_language"].toString());
+                min2[counter]->setTitreOri(child[j].toObject()["original_title"].toString());
+                min2[counter]->setBackdrop(child[j].toObject()["backdrop_path"].toString());
+                QJsonArray genreArray = child[j].toObject()["genre_ids"].toArray();
+
                 //DEBUG
-               qWarning()<< "ajout du titre";
+                //qWarning()<<"genre array 0 : "<<genreArray[0].toInt();
+                int genreCode =genreArray[0].toInt();
+                QString  genrePrincipal = sql.getGenre(genreCode);
+                //DEBUG
+                //qWarning()<<"genre :" << genrePrincipal;
+                 min2[counter]->setGenre(genrePrincipal);
+                //DEBUG
+               //qWarning()<< "ajout du titre";
            //telechargement de affiche des films
             if(child[j].toObject()["poster_path"].toString()!="")
             {
-              //DEBUG
-              qWarning()<<"readJson->ajout dl_manager du fichier image de l'affiche n°: "<<i;
-             m_dlmanager.append(urlBaseAffiche+ child[j].toObject()["poster_path"].toString(),child[j].toObject()["poster_path"].toString());
-             min2[counter]->setAffiche(directoryBase+child[j].toObject()["poster_path"].toString());
+                //DEBUG
+                //qWarning()<<"readJson->ajout dl_manager du fichier image de l'affiche n°: "<<i;
+                m_dlmanager.append(urlBaseAffiche+ child[j].toObject()["poster_path"].toString(),child[j].toObject()["poster_path"].toString());
+                min2[counter]->setAffiche(directoryBase+child[j].toObject()["poster_path"].toString());
              }
-
             else{
               min2[counter]->setAffiche(directoryBase+"/noPicture.png");
               }
-
-
-
-
-            qWarning()<<counter;
+            //DEBUG
+            //qWarning()<<counter;
             counter++;
           }
       }
-
-
-
       //DEBUG
-      qWarning()<<"fin de la lecture du fichier saveMovie.json";
+      //qWarning()<<"fin de la lecture du fichier saveMovie.json";
       connect(&m_dlmanager,SIGNAL(startCreateMini()),this ,SLOT(createMinifilm()));
       createMinifilm();
-
-
    }
+/**
+ * @brief
+ *
+ * @return bool
+ */
 bool MainWindow::createMinifilm(){
-    //DEBUG
   //DEBUG
-   qWarning()<<"<-createminifil";
+   //qWarning()<<"<-createminifil";
    grdt[0]= ui->grd1;
    grdt[1]= ui->grd2;
    grdt[2]= ui->grd3;
@@ -643,58 +431,46 @@ bool MainWindow::createMinifilm(){
                 grdt[i]->addWidget(min2[filmCounter],j,k);
                 filmCounter++;
                 lastPage =i+1;
-
             }
-				   
-							  
-							   
-														   
-					   
-																				  
-							
-				   
-														   
-        }
-							   
+        }							   
     }
-    for(int j =0; j<2;j++){ //pour les lignes
-			   
-							  
+    for(int j =0; j<2;j++){ //pour les lignes			   						  
         for(int k =0; k<5; k++){ //pour les colones
             if(filmCounter <m_minifilmCount){
                 min2[filmCounter]->addAffiche();
-            grdt[lastPage]->addWidget(min2[filmCounter],j,k);
-            filmCounter++;
-            }
-																				  
-							
+                grdt[lastPage]->addWidget(min2[filmCounter],j,k);
+                filmCounter++;
+            }						
         }
     }
     getsion_prevNext_Btn();
-qWarning()<<"affiche de min2 0:"<<min2[0]->getAffiche();
-
-qWarning()<<"affiche de min2 0:"<<min2[1]->getAffiche();
-qWarning()<<"affiche de min2 0:"<<min2[3]->getAffiche();
-min2[0]->addAffiche();
+    min2[0]->addAffiche();
     return true;
-
 }
-
-void MainWindow::on_btn_modifier_clicked()
-{
-
-
-}
-	void MainWindow::status_dbConnectee(){
-
-    qWarning()<<"connecté";
+/**
+ * @brief
+ *
+ */
+void MainWindow::status_dbConnectee(){
+    //DEBUG
+    //qWarning()<<"connecté";
     ui->lbl_db_status->setText("Database connectée");
 }
+/**
+ * @brief
+ *
+ */
 void MainWindow::status_dbDeconnectee(){
     QMessageBox::warning(this,"Echec de connection","Echec de la connection à la base de données",QMessageBox::Ok);
     ui->lbl_db_status->setText("Database NON connectée");
-    qWarning()<<"non connecté";
+    //DEBUG
+    //qWarning()<<"non connecté";
 }
+/**
+ * @brief
+ *
+ * @param layout
+ */
 void MainWindow::videLayout(QLayout *layout)
 {
     QLayoutItem *item;
@@ -709,15 +485,6 @@ void MainWindow::videLayout(QLayout *layout)
         delete item;
     }
 }								  
-
-
-
-void MainWindow::on_btn_supprimer_clicked()
-{
-
-
-
-}
 /**
  * @fn getsion_prevNext_Btn()
  * @author: Mercier Laurent
@@ -727,15 +494,13 @@ void MainWindow::on_btn_supprimer_clicked()
  * premiere ou la derniere page des résultat de recherche
  * */
 void MainWindow::getsion_prevNext_Btn(){
-    if(m_minifilmMax>=m_minifilmCount){
+    if(ui->dvdtek->currentIndex()>=m_minifilmCount/10){
         ui->btn_next->setEnabled(false);
     }else ui->btn_next->setEnabled(true);
-    if(m_minifilmMini<=0){
+    if(ui->dvdtek->currentIndex()==0){
         ui->btn_previous->setEnabled(false);
     }else ui->btn_previous->setEnabled(true);
-
 }
-
 
 /**
  * @author: Mercier Laurent
@@ -784,19 +549,18 @@ void MainWindow::on_rdb_rechLoc_toggled(bool checked)
     }
 }
 					  								
-
 /**
  * @author: Mercier Laurent
  * @date 11/04/2020
  * @brief definit une recherche de type locale et web
  *        connecte la base de donnée
  *
- * @param checked   état du bouton radion rdb_searchLDist
+ * @param checked   état du bouton radion rdb_searchDist
  */
 void MainWindow::on_rdb_rechDist_toggled(bool checked)
 {
     if(checked==true)
     sql.connection("dvdflix","127.0.0.1",3308,"root","coucou256!");
     m_searchType=true;
-						  
+
 }
