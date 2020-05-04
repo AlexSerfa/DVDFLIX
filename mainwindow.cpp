@@ -23,6 +23,13 @@ const QString urlBaseAffiche="https://image.tmdb.org/t/p/w500"; /**< adresse pou
 const QString directoryBase= "d:/tempo68"; /**< chemin du dossier de stockage */
 
 
+const QString database = "dvdflix";/**< nom de la base de donnée */
+const QString adress = "127.0.0.1";/**< adresse du serveur mysql */
+const int port = 3308;/**< port du serveur mysql */
+const QString user ="root";/**< nom utilisateur sur le server mysql */
+const QString password = "coucou256!";/**< mot de passe du serveur mysql */
+
+
 /**
  * @brief constructeur
  *
@@ -34,7 +41,8 @@ MainWindow::MainWindow(QWidget *parent)
     , min2()
     , m_minifilmMini(0)
     , m_minifilmMax(0)
-    , m_minifilmCount(0)
+    , m_minifilmCountLocal(0)
+    , m_minifilmCountOnline(0)
     , m_totalPage(0)
     , m_pageNumber(0)
     , ui(new Ui::MainWindow)
@@ -46,20 +54,19 @@ MainWindow::MainWindow(QWidget *parent)
     connect(&sql,SIGNAL(connected()),this,SLOT(status_dbConnectee()));
     connect(&sql,SIGNAL(disconnected()),this,SLOT(status_dbDeconnectee()));
     //on se connect a la db
-    sql.connection("dvdflix","127.0.0.1",3308,"root","coucou256!");															   
+    sql.connection(database,adress,port,user,password);
 }
 
 /**
  * @brief destructeur
+ *
+ * @todo supprimer les image qui ont été télécharger lors de la dernière recherche
  *
  */
 MainWindow::~MainWindow()
 {
     delete ui;
 }
-
-
-
 
 
 /**
@@ -80,11 +87,12 @@ void MainWindow::movieDlFinished()
 
 }
 /**
- * @fn on_btn_rechercher_clicked()
+ * @fn restoreValue()
  * @author: Mercier Laurent
  * @date 01/05/2020
  *
  * @brief restoration des membres à leur valeur initiales
+ * @todo verifier bug vidage de min1
  *
 */
 void MainWindow::restoreValue()
@@ -95,28 +103,25 @@ void MainWindow::restoreValue()
      //reset des divers membres utilisés
     m_minifilmMax=0;
     m_minifilmMini=0;
-    m_minifilmCount=0;
+    m_minifilmCountLocal=0;
+    m_minifilmCountOnline=0;
     m_totalPage=0;
     m_pageNumber=0;
     m_JsonSearch.clear();
-}
-/**
- * @fn on_btn_rechercher_clicked()
- * @author: Mercier Laurent
- * @date 07/04/2020
- *
- * @brief Lancement de la recherche en ligne a partir du titre du film
- *
-*/
-
-void MainWindow::on_btn_rechercher_clicked()
-{
-    restoreValue();
     //suppression du fichier saveMovies.json
     bool result = QFile::remove(directoryBase+"/saveMovies.json");
     //DEBUG
     //qWarning()<<"Suppression du fichier: "<<result;
-    //on vide le tableau de minifilm
+    //on vide le tableau de minifilm de resultat en local
+ /*   for(int i =0;i<150;i++){
+        if(min1[i]){
+            //DEBUG
+            qWarning()<<"vidage de min1 : "<<i;
+            min1[i]->~C_miniFilm();
+
+        }
+    }*/
+    //on vide le tableau de minifilm de resultat en ligne
     for(int i =0;i<150;i++){
         if(min2[i]){
             //DEBUG
@@ -125,11 +130,62 @@ void MainWindow::on_btn_rechercher_clicked()
 
         }
     }
+}
+/**
+ * @fn formatSearch()
+ * @author: Mercier Laurent
+ * @date 01/05/2020
+ *
+ * @brief replacement des espaces par des tirets dans le texte du control ln_titre
+ *
+ * @return QString
+*/
+QString MainWindow::formatSearch()
+{
+
+    QString recherche = ui->ln_titre->text();
+    int i=0;
+    do{
+        i =recherche.indexOf(" ",0);
+        recherche.replace(i,1,"-");
+        //DEBUG
+        //qWarning()<<recherche;
+    } while (i!=-1);
+    return recherche;
+}
+/**
+ * @fn on_btn_rechercher_clicked()
+ * @author: Mercier Laurent
+ * @date 07/04/2020
+ *
+ * @brief Lancement de la recherche en ligne a partir du titre du film
+ *
+ * @todo supprimer les image telechargées durant la dernière recherche
+ *
+*/
+
+void MainWindow::on_btn_rechercher_clicked()
+{
+    restoreValue();
+
+    //on vérifie que la db est bien connectée
+    if(m_DBState){
+        m_minifilmCountLocal= sql.filmCount(ui->lbl_titre->text());
+        for(int i = 0 ; i < m_minifilmCountLocal ; i++){
+         min1[i]=   sql.searchTitre(ui->lbl_titre->text());
+         min1[i]->setIcone(directoryBase+"/home.png");
+        }
+
+    }else
+    {
+      QMessageBox::warning(this,"Echec de connection","Echec de la connection à la base de données recherche locale impossible",QMessageBox::Ok);
+    }
+
 
     //DEBUG
     //qWarning()<<"ajout movie0.json a DL_MANAGER ok";
-    //on recupere la premiere page du film correspondant
-    m_dlmanager.append(QUrl::fromUserInput((m_dlmanager.formatUrl(ui->ln_titre->text()))),"movie0.json");
+    //on recupere la premiere page du film correspondant apres mise en forme du titre (remplacemant des espaces par de tirets)
+    m_dlmanager.append(QUrl::fromUserInput((m_dlmanager.formatUrl(formatSearch()))),"movie0.json");
     //DEBUG
     // qWarning()<<"connect au slot getpagenumber() ok";
     connect(&m_dlmanager,SIGNAL(emptyQueue()),SLOT(getPageNumberJson()));
@@ -188,7 +244,7 @@ void MainWindow::getPageNumberJson(){
     //on recupere le nombre de page pour le film recherché
     m_totalPage = JsonObj.value(QString("total_pages")).toInt();
     //on recupere le nombre de film total
-    m_minifilmCount=JsonObj.value(QString("total_results")).toInt();
+    m_minifilmCountOnline=JsonObj.value(QString("total_results")).toInt();
     //on telecharge les page suivante si il y en a
     //DEBUG
     //qWarning()<<"nombre total de film correspondant a la recherche:  "<< m_minifilmCount;
@@ -356,12 +412,14 @@ int counter = 0;
                 min2[counter]->setLanguage(child[j].toObject()["original_language"].toString());
                 min2[counter]->setTitreOri(child[j].toObject()["original_title"].toString());
                 min2[counter]->setBackdrop(child[j].toObject()["backdrop_path"].toString());
+                min2[counter]->setIcone(directoryBase+"/online.png");
                 QJsonArray genreArray = child[j].toObject()["genre_ids"].toArray();
 
                 //DEBUG
                 //qWarning()<<"genre array 0 : "<<genreArray[0].toInt();
                 int genreCode =genreArray[0].toInt();
                 QString  genrePrincipal = sql.getGenre(genreCode);
+
                 //DEBUG
                 //qWarning()<<"genre :" << genrePrincipal;
                  min2[counter]->setGenre(genrePrincipal);
@@ -423,8 +481,31 @@ bool MainWindow::createMinifilm(){
     }
    int filmCounter=0;
    int lastPage = 0;
-    //remplissage des page complet (10 minifilms)
-    for(int i = 0;i<m_minifilmCount/10 && i<200;i++){
+   //todo affichage des film locaux
+   //remplissage des page completes (10 minifilms)
+   for(int i = 0;i<m_minifilmCountLocal/10 && i<100;i++){
+       for(int j =0; j<2;j++){ //pour les lignes
+           for(int k =0; k<5; k++){ //pour les colones
+               min1[filmCounter]->addAffiche();
+               //DEBUG
+               qWarning()<<"titre database"<<min1[0]->getTitre();
+               grdt[i]->addWidget(min1[filmCounter],j,k);
+               filmCounter++;
+               lastPage =i+1;
+           }
+       }
+   }
+   for(int j =0; j<2;j++){ //pour les lignes
+       for(int k =0; k<5; k++){ //pour les colones
+           if(filmCounter <m_minifilmCountLocal){
+               min1[filmCounter]->addAffiche();
+               grdt[lastPage]->addWidget(min1[filmCounter],j,k);
+               filmCounter++;
+           }
+       }
+   }
+    //remplissage des page completes (10 minifilms)
+    for(int i = filmCounter;i<m_minifilmCountOnline/10 && i<100;i++){
         for(int j =0; j<2;j++){ //pour les lignes
             for(int k =0; k<5; k++){ //pour les colones
                 min2[filmCounter]->addAffiche();
@@ -436,7 +517,7 @@ bool MainWindow::createMinifilm(){
     }
     for(int j =0; j<2;j++){ //pour les lignes			   						  
         for(int k =0; k<5; k++){ //pour les colones
-            if(filmCounter <m_minifilmCount){
+            if(filmCounter <m_minifilmCountOnline){
                 min2[filmCounter]->addAffiche();
                 grdt[lastPage]->addWidget(min2[filmCounter],j,k);
                 filmCounter++;
@@ -454,6 +535,7 @@ bool MainWindow::createMinifilm(){
 void MainWindow::status_dbConnectee(){
     //DEBUG
     //qWarning()<<"connecté";
+    m_DBState=true;
     ui->lbl_db_status->setText("Database connectée");
 }
 /**
@@ -462,6 +544,7 @@ void MainWindow::status_dbConnectee(){
  */
 void MainWindow::status_dbDeconnectee(){
     QMessageBox::warning(this,"Echec de connection","Echec de la connection à la base de données",QMessageBox::Ok);
+    m_DBState = false;
     ui->lbl_db_status->setText("Database NON connectée");
     //DEBUG
     //qWarning()<<"non connecté";
@@ -494,7 +577,7 @@ void MainWindow::videLayout(QLayout *layout)
  * premiere ou la derniere page des résultat de recherche
  * */
 void MainWindow::getsion_prevNext_Btn(){
-    if(ui->dvdtek->currentIndex()>=m_minifilmCount/10){
+    if(ui->dvdtek->currentIndex()>=m_minifilmCountOnline/10){
         ui->btn_next->setEnabled(false);
     }else ui->btn_next->setEnabled(true);
     if(ui->dvdtek->currentIndex()==0){
@@ -513,7 +596,7 @@ void MainWindow::on_btn_next_clicked()
     //on passe a la page precedente du stackedWidget dvdtek
     ui->dvdtek->setCurrentIndex(ui->dvdtek->currentIndex()+1);
     //DEBUG
-    qWarning()<<"m_totalpage: "<<m_minifilmCount/10+1<<" curentindex: "<<ui->dvdtek->currentIndex();
+    qWarning()<<"m_totalpage: "<<m_minifilmCountOnline/10+1<<" curentindex: "<<ui->dvdtek->currentIndex();
     //on gere l'activiter des bouton
     getsion_prevNext_Btn();					   
 }
@@ -560,7 +643,7 @@ void MainWindow::on_rdb_rechLoc_toggled(bool checked)
 void MainWindow::on_rdb_rechDist_toggled(bool checked)
 {
     if(checked==true)
-    sql.connection("dvdflix","127.0.0.1",3308,"root","coucou256!");
+    sql.connection(database,adress,port,user,password);
     m_searchType=true;
 
 }

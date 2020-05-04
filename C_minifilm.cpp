@@ -9,7 +9,7 @@
  */
 C_miniFilm::C_miniFilm(QWidget *parent) :
     QWidget(parent)
-   , ui(new Ui::C_miniFilm),m_Affiche("")
+   , ui(new Ui::C_miniFilm),m_Affiche(""),m_Icone("")
 {
     ui->setupUi(this);
 }
@@ -74,6 +74,16 @@ QString C_miniFilm::getVote() const
 void C_miniFilm::setVote(const QString &vote)
 {
     m_vote = vote;
+}
+
+QString C_miniFilm::getDateEnr() const
+{
+    return m_date_enregistrement;
+}
+
+void C_miniFilm::setDateEnr(const QString &DateEnr)
+{
+    m_date_enregistrement = DateEnr;
 }
 
 /**
@@ -352,6 +362,20 @@ void C_miniFilm::setAffiche(QString img){
  */
 void C_miniFilm::addAffiche(){
     ui->lbl_affiche->setPixmap(m_Affiche);
+}
+
+void C_miniFilm::setIcone(QString img)
+{
+    m_Icone=img;
+    addIcone();
+}
+
+
+
+void C_miniFilm::addIcone()
+{
+
+    ui->lbl_ico->setPixmap(m_Icone);
 }
 
 /**

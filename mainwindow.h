@@ -87,23 +87,28 @@ private:
 
     C_MySQLManager sql;     /*!< objet gérant la partie Mysql */
     C_downloadmanager  m_dlmanager; /*!< objet gérant le tééléchargement des fichier sur la toile et l'enregistrement sur le hdd */
-    C_miniFilm *min2[200];   /*!< collection de minifiche après une recherche d'un film*/
-//    qint64 m_byteWrite;     /*!< contien la valeur des bytes écrit lors d'une écriture sur le disque dur (obsolète)*/
+    C_miniFilm *min2[150];   /*!< collection de minifiche après une recherche d'un film en ligne*/
+    C_miniFilm *min1[150];   /*!< collection de minifiche après une recherche d'un film en local*/
+    bool m_DBState;         /*!< flag de connection a la database Mysql */
     bool m_searchType;      /*!< definit le type de recherche true: locale et web; false: locale uniquement*/
     int m_minifilmMini;     /*!< numero minimum de la minifiche affichée   */
     int m_minifilmMax;      /*!< numero maximum de la minifiche affichée   */
-    int m_minifilmCount;    /*!< nombre de film pour la derniere recherche */
+    int m_minifilmCountLocal;    /*!< nombre de film pour la derniere recherche en local*/
+    int m_minifilmCountOnline;    /*!< nombre de film pour la derniere recherche en ligne*/
     int m_totalPage;        /*!< nombre total de page pour la recherche d'un film   */
-//    int m_fileType;         /*!< definit la connection a un slot donné en fonction de sa valeur (obsolète)*/
     int m_pageNumber;       /*!< stock le nombre de page deja telecharger lors d'un recherche contenant plusieurs pages*/
     QVector<QJsonObject> m_JsonSearch;  /*!< stockage des objet Json contenu dans les fichier telecharger lors d'une recherche de film avant concatenation*/
     QUrl url;
-//    QNetworkAccessManager qnam; /*!<  utiliser pour requete http d'une page unique (obsolète)*/
-//    QNetworkReply *reply;       /*!<  utiliser pour réponse a une requete http d'une page unique (obsolète)*/
-//    std::unique_ptr<QFile> file;/*!<  utiliser pour ecrire un fichier sur le hdd lors de la recherche d'une page unique (obsolete)*/
-//    bool httpRequestAborted;    /*!<  utiliser en cas d'annulation dune requete http lors de la recherche d'une page unique (osolete)*/
     Ui::MainWindow *ui;        /*!< interface graphique de la fenetre principale*/
-    void restoreValue();/*!< restore les valeurs des menbres concernant l'affichage des minifilm */
+    /**
+     * @brief restore les valeurs des menbres concernant l'affichage des minifilm
+     *
+     */
+    void restoreValue();
+    /**
+     * @brief vide le layout contenant les minifilm
+     *
+     */
     void videLayout(QLayout *layout);
     /**
      * @brief getion des boutons btn_prev et btn_next dans le cas on on affiche la
@@ -111,6 +116,12 @@ private:
      *
      */
     void getsion_prevNext_Btn();
+    /**
+     * @brief remplacement des espaces dans le tittre a rechercher par des tirets
+     *
+     * @return QString
+     */
+    QString formatSearch();
 
     /**
      * @brief

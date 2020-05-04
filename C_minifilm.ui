@@ -25,39 +25,58 @@
      <height>301</height>
     </rect>
    </property>
-   <layout class="QGridLayout" name="gridLayout" rowstretch="0,8,0,0,1,1" columnstretch="0,1,0">
+   <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0,0,0,0,0" columnstretch="0,0,0">
     <property name="verticalSpacing">
      <number>2</number>
     </property>
-    <item row="4" column="2" rowspan="2">
-     <widget class="QPushButton" name="btn_details">
-      <property name="text">
-       <string>Détails</string>
-      </property>
-     </widget>
-    </item>
-    <item row="4" column="1">
+    <item row="5" column="1">
      <widget class="QLabel" name="lbl_genre">
       <property name="text">
        <string>inconu</string>
       </property>
      </widget>
     </item>
-    <item row="5" column="1">
-     <widget class="QLabel" name="lbl_annee">
+    <item row="6" column="0">
+     <widget class="QLabel" name="lbl_T_annee">
       <property name="text">
-       <string>inconnue</string>
+       <string>Année:</string>
       </property>
      </widget>
     </item>
-    <item row="4" column="0">
-     <widget class="QLabel" name="lbl_T_genre">
+    <item row="1" column="2">
+     <widget class="QLabel" name="lbl_ico">
+      <property name="minimumSize">
+       <size>
+        <width>50</width>
+        <height>50</height>
+       </size>
+      </property>
       <property name="text">
-       <string>Genre:</string>
+       <string/>
+      </property>
+      <property name="scaledContents">
+       <bool>true</bool>
       </property>
      </widget>
     </item>
-    <item row="2" column="2">
+    <item row="5" column="2" rowspan="2">
+     <widget class="QPushButton" name="btn_details">
+      <property name="text">
+       <string>Détails</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0" rowspan="4" colspan="2">
+     <widget class="QLabel" name="lbl_affiche">
+      <property name="text">
+       <string>TextLabel</string>
+      </property>
+      <property name="scaledContents">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="2">
      <widget class="QLabel" name="lbl_T_note">
       <property name="font">
        <font>
@@ -69,13 +88,6 @@
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
-      </property>
-     </widget>
-    </item>
-    <item row="5" column="0">
-     <widget class="QLabel" name="lbl_T_annee">
-      <property name="text">
-       <string>Année:</string>
       </property>
      </widget>
     </item>
@@ -94,7 +106,7 @@
       </property>
      </widget>
     </item>
-    <item row="3" column="2">
+    <item row="4" column="2">
      <widget class="QLabel" name="lbl_note">
       <property name="font">
        <font>
@@ -109,7 +121,21 @@
       </property>
      </widget>
     </item>
-    <item row="1" column="2">
+    <item row="6" column="1">
+     <widget class="QLabel" name="lbl_annee">
+      <property name="text">
+       <string>inconnue</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="0">
+     <widget class="QLabel" name="lbl_T_genre">
+      <property name="text">
+       <string>Genre:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="2">
      <spacer name="verticalSpacer">
       <property name="orientation">
        <enum>Qt::Vertical</enum>
@@ -121,16 +147,6 @@
        </size>
       </property>
      </spacer>
-    </item>
-    <item row="1" column="0" rowspan="3" colspan="2">
-     <widget class="QLabel" name="lbl_affiche">
-      <property name="text">
-       <string>TextLabel</string>
-      </property>
-      <property name="scaledContents">
-       <bool>true</bool>
-      </property>
-     </widget>
     </item>
    </layout>
   </widget>

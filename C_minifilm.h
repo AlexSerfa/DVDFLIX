@@ -62,6 +62,9 @@ public:
     QString getAffiche();
     void addAffiche();
 
+    void setIcone(QString);
+    void addIcone();
+
     /**
      * @brief
      *
@@ -162,6 +165,9 @@ public:
     QString getVote() const;
     void setVote(const QString &vote);
 
+    QString getDateEnr() const;
+    void setDateEnr(const QString &DateEnr);
+
 private slots:
 
     /**
@@ -173,6 +179,7 @@ private slots:
 private:
     Ui::C_miniFilm *ui; /**< UI de la classeTODO: describe */
     QString m_Affiche; /**< nom du fichier de l'affiche du film */
+    QString m_Icone;
     QString m_notation; /**< note obtenue par le film */
     int  m_idLocal; /**< identifiant dans la database locale */
     bool m_adult;/**< fil madulte ou non */
@@ -188,7 +195,7 @@ private:
     QString m_release;/**< date de réalisation */
     QString m_video; /**< lien vers le trailer */
     QString m_vote; /**< nombre de vote */
-
+    QString m_date_enregistrement; /**< date d'enregistrement dans la base de données */
 
 
 };

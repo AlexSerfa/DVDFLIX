@@ -70,11 +70,13 @@ void C_MySQLManager::connection(QString db, QString adress, int port, QString us
  */
 QString C_MySQLManager::getGenre(int number){
     QSqlQuery requete;
-    if(requete.exec("SELECT nom FROM genre WHERE id="+QString::number(number))) {
-        //DEBUG 3l
+    if(requete.exec("SELECT * FROM genre WHERE id="+QString::number(number))) {
+        //DEBUG 4l
         qWarning()<<"req first:"<<requete.first();
+
         //qWarning()<<requete.lastInsertId().toString();
         //qDebug() << "Ok - requete";
+        qDebug() <<"requete value0: "<<(requete.value("nom")).toString();
             return QVariant(requete.value("nom")).toString();
     }
     return "Inconnu";
@@ -86,6 +88,63 @@ QString C_MySQLManager::getGenre(int number){
 void C_MySQLManager::deconnection(){
     m_dvdDB.close();
     emit disconnected();
+}
+/**
+ * @brief recherche le nombre de film corrrespondant au texte entré la recherche dans la fenetre principale et retourne les info contenues dans la db après création d'un C_miniFilm
+ *
+ * @return int
+ */
+int C_MySQLManager::filmCount(QString titre)
+{
+    int result=0;
+    QSqlQuery requete;
+
+    if(requete.exec("SELECT * FROM film WHERE titre="+titre)){
+        if (requete.next()) {
+               result= requete.value(0).toInt();
+               //DEBUG
+               qWarning()<<"filmCount db: "<<result;
+        }
+    }
+    return result;
+
+}
+/**
+ * @brief recherche les titres corrrespondant au texte entré la recherche dans la fenetre principale et retourne les info contenues dans la db après création d'un C_miniFilm
+ *
+ * @return C_miniFilm*
+ */
+C_miniFilm* C_MySQLManager::searchTitre(QString titre)
+{
+    C_miniFilm *film = new C_miniFilm();
+    QSqlQuery requete;
+    if(requete.exec("SELECT * FROM film WHERE titre="+titre)){
+        while(requete.next()){
+            film->setTitre(requete.value("titre").toString());
+            //DEBUG
+            qWarning()<<"erquete titre: "<<requete.value(1).toString();
+            film->setPop(requete.value(13).toString());
+            film->setAdult(requete.value(2).toBool());
+            film->setNote(requete.value(11).toString());
+            film->setVote(requete.value(12).toString());
+            film->setAnnee(requete.value(9).toString());
+            film->setResum(requete.value(4).toString());
+            film->setVideo(requete.value(10).toString());
+            film->setAffiche(requete.value(5).toString());
+            film->setBackdrop(requete.value(6).toString());
+            film->setIdLocal(requete.value(0).toInt());
+            film->setId_online(requete.value(14).toInt());
+            film->setLanguage(requete.value(8).toString());
+            film->setTitreOri(requete.value(7).toString());
+            film->setDateEnr(requete.value(15).toString());
+
+
+
+
+
+        }
+    }
+    return film;
 }
 /**
  * @brief retourne le noom de la database

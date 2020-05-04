@@ -2,6 +2,9 @@
 #include "ui_C_details.h"
 
 /**
+ * @fn on_btn_rechercher_clicked()
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief constructeur
  *
  * @param parent
@@ -16,6 +19,9 @@ C_details::C_details(QWidget *parent) :
 }
 
 /**
+ * @fn on_btn_rechercher_clicked()
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief destructeur
  *
  */
@@ -25,6 +31,9 @@ C_details::~C_details()
 }
 
 /**
+ * @fn on_btn_rechercher_clicked()
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief stockage du nom du fichier le l'affiche
  *
  * @param affiche
@@ -34,6 +43,9 @@ void C_details::addAffiche(QString affiche)
     m_affiche=affiche;
 }
 /**
+ * @fn on_btn_rechercher_clicked()
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief affichage de l'affiche
  *
  * @param picture
@@ -46,6 +58,9 @@ void C_details::addAffichePicture(QPixmap( picture)){
 }
 
 /**
+ * @fn on_btn_rechercher_clicked()
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief affichage du titre original
  *
  * @param titreOri
@@ -56,6 +71,9 @@ void C_details::addTitreOri(QString titreOri)
 }
 
 /**
+ * @fn on_btn_rechercher_clicked()
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief affichage de la langue du film
  *
  * @param language
@@ -66,6 +84,9 @@ void C_details::addLanguage(QString language)
 }
 
 /**
+ * @fn on_btn_rechercher_clicked()
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief affichage de l'arrière de la jacquette
  *
  * @param picture
@@ -78,6 +99,9 @@ void C_details::addBackdropPicture(QPixmap picture)
 }
 
 /**
+ * @fn on_btn_rechercher_clicked()
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief stockage du nom  du fichier de l'image de l'arrière de la jacquette
  *
  * @param backdrop
@@ -88,6 +112,9 @@ void C_details::addBackdrop(QString backdrop)
 }
 
 /**
+ * @fn on_btn_rechercher_clicked()
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief affichage de film adulte ou non
  *
  * @param adult
@@ -98,6 +125,9 @@ void C_details::addAdult(QString adult)
 }
 
 /**
+ * @fn on_btn_rechercher_clicked()
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief affichage de la note obtenue par le film
  *
  * @param note
@@ -108,6 +138,9 @@ void C_details::addNote(QString note)
 }
 
 /**
+ * @fn on_btn_rechercher_clicked()
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief affichage du nombre de vote
  *
  * @param vote
@@ -118,6 +151,9 @@ void C_details::addVote(QString vote)
 }
 
 /**
+ * @fn on_btn_rechercher_clicked()
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief affichage des genres du film et ajout du genre passé en paramètre a un QVector
  *
  * @param genre
@@ -129,6 +165,9 @@ void C_details::addGenre(QString genre)
 }
 
 /**
+ * @fn on_btn_rechercher_clicked()
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief date de réalisation du film
  *
  * @param date
@@ -139,6 +178,9 @@ void C_details::addDateReal(QString date)
 }
 
 /**
+ * @fn on_btn_rechercher_clicked()
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief affichage de l'id mondial du film
  *
  * @param id
@@ -149,6 +191,9 @@ void C_details::addIdDistant(int id)
 }
 
 /**
+ * @fn on_btn_rechercher_clicked()
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief affichage de l'id local du film en database
  *
  * @param id
@@ -158,6 +203,9 @@ void C_details::addIdLocal(int id)
     ui->txt_id_local->setText(QString::number(id));
 }
 /**
+ * @fn on_btn_rechercher_clicked()
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief affichage du resumél du film
  *
  * @param resum
@@ -173,6 +221,9 @@ void C_details::addVideo(QString video)
 }
 
 /**
+ * @fn on_btn_rechercher_clicked()
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief affichage du titre du film
  *
  * @param titre
@@ -183,6 +234,9 @@ void C_details::addTitre(QString titre)
 }
 
 /**
+ * @fn on_btn_rechercher_clicked()
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief active les controle pour modification des information du film avant enregistrement en database
  *
  */

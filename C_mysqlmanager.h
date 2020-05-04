@@ -3,6 +3,7 @@
 #include <QtCore>
 #include <QSql>
 #include <QSqlDatabase>
+#include <C_minifilm.h>
 /**
  * @brief
  *
@@ -33,6 +34,7 @@ public:
      *
      */
     void deconnection();
+    C_miniFilm  * searchTitre(QString titre);
     /**
      * @brief
      *
@@ -70,6 +72,13 @@ public:
      * @return QString
      */
     QString getGenre(int);
+    /**
+     * @brief recherche le nombre de film corrrespondant au texte entré la recherche dans la fenetre principale et retourne les info contenues dans la db après création d'un C_miniFilm
+     *
+     * @param QString
+     * @return int
+     */
+    int filmCount(QString titre);
 signals:
     /**
      * @brief
@@ -83,6 +92,7 @@ signals:
     void disconnected();
 
 private:
+
     QSqlDatabase m_dvdDB; /**< database objet */
     QString m_db; /**< nom de la db */
     QString m_adress; /**< adresse de la db */
