@@ -21,14 +21,16 @@ SOURCES += \
     C_minifilm.cpp \
     C_mysqlmanager.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    testclasse.cpp
 
 HEADERS += \
     C_details.h \
     C_downloadmanager.h \
     C_minifilm.h \
     C_mysqlmanager.h \
-    mainwindow.h
+    mainwindow.h \
+    testclasse.h
 
 FORMS += \
     C_details.ui \
