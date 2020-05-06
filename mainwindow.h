@@ -95,7 +95,9 @@ private:
     int m_minifilmMax;      /*!< numero maximum de la minifiche affichée   */
     int m_minifilmCountLocal;    /*!< nombre de film pour la derniere recherche en local*/
     int m_minifilmCountOnline;    /*!< nombre de film pour la derniere recherche en ligne*/
+    int m_minifilmCount=0;
     int m_totalPage;        /*!< nombre total de page pour la recherche d'un film   */
+    int m_filmCounterTotal; /*!< nombre total de film retrourner lors d'un recherche local et en ligne */
     int m_pageNumber;       /*!< stock le nombre de page deja telecharger lors d'un recherche contenant plusieurs pages*/
     QVector<QJsonObject> m_JsonSearch;  /*!< stockage des objet Json contenu dans les fichier telecharger lors d'une recherche de film avant concatenation*/
     QUrl url;

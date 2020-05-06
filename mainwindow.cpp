@@ -172,9 +172,11 @@ void MainWindow::on_btn_rechercher_clicked()
     if(m_DBState){
         m_minifilmCountLocal= sql.filmCount(ui->lbl_titre->text());
         for(int i = 0 ; i < m_minifilmCountLocal ; i++){
-         min1[i]=   sql.searchTitre(ui->lbl_titre->text());
-         min1[i]->setIcone(directoryBase+"/home.png");
+         min2[i]=   sql.searchTitre(ui->lbl_titre->text());
+         min2[i]->setIcone(directoryBase+"/home.png");
+
         }
+         m_filmCounterTotal =m_minifilmCountLocal;
 
     }else
     {
@@ -384,7 +386,7 @@ void MainWindow::readJson()
 
 
 //boucle créant les miniature pour chaque film dans le json movie.json
-int counter = 0;
+int counter = m_filmCounterTotal ;
       for(int i =0 ; i<arry.count();i++)
       {
           QJsonArray child =arry[i].toArray();
@@ -479,48 +481,50 @@ bool MainWindow::createMinifilm(){
     for(int i = 0 ; i<21; i++){
         videLayout(grdt[i]);
     }
+
    int filmCounter=0;
+   int filmcounterLocal=0;
    int lastPage = 0;
-   //todo affichage des film locaux
-   //remplissage des page completes (10 minifilms)
-   for(int i = 0;i<m_minifilmCountLocal/10 && i<100;i++){
-       for(int j =0; j<2;j++){ //pour les lignes
-           for(int k =0; k<5; k++){ //pour les colones
-               min1[filmCounter]->addAffiche();
-               //DEBUG
-               qWarning()<<"titre database"<<min1[0]->getTitre();
-               grdt[i]->addWidget(min1[filmCounter],j,k);
-               filmCounter++;
-               lastPage =i+1;
-           }
-       }
-   }
-   for(int j =0; j<2;j++){ //pour les lignes
-       for(int k =0; k<5; k++){ //pour les colones
-           if(filmCounter <m_minifilmCountLocal){
-               min1[filmCounter]->addAffiche();
-               grdt[lastPage]->addWidget(min1[filmCounter],j,k);
-               filmCounter++;
-           }
-       }
-   }
+   int totalResult= m_minifilmCountLocal+m_minifilmCountOnline;
+
     //remplissage des page completes (10 minifilms)
-    for(int i = filmCounter;i<m_minifilmCountOnline/10 && i<100;i++){
+    for(int i = filmCounter;i<totalResult/10 && i<150;i++){
         for(int j =0; j<2;j++){ //pour les lignes
             for(int k =0; k<5; k++){ //pour les colones
-                min2[filmCounter]->addAffiche();
-                grdt[i]->addWidget(min2[filmCounter],j,k);
-                filmCounter++;
-                lastPage =i+1;
+                if (filmCounter<filmcounterLocal){
+                    qWarning()<<"titre local(10)"<<min1[filmCounter]->getTitre();
+                    min1[filmCounter]->addAffiche();
+                    grdt[i]->addWidget(min1[filmCounter],j,k);
+                    filmCounter++;
+                    lastPage =i+1;
+                }else{
+                    //DEBUG
+                    qWarning()<<"titre online(10)"<<min2[filmCounter]->getTitre();
+                    min2[filmCounter]->addAffiche();
+                    grdt[i]->addWidget(min2[filmCounter],j,k);
+                    filmCounter++;
+                    lastPage =i+1;
+                }
             }
         }							   
     }
-    for(int j =0; j<2;j++){ //pour les lignes			   						  
+    for(int j =0; j<2;j++){ //pour les lignes
         for(int k =0; k<5; k++){ //pour les colones
             if(filmCounter <m_minifilmCountOnline){
-                min2[filmCounter]->addAffiche();
-                grdt[lastPage]->addWidget(min2[filmCounter],j,k);
-                filmCounter++;
+                if (filmCounter<filmcounterLocal){
+                    //DEBUG
+                    qWarning()<<"titre online(<10)"<<min1[filmCounter]->getTitre();
+                    min1[filmCounter]->addAffiche();
+                    grdt[lastPage]->addWidget(min1[filmCounter],j,k);
+                    filmCounter++;
+                }else{
+                    //DEBUG
+                    qWarning()<<"titre online(<10)"<<min2[filmCounter]->getTitre();
+                    min2[filmCounter]->addAffiche();
+                    grdt[lastPage]->addWidget(min2[filmCounter],j,k);
+                    filmCounter++;
+
+                }
             }						
         }
     }
