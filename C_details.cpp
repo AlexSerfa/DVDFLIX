@@ -1,8 +1,19 @@
 #include "C_details.h"
 #include "ui_C_details.h"
+#include <C_mysqlmanager.h>
+#include <C_minifilm.h>
+
+
+const QString database = "dvdflix";/**< nom de la base de donnée */
+const QString adress = "127.0.0.1";/**< adresse du serveur mysql */
+const int port = 3308;/**< port du serveur mysql */
+const QString user ="root";/**< nom utilisateur sur le server mysql */
+const QString password = "coucou256!";/**< mot de passe du serveur mysql */
 
 /**
- * @fn on_btn_rechercher_clicked()
+ * @fn C_details(QWidget *parent) :
+    QWidget(parent),
+    ui(new Ui::C_details)
  * @author: Mercier Laurent
  * @date 01/05/2020
  * @brief constructeur
@@ -19,7 +30,7 @@ C_details::C_details(QWidget *parent) :
 }
 
 /**
- * @fn on_btn_rechercher_clicked()
+ * @fn ~C_details()
  * @author: Mercier Laurent
  * @date 01/05/2020
  * @brief destructeur
@@ -29,9 +40,13 @@ C_details::~C_details()
 {
     delete ui;
 }
+void C_details::setFilm(C_miniFilm &film){
+    m_film = &film;
+}
+
 
 /**
- * @fn on_btn_rechercher_clicked()
+ * @fn addAffiche(QString affiche)
  * @author: Mercier Laurent
  * @date 01/05/2020
  * @brief stockage du nom du fichier le l'affiche
@@ -43,7 +58,7 @@ void C_details::addAffiche(QString affiche)
     m_affiche=affiche;
 }
 /**
- * @fn on_btn_rechercher_clicked()
+ * @fn addAffichePicture(QPixmap( picture))
  * @author: Mercier Laurent
  * @date 01/05/2020
  * @brief affichage de l'affiche
@@ -58,7 +73,7 @@ void C_details::addAffichePicture(QPixmap( picture)){
 }
 
 /**
- * @fn on_btn_rechercher_clicked()
+ * @fnaddTitreOri(QString titreOri)
  * @author: Mercier Laurent
  * @date 01/05/2020
  * @brief affichage du titre original
@@ -71,7 +86,7 @@ void C_details::addTitreOri(QString titreOri)
 }
 
 /**
- * @fn on_btn_rechercher_clicked()
+ * @fn addLanguage(QString language)
  * @author: Mercier Laurent
  * @date 01/05/2020
  * @brief affichage de la langue du film
@@ -84,7 +99,7 @@ void C_details::addLanguage(QString language)
 }
 
 /**
- * @fn on_btn_rechercher_clicked()
+ * @fn addBackdropPicture(QPixmap picture)
  * @author: Mercier Laurent
  * @date 01/05/2020
  * @brief affichage de l'arrière de la jacquette
@@ -99,7 +114,7 @@ void C_details::addBackdropPicture(QPixmap picture)
 }
 
 /**
- * @fn on_btn_rechercher_clicked()
+ * @fn addBackdrop(QString backdrop)
  * @author: Mercier Laurent
  * @date 01/05/2020
  * @brief stockage du nom  du fichier de l'image de l'arrière de la jacquette
@@ -112,7 +127,7 @@ void C_details::addBackdrop(QString backdrop)
 }
 
 /**
- * @fn on_btn_rechercher_clicked()
+ * @fn addAdult(QString adult)
  * @author: Mercier Laurent
  * @date 01/05/2020
  * @brief affichage de film adulte ou non
@@ -125,7 +140,7 @@ void C_details::addAdult(QString adult)
 }
 
 /**
- * @fn on_btn_rechercher_clicked()
+ * @fn addNote(QString note)
  * @author: Mercier Laurent
  * @date 01/05/2020
  * @brief affichage de la note obtenue par le film
@@ -138,7 +153,7 @@ void C_details::addNote(QString note)
 }
 
 /**
- * @fn on_btn_rechercher_clicked()
+ * @fn addVote(QString vote)
  * @author: Mercier Laurent
  * @date 01/05/2020
  * @brief affichage du nombre de vote
@@ -151,7 +166,7 @@ void C_details::addVote(QString vote)
 }
 
 /**
- * @fn on_btn_rechercher_clicked()
+ * @fn addGenre(QString genre)
  * @author: Mercier Laurent
  * @date 01/05/2020
  * @brief affichage des genres du film et ajout du genre passé en paramètre a un QVector
@@ -165,7 +180,7 @@ void C_details::addGenre(QString genre)
 }
 
 /**
- * @fn on_btn_rechercher_clicked()
+ * @fn addDateReal(QString date)
  * @author: Mercier Laurent
  * @date 01/05/2020
  * @brief date de réalisation du film
@@ -178,7 +193,7 @@ void C_details::addDateReal(QString date)
 }
 
 /**
- * @fn on_btn_rechercher_clicked()
+ * @fn addIdDistant(int id)
  * @author: Mercier Laurent
  * @date 01/05/2020
  * @brief affichage de l'id mondial du film
@@ -191,7 +206,7 @@ void C_details::addIdDistant(int id)
 }
 
 /**
- * @fn on_btn_rechercher_clicked()
+ * @fn addIdLocal(int id)
  * @author: Mercier Laurent
  * @date 01/05/2020
  * @brief affichage de l'id local du film en database
@@ -203,7 +218,7 @@ void C_details::addIdLocal(int id)
     ui->txt_id_local->setText(QString::number(id));
 }
 /**
- * @fn on_btn_rechercher_clicked()
+ * @fn addResum(QString resum)
  * @author: Mercier Laurent
  * @date 01/05/2020
  * @brief affichage du resumél du film
@@ -220,8 +235,21 @@ void C_details::addVideo(QString video)
     m_video=video;
 }
 
+void C_details::addDispo(QString icone)
+{
+    ui->lbl_dispo->setPixmap(icone);
+}
+
+void C_details::setLocal(bool value)
+{
+    m_local = value;
+    if(value){
+        ui->btn_enregistrer->setEnabled(false);
+    }
+}
+
 /**
- * @fn on_btn_rechercher_clicked()
+ * @fn addTitre(QString titre)
  * @author: Mercier Laurent
  * @date 01/05/2020
  * @brief affichage du titre du film
@@ -234,7 +262,7 @@ void C_details::addTitre(QString titre)
 }
 
 /**
- * @fn on_btn_rechercher_clicked()
+ * @fn on_btn_modifier_clicked()
  * @author: Mercier Laurent
  * @date 01/05/2020
  * @brief active les controle pour modification des information du film avant enregistrement en database
@@ -248,5 +276,41 @@ void C_details::on_btn_modifier_clicked()
     ui->txt_resum->setEnabled(true);
     ui->txt_langue->setEnabled(true);
     ui->chk_soustitre->setEnabled(true);
+    if(m_local){
+        ui->btn_enregistrer->setEnabled(true);
+    }
 
+}
+C_miniFilm & C_details::getFilm()
+{
+    return   *m_film;
+}
+void C_details::on_btn_enregistrer_clicked()
+{
+        qWarning()<<"debut 1";
+    sql =new C_MySQLManager();
+        qWarning()<<"debut 2";
+    sql->connection(database,adress,port,user,password);
+    qWarning()<<"debut 3";
+//sql->setFilm(getFilm());
+    sql->saveFilm(getFilm());
+
+       /*      m_film->getTitre(),
+             m_film->getAdult(),
+             m_film->getResum(),
+             m_film->getAffiche(),
+             m_film->getBackdrop(),
+             m_film->getTitreOri(),
+             m_film->getLanguage(),
+             m_film->getRelease(),
+             m_film->getVideo(),
+             m_film->getNote(),
+             m_film->getVote(),
+             m_film->getPop(),
+             m_film->getId_online(),
+             "NULL",
+             "NULL"
+             );*/
+
+    qWarning()<<"fin";
 }

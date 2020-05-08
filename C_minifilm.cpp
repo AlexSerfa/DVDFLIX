@@ -9,7 +9,7 @@
  */
 C_miniFilm::C_miniFilm(QWidget *parent) :
     QWidget(parent)
-   , ui(new Ui::C_miniFilm),m_Affiche(""),m_Icone("")
+   , ui(new Ui::C_miniFilm),m_Affiche(""),m_Icone(""),m_local(false)
 {
     ui->setupUi(this);
 }
@@ -49,6 +49,9 @@ void C_miniFilm::on_btn_details_clicked()
  detail->addLanguage(m_language);
  detail->addTitreOri(m_titreOri);
  detail->addIdDistant(m_id_online);
+ detail->addDispo(m_Icone);
+ detail->setLocal(m_local);
+ detail->setFilm(*this);
 
  /**
   * @TODO gérer le passage de la backdrop après téléchargement de l'image
@@ -84,6 +87,16 @@ QString C_miniFilm::getDateEnr() const
 void C_miniFilm::setDateEnr(const QString &DateEnr)
 {
     m_date_enregistrement = DateEnr;
+}
+
+void C_miniFilm::setLocal(bool value)
+{
+    m_local=value;
+}
+
+bool C_miniFilm::getLocal() const
+{
+    return m_local;
 }
 
 /**
@@ -369,7 +382,10 @@ void C_miniFilm::setIcone(QString img)
     m_Icone=img;
     addIcone();
 }
-
+QString C_miniFilm::getIcone()
+{
+        return m_Icone;
+}
 
 
 void C_miniFilm::addIcone()

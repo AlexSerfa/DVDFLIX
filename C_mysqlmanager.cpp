@@ -6,6 +6,10 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QPluginLoader>
+
+const QString directoryBase= "d:/tempo68"; /**< chemin du dossier de stockage */
+
+
 /**
  * @brief constructeur
  *
@@ -13,6 +17,7 @@
  */
 C_MySQLManager::C_MySQLManager(QObject *parent)
     : QObject(parent)
+        , min1()
 {
 
 }
@@ -40,7 +45,7 @@ void C_MySQLManager::connection(QString db, QString adress, int port, QString us
         emit connected();
         // Exécution d'une requête
         QSqlQuery requete;
-        if(requete.exec("SELECT * FROM genre")) {
+     /*   if(requete.exec("SELECT * FROM genre")) {
             //DEBUG
             //qDebug() << "Ok - requete";
 
@@ -54,7 +59,7 @@ void C_MySQLManager::connection(QString db, QString adress, int port, QString us
         else {
             // afficher un message explicite sur les causes de l'erreur
             qDebug() << requete.lastError();
-        }
+        }*/
     }
     else {
         emit disconnected();
@@ -62,6 +67,7 @@ void C_MySQLManager::connection(QString db, QString adress, int port, QString us
         qDebug() << m_dvdDB.lastError();
     }
 }
+
 /**
  * @brief recupère le genre de film d'apres le code genre
  *
@@ -109,42 +115,107 @@ int C_MySQLManager::filmCount(QString titre)
     return result;
 
 }
+void  C_MySQLManager::resetResultCounter()
+{
+    m_resultCounter=0;
+}
+
+void C_MySQLManager::videMinifilm()
+{
+    //on vide le tableau de minifilm de resultat en local
+    for(int i =0;i<150;i++){
+        if(min1[i]){
+            //DEBUG
+            qWarning()<<"vidage de min1 : "<<i;
+            min1[i]->~C_miniFilm();
+
+        }
+    }
+}
+int C_MySQLManager::getFilmCount()
+{
+    return m_resultCounter;
+}
 /**
  * @brief recherche les titres corrrespondant au texte entré la recherche dans la fenetre principale et retourne les info contenues dans la db après création d'un C_miniFilm
  *
  * @return C_miniFilm*
  */
-C_miniFilm* C_MySQLManager::searchTitre(QString titre)
+void C_MySQLManager::searchTitre(QString titre)
 {
     C_miniFilm *film = new C_miniFilm();
+    int i=0;
     QSqlQuery requete;
     if(requete.exec("SELECT * FROM film WHERE titre="+titre)){
         while(requete.next()){
+            m_resultCounter++;
             film->setTitre(requete.value("titre").toString());
             //DEBUG
             qWarning()<<"erquete titre: "<<requete.value(1).toString();
-            film->setPop(requete.value(13).toString());
-            film->setAdult(requete.value(2).toBool());
-            film->setNote(requete.value(11).toString());
-            film->setVote(requete.value(12).toString());
-            film->setAnnee(requete.value(9).toString());
-            film->setResum(requete.value(4).toString());
-            film->setVideo(requete.value(10).toString());
-            film->setAffiche(requete.value(5).toString());
-            film->setBackdrop(requete.value(6).toString());
-            film->setIdLocal(requete.value(0).toInt());
-            film->setId_online(requete.value(14).toInt());
-            film->setLanguage(requete.value(8).toString());
-            film->setTitreOri(requete.value(7).toString());
-            film->setDateEnr(requete.value(15).toString());
-
-
-
-
+            C_miniFilm *min3 =new C_miniFilm();
+             //ajout de la fiche a la colletion
+            min1[i] =min3;
+            min1[i]->setIdLocal(requete.value(0).toInt());
+            min1[i]->setTitre(requete.value(1).toString());
+            min1[i]->setAdult(requete.value(2).toBool());
+            min1[i]->setResum(requete.value(3).toString());
+            min1[i]->setAffiche(requete.value(4).toString());
+            min1[i]->setBackdrop(requete.value(5).toString());
+            min1[i]->setTitreOri(requete.value(6).toString());
+            min1[i]->setLanguage(requete.value(7).toString());
+            min1[i]->setAnnee(requete.value(8).toString());
+            min1[i]->setVideo(requete.value(9).toString());
+            min1[i]->setNote(requete.value(10).toString());
+            min1[i]->setVote(requete.value(11).toString());
+            min1[i]->setPop(requete.value(12).toString());
+            min1[i]->setId_online(requete.value(13).toInt());
+            min1[i]->setDateEnr(requete.value(14).toString());
+            min1[i]->setIcone(directoryBase+"/home.png");
+            min1[i]->addIcone();
+            min1[i]->setLocal(true);
+            i++;
 
         }
     }
-    return film;
+
+}
+/*void C_MySQLManager::setFilm(C_miniFilm & film)
+{
+  //  m_film =film;
+}*/
+//bool C_MySQLManager::saveFilm(QString titre,bool adult, QString resum,QString affiche,QString back,QString titreOri,QString lang,QString date_real,QString video, QString note, QString vote, QString pop,int id_online,QString date_enreg, QString stockage)
+bool C_MySQLManager::saveFilm(C_miniFilm &film)
+{
+    bool result  =false;
+    QDate dateR;
+    dateR= QDate::fromString(film.getRelease());
+            qWarning()<<"date: "<< film.getRelease();
+        qWarning()<<"date: "<< QDate::fromString(film.getRelease());
+    qWarning()<<"date: "<< dateR;
+    QSqlQuery requete;
+
+    requete.prepare("INSERT INTO `film` (`ID`, `titre`, `adulte`, `resume`, `poster_path`, `backdrop`, `titre_origin`, `langue`, `date_real`, `video`, `note`, `vote_count`, `popularity`, `id_film`, `date_enr`, `stockage`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+            requete.addBindValue(NULL); //ID
+            requete.addBindValue(film.getTitre());//titre
+            requete.addBindValue(film.getAdult());//adulte
+            requete.addBindValue(film.getResum());//resume
+            requete.addBindValue(film.getAffiche());//poster_path
+            requete.addBindValue(film.getBackdrop());//backdrop
+            requete.addBindValue(film.getTitreOri());//titreOri
+            requete.addBindValue(film.getLanguage());//language
+            requete.addBindValue(dateR);//date_real
+            requete.addBindValue(film.getVideo());//video
+            requete.addBindValue(film.getNote());//note
+            requete.addBindValue(film.getVote());//vote_couunt
+            requete.addBindValue(film.getPop());//popularity
+            requete.addBindValue(film.getId_online());//id_film
+            requete.addBindValue(NULL);
+            requete.addBindValue(NULL);
+            qWarning()<<"requete execution";
+            requete.exec();
+            qWarning()<<"requete erreur"<<requete.lastError();
+    return result;
+
 }
 /**
  * @brief retourne le noom de la database

@@ -62,6 +62,7 @@ public:
     QString getAffiche();
     void addAffiche();
 
+    QString getIcone();
     void setIcone(QString);
     void addIcone();
 
@@ -168,6 +169,9 @@ public:
     QString getDateEnr() const;
     void setDateEnr(const QString &DateEnr);
 
+    void setLocal(bool value);
+    bool getLocal() const;
+
 private slots:
 
     /**
@@ -196,6 +200,7 @@ private:
     QString m_video; /**< lien vers le trailer */
     QString m_vote; /**< nombre de vote */
     QString m_date_enregistrement; /**< date d'enregistrement dans la base de données */
+    bool m_local; /**< flag de film deja possédé*/
 
 
 };

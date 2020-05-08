@@ -12,6 +12,7 @@ class C_MySQLManager: public QObject
 {
     Q_OBJECT
 public:
+     C_miniFilm *min1[150];   /*!< collection de minifiche après une recherche d'un film en local*/
     /**
      * @brief
      *
@@ -34,7 +35,7 @@ public:
      *
      */
     void deconnection();
-    C_miniFilm  * searchTitre(QString titre);
+   void searchTitre(QString titre);
     /**
      * @brief
      *
@@ -79,6 +80,10 @@ public:
      * @return int
      */
     int filmCount(QString titre);
+    int getFilmCount();
+    void resetResultCounter();
+    void videMinifilm();
+bool saveFilm(C_miniFilm  &film);
 signals:
     /**
      * @brief
@@ -91,7 +96,9 @@ signals:
      */
     void disconnected();
 
+//void setFilm(C_miniFilm  &film);
 private:
+
 
     QSqlDatabase m_dvdDB; /**< database objet */
     QString m_db; /**< nom de la db */
@@ -99,6 +106,7 @@ private:
     int m_port; /**< port de la db */
     QString m_user; /**< nom de l'utilisteur de la db */
     QString m_password; /**< password de la db */
+    int m_resultCounter=0;
     /**
      * @brief
      *

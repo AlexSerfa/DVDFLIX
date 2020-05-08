@@ -112,15 +112,7 @@ void MainWindow::restoreValue()
     bool result = QFile::remove(directoryBase+"/saveMovies.json");
     //DEBUG
     //qWarning()<<"Suppression du fichier: "<<result;
-    //on vide le tableau de minifilm de resultat en local
- /*   for(int i =0;i<150;i++){
-        if(min1[i]){
-            //DEBUG
-            qWarning()<<"vidage de min1 : "<<i;
-            min1[i]->~C_miniFilm();
-
-        }
-    }*/
+  sql.videMinifilm();
     //on vide le tableau de minifilm de resultat en ligne
     for(int i =0;i<150;i++){
         if(min2[i]){
@@ -130,6 +122,8 @@ void MainWindow::restoreValue()
 
         }
     }
+    //on reset le compteur de resultat de la derniere recherche en local
+    sql.resetResultCounter();
 }
 /**
  * @fn formatSearch()
@@ -171,13 +165,14 @@ void MainWindow::on_btn_rechercher_clicked()
     //on vérifie que la db est bien connectée
     if(m_DBState){
         m_minifilmCountLocal= sql.filmCount(ui->lbl_titre->text());
-        for(int i = 0 ; i < m_minifilmCountLocal ; i++){
-         min2[i]=   sql.searchTitre(ui->lbl_titre->text());
-         min2[i]->setIcone(directoryBase+"/home.png");
 
-        }
-         m_filmCounterTotal =m_minifilmCountLocal;
 
+
+         sql.searchTitre(ui->lbl_titre->text());
+         m_minifilmCountLocal = sql.getFilmCount();
+         //DEBUG
+         qWarning()<<" m_minifilmCountLocal :"<<m_minifilmCountLocal;
+  //     min2[h]->setIcone(directoryBase+"/home.png");
     }else
     {
       QMessageBox::warning(this,"Echec de connection","Echec de la connection à la base de données recherche locale impossible",QMessageBox::Ok);
@@ -386,7 +381,7 @@ void MainWindow::readJson()
 
 
 //boucle créant les miniature pour chaque film dans le json movie.json
-int counter = m_filmCounterTotal ;
+int counter =0 ;
       for(int i =0 ; i<arry.count();i++)
       {
           QJsonArray child =arry[i].toArray();
@@ -415,6 +410,7 @@ int counter = m_filmCounterTotal ;
                 min2[counter]->setTitreOri(child[j].toObject()["original_title"].toString());
                 min2[counter]->setBackdrop(child[j].toObject()["backdrop_path"].toString());
                 min2[counter]->setIcone(directoryBase+"/online.png");
+                min2[counter]->setLocal(false);
                 QJsonArray genreArray = child[j].toObject()["genre_ids"].toArray();
 
                 //DEBUG
@@ -483,7 +479,9 @@ bool MainWindow::createMinifilm(){
     }
 
    int filmCounter=0;
-   int filmcounterLocal=0;
+
+   //DEBUG
+   qWarning()<<"resultat local nb: "<<  m_minifilmCountLocal;
    int lastPage = 0;
    int totalResult= m_minifilmCountLocal+m_minifilmCountOnline;
 
@@ -491,31 +489,31 @@ bool MainWindow::createMinifilm(){
     for(int i = filmCounter;i<totalResult/10 && i<150;i++){
         for(int j =0; j<2;j++){ //pour les lignes
             for(int k =0; k<5; k++){ //pour les colones
-                if (filmCounter<filmcounterLocal){
-                    qWarning()<<"titre local(10)"<<min1[filmCounter]->getTitre();
-                    min1[filmCounter]->addAffiche();
-                    grdt[i]->addWidget(min1[filmCounter],j,k);
+                if (filmCounter<m_minifilmCountLocal){
+                    qWarning()<<"titre local(10)"<<sql.min1[filmCounter]->getTitre();
+                    sql.min1[filmCounter]->addAffiche();
+                    grdt[i]->addWidget(sql.min1[filmCounter],j,k);
                     filmCounter++;
                     lastPage =i+1;
                 }else{
                     //DEBUG
-                    qWarning()<<"titre online(10)"<<min2[filmCounter]->getTitre();
-                    min2[filmCounter]->addAffiche();
-                    grdt[i]->addWidget(min2[filmCounter],j,k);
+                    qWarning()<<"titre online(10)"<<min2[filmCounter-m_minifilmCountLocal]->getTitre();
+                    min2[filmCounter-m_minifilmCountLocal]->addAffiche();
+                    grdt[i]->addWidget(min2[filmCounter-m_minifilmCountLocal],j,k);
                     filmCounter++;
                     lastPage =i+1;
                 }
             }
         }							   
     }
-    for(int j =0; j<2;j++){ //pour les lignes
+   for(int j =0; j<2;j++){ //pour les lignes
         for(int k =0; k<5; k++){ //pour les colones
             if(filmCounter <m_minifilmCountOnline){
-                if (filmCounter<filmcounterLocal){
+                if (filmCounter<m_minifilmCountLocal){
                     //DEBUG
-                    qWarning()<<"titre online(<10)"<<min1[filmCounter]->getTitre();
-                    min1[filmCounter]->addAffiche();
-                    grdt[lastPage]->addWidget(min1[filmCounter],j,k);
+                    qWarning()<<"titre online(<10)"<<sql.min1[filmCounter]->getTitre();
+                    sql.min1[filmCounter]->addAffiche();
+                    grdt[lastPage]->addWidget(sql.min1[filmCounter],j,k);
                     filmCounter++;
                 }else{
                     //DEBUG
