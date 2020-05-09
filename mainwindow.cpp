@@ -413,6 +413,11 @@ int counter =0 ;
                 min2[counter]->setLocal(false);
                 QJsonArray genreArray = child[j].toObject()["genre_ids"].toArray();
 
+
+                for(int i =0; i<genreArray.count();i++)
+                {
+                    min2[counter]->setGenres(i,genreArray[i].toInt());
+                }
                 //DEBUG
                 //qWarning()<<"genre array 0 : "<<genreArray[0].toInt();
                 int genreCode =genreArray[0].toInt();
@@ -597,8 +602,6 @@ void MainWindow::on_btn_next_clicked()
 {
     //on passe a la page precedente du stackedWidget dvdtek
     ui->dvdtek->setCurrentIndex(ui->dvdtek->currentIndex()+1);
-    //DEBUG
-    qWarning()<<"m_totalpage: "<<m_minifilmCountOnline/10+1<<" curentindex: "<<ui->dvdtek->currentIndex();
     //on gere l'activiter des bouton
     getsion_prevNext_Btn();					   
 }

@@ -180,7 +180,7 @@ void C_downloadmanager::downloadFinished()
 
 void C_downloadmanager::downloadReadyRead()
 {
-    qWarning()<<output.write(currentDownload->readAll());
+    output.write(currentDownload->readAll());
 
 
 }

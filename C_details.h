@@ -36,6 +36,7 @@ public:
     void addDispo(QString icone);
     void setLocal(bool value);
     void setFilm(C_miniFilm &film);
+
     C_miniFilm & getFilm();
 private slots:
     void on_btn_modifier_clicked();

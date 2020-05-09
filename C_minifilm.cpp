@@ -1,6 +1,9 @@
 #include "C_minifilm.h"
 #include "ui_C_minifilm.h"
 #include <QDebug>
+#include <QSqlRecord>
+#include <QSqlQuery>
+#include <QSqlError>
 #include <C_details.h>
 /**
  * @brief constructeur
@@ -52,6 +55,16 @@ void C_miniFilm::on_btn_details_clicked()
  detail->addDispo(m_Icone);
  detail->setLocal(m_local);
  detail->setFilm(*this);
+
+ int i=0;
+ QSqlQuery requete;
+ C_MySQLManager  *sql =new C_MySQLManager();
+ while(m_genres[i]!=0){
+     QString genre =sql->getGenre(m_genres[i]);
+
+     detail->addGenre(genre);
+     i++;
+ }
 
  /**
   * @TODO gérer le passage de la backdrop après téléchargement de l'image

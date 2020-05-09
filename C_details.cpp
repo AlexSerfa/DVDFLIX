@@ -175,7 +175,7 @@ void C_details::addVote(QString vote)
  */
 void C_details::addGenre(QString genre)
 {
-    ui->txt_genre->setText(ui->txt_genre->text()+=genre);
+    ui->txt_genre->setText(ui->txt_genre->text()+= " -"+genre);
     m_genres->append(genre);
 }
 
@@ -287,30 +287,7 @@ C_miniFilm & C_details::getFilm()
 }
 void C_details::on_btn_enregistrer_clicked()
 {
-        qWarning()<<"debut 1";
     sql =new C_MySQLManager();
-        qWarning()<<"debut 2";
-    sql->connection(database,adress,port,user,password);
-    qWarning()<<"debut 3";
-//sql->setFilm(getFilm());
     sql->saveFilm(getFilm());
 
-       /*      m_film->getTitre(),
-             m_film->getAdult(),
-             m_film->getResum(),
-             m_film->getAffiche(),
-             m_film->getBackdrop(),
-             m_film->getTitreOri(),
-             m_film->getLanguage(),
-             m_film->getRelease(),
-             m_film->getVideo(),
-             m_film->getNote(),
-             m_film->getVote(),
-             m_film->getPop(),
-             m_film->getId_online(),
-             "NULL",
-             "NULL"
-             );*/
-
-    qWarning()<<"fin";
 }

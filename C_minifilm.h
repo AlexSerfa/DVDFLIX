@@ -36,12 +36,7 @@ public:
      */
     void setTitre(QString);
     QString getTitre();
-    /**
-     * @brief
-     *
-     * @param QString
-     */
-    void setGenre(QString);
+
     /**
      * @brief
      *
@@ -126,7 +121,12 @@ public:
      * @return int
      */
     int getGenre(int index);
-
+    /**
+     * @brief
+     *
+     * @param QString
+     */
+    void setGenre(QString);
 
     /**
      * @brief
