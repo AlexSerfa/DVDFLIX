@@ -35,6 +35,8 @@ public:
      *
      */
     void deconnection();
+    QStringList getStockageList();
+    QString getStockage(int id_film);
    void searchTitre(QString titre);
     /**
      * @brief

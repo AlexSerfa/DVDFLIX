@@ -171,6 +171,8 @@ public:
 
     void setLocal(bool value);
     bool getLocal() const;
+    void setStockage(QString stock);
+    QString getStockage();
 
 private slots:
 
@@ -181,6 +183,7 @@ private slots:
     void on_btn_details_clicked();
 
 private:
+
     Ui::C_miniFilm *ui; /**< UI de la classeTODO: describe */
     QString m_Affiche; /**< nom du fichier de l'affiche du film */
     QString m_Icone;
@@ -201,6 +204,7 @@ private:
     QString m_vote; /**< nombre de vote */
     QString m_date_enregistrement; /**< date d'enregistrement dans la base de données */
     bool m_local; /**< flag de film deja possédé*/
+    QString m_stockage;/**< lieu de stockage du film */
 
 
 };

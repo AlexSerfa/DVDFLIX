@@ -486,7 +486,7 @@ bool MainWindow::createMinifilm(){
    int filmCounter=0;
 
    //DEBUG
-   qWarning()<<"resultat local nb: "<<  m_minifilmCountLocal;
+   //qWarning()<<"resultat local nb: "<<  m_minifilmCountLocal;
    int lastPage = 0;
    int totalResult= m_minifilmCountLocal+m_minifilmCountOnline;
 
@@ -495,14 +495,15 @@ bool MainWindow::createMinifilm(){
         for(int j =0; j<2;j++){ //pour les lignes
             for(int k =0; k<5; k++){ //pour les colones
                 if (filmCounter<m_minifilmCountLocal){
-                    qWarning()<<"titre local(10)"<<sql.min1[filmCounter]->getTitre();
+                    //DEBUG
+                    //qWarning()<<"titre local(10)"<<sql.min1[filmCounter]->getTitre();
                     sql.min1[filmCounter]->addAffiche();
                     grdt[i]->addWidget(sql.min1[filmCounter],j,k);
                     filmCounter++;
                     lastPage =i+1;
                 }else{
                     //DEBUG
-                    qWarning()<<"titre online(10)"<<min2[filmCounter-m_minifilmCountLocal]->getTitre();
+                    // qWarning()<<"titre online(10)"<<min2[filmCounter-m_minifilmCountLocal]->getTitre();
                     min2[filmCounter-m_minifilmCountLocal]->addAffiche();
                     grdt[i]->addWidget(min2[filmCounter-m_minifilmCountLocal],j,k);
                     filmCounter++;
@@ -516,13 +517,13 @@ bool MainWindow::createMinifilm(){
             if(filmCounter <m_minifilmCountOnline){
                 if (filmCounter<m_minifilmCountLocal){
                     //DEBUG
-                    qWarning()<<"titre online(<10)"<<sql.min1[filmCounter]->getTitre();
+                    //qWarning()<<"titre online(<10)"<<sql.min1[filmCounter]->getTitre();
                     sql.min1[filmCounter]->addAffiche();
                     grdt[lastPage]->addWidget(sql.min1[filmCounter],j,k);
                     filmCounter++;
                 }else{
                     //DEBUG
-                    qWarning()<<"titre online(<10)"<<min2[filmCounter]->getTitre();
+                    //qWarning()<<"titre online(<10)"<<min2[filmCounter]->getTitre();
                     min2[filmCounter]->addAffiche();
                     grdt[lastPage]->addWidget(min2[filmCounter],j,k);
                     filmCounter++;
@@ -616,7 +617,8 @@ void MainWindow::on_btn_previous_clicked()
 {
    //on passe a la page precedente du stackedWidget dvdtek
    ui->dvdtek->setCurrentIndex(ui->dvdtek->currentIndex()-1);
-   qWarning()<<"m_totalpage: "<<m_totalPage<<" curentindex: "<<ui->dvdtek->currentIndex();
+   //DEBUG
+   //qWarning()<<"m_totalpage: "<<m_totalPage<<" curentindex: "<<ui->dvdtek->currentIndex();
    //on gere l'activiter des bouton
    getsion_prevNext_Btn();
 }

@@ -55,7 +55,7 @@ void C_miniFilm::on_btn_details_clicked()
  detail->addDispo(m_Icone);
  detail->setLocal(m_local);
  detail->setFilm(*this);
-
+detail->listStockage();
  int i=0;
  QSqlQuery requete;
  C_MySQLManager  *sql =new C_MySQLManager();
@@ -110,6 +110,16 @@ void C_miniFilm::setLocal(bool value)
 bool C_miniFilm::getLocal() const
 {
     return m_local;
+}
+
+void C_miniFilm::setStockage(QString stock)
+{
+    m_stockage=stock;
+}
+
+QString C_miniFilm::getStockage()
+{
+    return m_stockage;
 }
 
 /**

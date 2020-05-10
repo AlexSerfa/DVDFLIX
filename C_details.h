@@ -36,12 +36,15 @@ public:
     void addDispo(QString icone);
     void setLocal(bool value);
     void setFilm(C_miniFilm &film);
+    void listStockage();
 
     C_miniFilm & getFilm();
 private slots:
     void on_btn_modifier_clicked();
 
     void on_btn_enregistrer_clicked();
+
+    void on_cbb_stockage_currentIndexChanged(const QString &arg1);
 
 private:
     C_MySQLManager *sql;     /*!< objet gérant la partie Mysql */

@@ -45,21 +45,6 @@ void C_MySQLManager::connection(QString db, QString adress, int port, QString us
         emit connected();
         // Exécution d'une requête
         QSqlQuery requete;
-        /*   if(requete.exec("SELECT * FROM genre")) {
-            //DEBUG
-            //qDebug() << "Ok - requete";
-
-            // Boucle qui permet de parcourir les enregistrements renvoyés par la requête
-            while(requete.next()) {
-                // On accède ici aux différents champs par leurs noms, il est également possible
-                // d'y accéder par leur index : requete.value(0)
-                qDebug() << requete.value("id") << " " << requete.value("nom");
-            }
-        }
-        else {
-            // afficher un message explicite sur les causes de l'erreur
-            qDebug() << requete.lastError();
-        }*/
     }
     else {
         emit disconnected();
@@ -77,15 +62,26 @@ void C_MySQLManager::connection(QString db, QString adress, int port, QString us
 QString C_MySQLManager::getGenre(int number){
     QSqlQuery requete;
     if(requete.exec("SELECT * FROM genre WHERE id="+QString::number(number))) {
-        //DEBUG 4l
-        qWarning()<<"req first:"<<requete.first();
 
-        //qWarning()<<requete.lastInsertId().toString();
-        //qDebug() << "Ok - requete";
-        qDebug() <<"requete value0: "<<(requete.value("nom")).toString();
+       if( requete.next()){
+        //DEBUG
+        //qDebug() <<"requete value0: "<<(requete.value("nom")).toString();
         return QVariant(requete.value("nom")).toString();
+       }
     }
     return "Inconnu";
+}
+QString C_MySQLManager::getStockage(int id_film)
+{
+    QSqlQuery requete;
+    if(requete.exec("SELECT * FROM stockagefilm WHERE id_film="+QString::number(id_film))) {
+
+       if( requete.next()){
+
+        return QVariant(requete.value("stockage")).toString();
+       }
+    }
+    return "inconnu";
 }
 /**
  * @brief gere la déconnection a la base de donnée
@@ -94,6 +90,18 @@ QString C_MySQLManager::getGenre(int number){
 void C_MySQLManager::deconnection(){
     m_dvdDB.close();
     emit disconnected();
+}
+
+QStringList  C_MySQLManager::getStockageList()
+{
+    QStringList liste;
+    QSqlQuery requete;
+    requete.prepare("SELECT * FROM stockage");
+    requete.exec();
+    while(requete.next()){
+        liste.append(requete.value(1).toString());
+    }
+    return liste;
 }
 /**
  * @brief recherche le nombre de film corrrespondant au texte entré la recherche dans la fenetre principale et retourne les info contenues dans la db après création d'un C_miniFilm
@@ -150,8 +158,6 @@ void C_MySQLManager::searchTitre(QString titre)
         while(requete.next()){
             m_resultCounter++;
             film->setTitre(requete.value("titre").toString());
-            //DEBUG
-            qWarning()<<"erquete titre: "<<requete.value(1).toString();
             C_miniFilm *min3 =new C_miniFilm();
             //ajout de la fiche a la colletion
             min1[i] =min3;
@@ -173,10 +179,7 @@ void C_MySQLManager::searchTitre(QString titre)
             min1[i]->setIcone(directoryBase+"/home.png");
             min1[i]->addIcone();
             min1[i]->setGenre(getGenre(requete.value(16).toInt()));
-
             min1[i]->setLocal(true);
-
-
             i++;
 
         }
@@ -186,11 +189,28 @@ void C_MySQLManager::searchTitre(QString titre)
     while(min1[i]){
         int j=0;
         requete.prepare(("SELECT * FROM genresfilm WHERE id_film = "+ QString::number(min1[i]->getIdLocal())));
-        qWarning()<<QString::number(min1[i]->getIdLocal());
+        //DEBUG
+       // qWarning()<<QString::number(min1[i]->getIdLocal());
         requete.exec();
         while(requete.next()){
             min1[i]->setGenres(j,requete.value(2).toInt());
             j++;
+
+        }
+        i++;
+    }
+    i=0;
+    //recupération des genre dans la table genresfilm et assignation au minifilm
+    while(min1[i]){
+
+        requete.prepare(("SELECT * FROM stockagefilm WHERE id_film = "+ QString::number(min1[i]->getIdLocal())));
+        //DEBUG
+        //qWarning()<<QString::number(min1[i]->getIdLocal());
+        requete.exec();
+        while(requete.next()){
+            min1[i]->setStockage(requete.value(2).toString());
+            //DEBUG
+            qWarning()<<"Stockage trouver : "<<requete.value(2).toString();
 
         }
         i++;
@@ -225,20 +245,19 @@ bool C_MySQLManager::saveFilm(C_miniFilm &film)
         requete.addBindValue(NULL);
         requete.addBindValue(NULL);
         requete.addBindValue(film.getGenre(0));
-        qWarning()<<"genre T:"<<QString::number(film.getGenre(0));
-        qWarning()<<requete.exec();
+        requete.exec();
+        result =true;
 
     }
     catch(QException e){
 
-        qWarning()<<"erreur lors de la requete d'insertion du film: "<<requete.lastError();
+        qWarning()<<"Erreur lors de la requete d'insertion du film: "<<requete.lastError();
         result = false;
     }
+    int idFilm; //id locale du film
     //recupération de l'id local du film et insertion des genres dans la table genresfilm
     try {
-        int idFilm;
-        //DEBUG
-   //     qWarning()<<QString::number(film.getId_online());
+
         requete.prepare("SELECT * FROM film WHERE id_film ="+ QString::number(film.getId_online()));
         requete.exec();
         requete.lastError();
@@ -250,9 +269,20 @@ bool C_MySQLManager::saveFilm(C_miniFilm &film)
             requete.prepare("INSERT INTO `genresfilm` (`ID`, `id_film`, `genre`) VALUES (NULL, '"+QString::number(idFilm)+"', "+QString::number(film.getGenre(i))+");");
             requete.exec();
             i++;
+            result =true;
         }
     } catch (QException e) {
-        qWarning()<<"erreur lors de la requete d'insertion des genres: "<<requete.lastError();
+        qWarning()<<"Erreur lors de la requete d'insertion des genres: "<<requete.lastError();
+        result = false;
+    }
+    //sauvegarde du lieu de stockage du film
+    try {
+        requete.prepare("INSERT INTO `stockagefilm` (`ID`, `id_film`, `stockage`) VALUES (NULL, '"+ QString::number(idFilm) +"', '"+ film.getStockage()+"');");
+
+        requete.exec();
+        result = true;
+    } catch (QException e) {
+        qWarning()<<"Erreur lors de la requete d'insertion du lieu  de stockage: "<<requete.lastError();
         result = false;
     }
     return result;

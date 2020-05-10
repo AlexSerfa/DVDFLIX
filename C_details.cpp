@@ -27,6 +27,7 @@ C_details::C_details(QWidget *parent) :
     ui->setupUi(this);
     m_affiche="inconnu";
     m_backdrop="inconnu";
+
 }
 
 /**
@@ -42,6 +43,24 @@ C_details::~C_details()
 }
 void C_details::setFilm(C_miniFilm &film){
     m_film = &film;
+}
+
+/**
+ * @fn listStockage())
+ * @author: Mercier Laurent
+ * @date 10/05/2020
+ * @brief rempli et active le combobox des lieux de stockage
+ *         et affiche le lieu de stockage actuelle de l'oeuvre
+ *
+ *
+ */
+void C_details::listStockage()
+{
+    QStringList liste;
+    liste = sql->getStockageList();
+    ui->cbb_stockage->addItems(liste);
+    ui->txt_stock->setText(sql->getStockage(m_film->getIdLocal()));
+
 }
 
 
@@ -276,6 +295,7 @@ void C_details::on_btn_modifier_clicked()
     ui->txt_resum->setEnabled(true);
     ui->txt_langue->setEnabled(true);
     ui->chk_soustitre->setEnabled(true);
+    ui->cbb_stockage->setEnabled(true);
     if(m_local){
         ui->btn_enregistrer->setEnabled(true);
     }
@@ -288,6 +308,12 @@ C_miniFilm & C_details::getFilm()
 void C_details::on_btn_enregistrer_clicked()
 {
     sql =new C_MySQLManager();
+    m_film->setStockage(ui->txt_stock->text());
     sql->saveFilm(getFilm());
 
+}
+
+void C_details::on_cbb_stockage_currentIndexChanged(const QString &arg1)
+{
+    ui->txt_stock->setText(arg1);
 }
