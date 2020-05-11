@@ -7,10 +7,10 @@
 
 using namespace std;
 
-const QString key ="76532a92d48d6e7e7fb5d72eaf2029b3";
-const QString defaultUrl = " https://api.themoviedb.org/3/";
-const QString urlBaseAffiche="https://image.tmdb.org/t/p/w500";
-const QString directoryBase= "d:/tempo68";
+const QString key ="76532a92d48d6e7e7fb5d72eaf2029b3"; /**< TODO: describe */
+const QString defaultUrl = " https://api.themoviedb.org/3/"; /**< TODO: describe */
+const QString urlBaseAffiche="https://image.tmdb.org/t/p/w500"; /**< TODO: describe */
+const QString directoryBase= "d:/tempo68"; /**< TODO: describe */
 /**
  * @brief constructuer
  */
@@ -24,6 +24,8 @@ C_downloadmanager::C_downloadmanager(QObject *parent)
 
 /**
  * @fn formatUrl(QString url)
+ * @author: Mercier Laurent
+ * @date 12/04/2020
  * @brief Formatage de l'url de film pour recherche online, uniquement la premiere page de résultat
  *
  * @param[in]   film                QString         titre du film  a recherche
@@ -39,6 +41,8 @@ QString C_downloadmanager::formatUrl(QString film){
 }
 /**
  * @fn formatUrl(QString url, int page)
+ * @author: Mercier Laurent
+ * @date 12/04/2020
  * @brief Formatage de l'url de film a recherche online, précisant le numéro de la page de résultat
  * @warning la page 1 n'existe pas sur TMBD
  *
@@ -54,6 +58,12 @@ QString C_downloadmanager::formatUrl(QString film,int page){
     return completUrl;
 }
 
+/**
+ * @brief Ajout de des fichiers à télégarger dans la queue
+ *
+ * @param urls   QUrl        url du fichier a telecharger
+ * @param filename  QString     nom du fichier sur le hdd
+ */
 void C_downloadmanager::append(const QStringList &urls, QStringList &filename)
 {
     int counter= 0;
@@ -67,6 +77,12 @@ void C_downloadmanager::append(const QStringList &urls, QStringList &filename)
         QTimer::singleShot(0, this, SIGNAL(finished()));
 }
 
+/**
+ * @brief Ajout de des fichiers à télégarger dans la queue
+ *
+ * @param url   QUrl        url du fichier a telecharger
+ * @param filename  QString     nom du fichier sur le hdd
+ */
 void C_downloadmanager::append(const QUrl &url, QString filename)
 {
     //DEBUG
@@ -83,6 +99,12 @@ void C_downloadmanager::append(const QUrl &url, QString filename)
     qWarning()<<"Total de fichier a telecharger: "<<totalCount;
 }
 
+/**
+ * @brief formatage du nom de fichier à partir de l'url
+ *
+ * @param url   QUrl    url du fichier à télécharger
+ * @return QString  nom du fichier
+ */
 QString C_downloadmanager::saveFileName(const QUrl &url)
 {
     QString path = url.path();
@@ -105,6 +127,10 @@ QString C_downloadmanager::saveFileName(const QUrl &url)
     return basename;
 }
 
+/**
+ * @brief démarre le telechargement et nvoir du signal finished si la queue est vide
+ *
+ */
 void C_downloadmanager::startNextDownload()
 {
     if (downloadQueue.isEmpty()) {
@@ -129,8 +155,6 @@ void C_downloadmanager::startNextDownload()
                 qPrintable(output.errorString());
 
         startNextDownload();
-        //DEBUG
-        //qWarning()<<"demarrage telechargement E2 :"<<QString::number(downloadQueue.count());
         return;
     }
     QNetworkRequest request(url);
@@ -146,6 +170,11 @@ void C_downloadmanager::startNextDownload()
 }
 
 
+/**
+ * @brief   fermeture du fichier de sortie,
+ *           emission du signal de création de minifilm si la queue et vide, demarrage du téléchérgement du fichier suivant dans lec as contraire
+ *
+ */
 void C_downloadmanager::downloadFinished()
 {
     output.close();
@@ -162,29 +191,31 @@ void C_downloadmanager::downloadFinished()
             qWarning()<<"Succes.\n";
             ++downloadedCount;
             if(downloadQueue.isEmpty() ){
-                //DEBUG
-                //qWarning()<<"EMIT EMPTYQUEUE";
                emit emptyQueue();
             }
         }
     }
-
     currentDownload->deleteLater();
-    //DEBUG
-    //qWarning()<<"demarrage telechargement E3 :"<<QString::number(downloadQueue.count());
     if(downloadQueue.count()==0){
         emit startCreateMini();
     }
     startNextDownload();
 }
 
+/**
+ * @brief ecriture des data reçues
+ *
+ */
 void C_downloadmanager::downloadReadyRead()
 {
     output.write(currentDownload->readAll());
-
-
 }
 
+/**
+ * @brief
+ *
+ * @return bool
+ */
 bool C_downloadmanager::isHttpRedirect() const
 {
     int statusCode = currentDownload->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
@@ -192,6 +223,10 @@ bool C_downloadmanager::isHttpRedirect() const
            || statusCode == 305 || statusCode == 307 || statusCode == 308;
 }
 
+/**
+ * @brief
+ *
+ */
 void C_downloadmanager::reportRedirect()
 {
     int statusCode = currentDownload->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();

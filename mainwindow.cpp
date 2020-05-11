@@ -412,35 +412,22 @@ int counter =0 ;
                 min2[counter]->setIcone(directoryBase+"/online.png");
                 min2[counter]->setLocal(false);
                 QJsonArray genreArray = child[j].toObject()["genre_ids"].toArray();
-
-
                 for(int i =0; i<genreArray.count();i++)
                 {
                     min2[counter]->setGenres(i,genreArray[i].toInt());
                 }
-                //DEBUG
-                //qWarning()<<"genre array 0 : "<<genreArray[0].toInt();
                 int genreCode =genreArray[0].toInt();
                 QString  genrePrincipal = sql.getGenre(genreCode);
-
-                //DEBUG
-                //qWarning()<<"genre :" << genrePrincipal;
                  min2[counter]->setGenre(genrePrincipal);
-                //DEBUG
-               //qWarning()<< "ajout du titre";
            //telechargement de affiche des films
             if(child[j].toObject()["poster_path"].toString()!="")
             {
-                //DEBUG
-                //qWarning()<<"readJson->ajout dl_manager du fichier image de l'affiche n°: "<<i;
                 m_dlmanager.append(urlBaseAffiche+ child[j].toObject()["poster_path"].toString(),child[j].toObject()["poster_path"].toString());
                 min2[counter]->setAffiche(directoryBase+child[j].toObject()["poster_path"].toString());
              }
             else{
               min2[counter]->setAffiche(directoryBase+"/noPicture.png");
               }
-            //DEBUG
-            //qWarning()<<counter;
             counter++;
           }
       }
@@ -455,8 +442,6 @@ int counter =0 ;
  * @return bool
  */
 bool MainWindow::createMinifilm(){
-  //DEBUG
-   //qWarning()<<"<-createminifil";
    grdt[0]= ui->grd1;
    grdt[1]= ui->grd2;
    grdt[2]= ui->grd3;
@@ -485,8 +470,6 @@ bool MainWindow::createMinifilm(){
 
    int filmCounter=0;
 
-   //DEBUG
-   //qWarning()<<"resultat local nb: "<<  m_minifilmCountLocal;
    int lastPage = 0;
    int totalResult= m_minifilmCountLocal+m_minifilmCountOnline;
 
@@ -495,15 +478,11 @@ bool MainWindow::createMinifilm(){
         for(int j =0; j<2;j++){ //pour les lignes
             for(int k =0; k<5; k++){ //pour les colones
                 if (filmCounter<m_minifilmCountLocal){
-                    //DEBUG
-                    //qWarning()<<"titre local(10)"<<sql.min1[filmCounter]->getTitre();
                     sql.min1[filmCounter]->addAffiche();
                     grdt[i]->addWidget(sql.min1[filmCounter],j,k);
                     filmCounter++;
                     lastPage =i+1;
                 }else{
-                    //DEBUG
-                    // qWarning()<<"titre online(10)"<<min2[filmCounter-m_minifilmCountLocal]->getTitre();
                     min2[filmCounter-m_minifilmCountLocal]->addAffiche();
                     grdt[i]->addWidget(min2[filmCounter-m_minifilmCountLocal],j,k);
                     filmCounter++;
@@ -516,18 +495,13 @@ bool MainWindow::createMinifilm(){
         for(int k =0; k<5; k++){ //pour les colones
             if(filmCounter <m_minifilmCountOnline){
                 if (filmCounter<m_minifilmCountLocal){
-                    //DEBUG
-                    //qWarning()<<"titre online(<10)"<<sql.min1[filmCounter]->getTitre();
                     sql.min1[filmCounter]->addAffiche();
                     grdt[lastPage]->addWidget(sql.min1[filmCounter],j,k);
                     filmCounter++;
                 }else{
-                    //DEBUG
-                    //qWarning()<<"titre online(<10)"<<min2[filmCounter]->getTitre();
                     min2[filmCounter]->addAffiche();
                     grdt[lastPage]->addWidget(min2[filmCounter],j,k);
                     filmCounter++;
-
                 }
             }						
         }
@@ -541,8 +515,6 @@ bool MainWindow::createMinifilm(){
  *
  */
 void MainWindow::status_dbConnectee(){
-    //DEBUG
-    //qWarning()<<"connecté";
     m_DBState=true;
     ui->lbl_db_status->setText("Database connectée");
 }
@@ -554,13 +526,14 @@ void MainWindow::status_dbDeconnectee(){
     QMessageBox::warning(this,"Echec de connection","Echec de la connection à la base de données",QMessageBox::Ok);
     m_DBState = false;
     ui->lbl_db_status->setText("Database NON connectée");
-    //DEBUG
-    //qWarning()<<"non connecté";
 }
 /**
- * @brief
+ * @fn getsion_prevNext_Btn()
+ * @author: Mercier Laurent
+ * @date 13/04/2020
+ * @brief vide les layout, conteneurs des minifilms
  *
- * @param layout
+ * @param layout Layout à vider
  */
 void MainWindow::videLayout(QLayout *layout)
 {
@@ -571,7 +544,6 @@ void MainWindow::videLayout(QLayout *layout)
         {
             videLayout(item->layout());
         }
-
         layout -> removeItem(item);
         delete item;
     }
@@ -594,6 +566,7 @@ void MainWindow::getsion_prevNext_Btn(){
 }
 
 /**
+ * @fn on_btn_next_clicked()
  * @author: Mercier Laurent
  * @date 13/04/2020
  * @brief Affichage de la page suivante des résultats de recherche
@@ -608,6 +581,7 @@ void MainWindow::on_btn_next_clicked()
 }
 
 /**
+ * @fn on_btn_previous_clicked()
  * @author: Mercier Laurent
  * @date 13/04/2020
  * @brief Affichage de la page précédente des résultats de recherche
@@ -617,13 +591,12 @@ void MainWindow::on_btn_previous_clicked()
 {
    //on passe a la page precedente du stackedWidget dvdtek
    ui->dvdtek->setCurrentIndex(ui->dvdtek->currentIndex()-1);
-   //DEBUG
-   //qWarning()<<"m_totalpage: "<<m_totalPage<<" curentindex: "<<ui->dvdtek->currentIndex();
    //on gere l'activiter des bouton
    getsion_prevNext_Btn();
 }
 
 /**
+ * @fn on_rdb_rechLoc_toggled(bool checked)
  * @author: Mercier Laurent
  * @date 13/04/2020
  * @brief definit une recherche de type locale
@@ -640,6 +613,7 @@ void MainWindow::on_rdb_rechLoc_toggled(bool checked)
 }
 					  								
 /**
+ * @fn on_rdb_rechDist_toggled(bool checked)
  * @author: Mercier Laurent
  * @date 11/04/2020
  * @brief definit une recherche de type locale et web
@@ -653,4 +627,9 @@ void MainWindow::on_rdb_rechDist_toggled(bool checked)
     sql.connection(database,adress,port,user,password);
     m_searchType=true;
 
+}
+void MainWindow::on_pushButton_clicked()
+{
+   C_options *options = new  C_options();
+   options->show();
 }

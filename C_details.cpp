@@ -41,6 +41,11 @@ C_details::~C_details()
 {
     delete ui;
 }
+/**
+ * @brief
+ *
+ * @param film
+ */
 void C_details::setFilm(C_miniFilm &film){
     m_film = &film;
 }
@@ -249,16 +254,34 @@ void C_details::addResum(QString resum)
     ui->txt_resum->setText(resum);
 }
 
+/**
+ * @brief
+ *
+ * @param video
+ */
 void C_details::addVideo(QString video)
 {
     m_video=video;
 }
 
+/**
+ * @brief
+ *
+ * @param icone
+ */
 void C_details::addDispo(QString icone)
 {
     ui->lbl_dispo->setPixmap(icone);
 }
 
+/**
+ * @fn setLocal(bool value)
+ * @author: Mercier Laurent
+ * @date 05/05/2020
+ * @brief flag indiquant si c'est un film local
+ *
+ * @param value true si film local
+ */
 void C_details::setLocal(bool value)
 {
     m_local = value;
@@ -299,20 +322,38 @@ void C_details::on_btn_modifier_clicked()
     if(m_local){
         ui->btn_enregistrer->setEnabled(true);
     }
-
 }
+/**
+ * @fn getFilm()
+ * @author: Mercier Laurent
+ * @date 08/05/2020
+ * @brief retourne le minifilm correspondant au détails
+ *
+ * @return C_miniFilm minifilm correspondant au détails actuels
+ */
 C_miniFilm & C_details::getFilm()
 {
     return   *m_film;
 }
+/**
+ * @fn on_btn_enregistrer_clicked()
+ * @author: Mercier Laurent
+ * @date 08/05/2020
+ * @brief gere l'evenement click sur le bouton enregistrer et démarre la procédure d'enregistrement dans la base de données.
+ *
+ */
 void C_details::on_btn_enregistrer_clicked()
 {
     sql =new C_MySQLManager();
     m_film->setStockage(ui->txt_stock->text());
     sql->saveFilm(getFilm());
-
 }
 
+/**
+ * @brief
+ *
+ * @param arg1
+ */
 void C_details::on_cbb_stockage_currentIndexChanged(const QString &arg1)
 {
     ui->txt_stock->setText(arg1);

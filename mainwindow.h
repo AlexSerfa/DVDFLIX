@@ -38,6 +38,7 @@ public slots:
     void status_dbDeconnectee();
 
 private slots:
+     void on_pushButton_clicked();
     /**
      * @brief
      *

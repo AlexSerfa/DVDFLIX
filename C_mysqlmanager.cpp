@@ -21,8 +21,6 @@ C_MySQLManager::C_MySQLManager(QObject *parent)
 {
 
 }
-
-
 /**
  * @brief gere la connection à la base de donnée
  *
@@ -52,32 +50,37 @@ void C_MySQLManager::connection(QString db, QString adress, int port, QString us
         qDebug() << m_dvdDB.lastError();
     }
 }
-
 /**
+ * @fn getGenre(int number)
+ * @author: Mercier Laurent
+ * @date 09/05/2020
  * @brief recupère le genre de film d'apres le code genre
  *
  * @param number
  * @return QString
  */
-QString C_MySQLManager::getGenre(int number){
+QString C_MySQLManager::getGenre(int number)
+{
     QSqlQuery requete;
     if(requete.exec("SELECT * FROM genre WHERE id="+QString::number(number))) {
-
        if( requete.next()){
-        //DEBUG
-        //qDebug() <<"requete value0: "<<(requete.value("nom")).toString();
         return QVariant(requete.value("nom")).toString();
        }
     }
     return "Inconnu";
 }
+/**
+ * @brief
+ *
+ * @param id_film
+ * @return QString
+ */
 QString C_MySQLManager::getStockage(int id_film)
 {
     QSqlQuery requete;
     if(requete.exec("SELECT * FROM stockagefilm WHERE id_film="+QString::number(id_film))) {
 
        if( requete.next()){
-
         return QVariant(requete.value("stockage")).toString();
        }
     }
@@ -92,6 +95,14 @@ void C_MySQLManager::deconnection(){
     emit disconnected();
 }
 
+/**
+ * @fn getStockageList()
+ * @author: Mercier Laurent
+ * @date 10/05/2020
+ * @brief recherche lles lieux des stockage des film dans la base de données
+ *
+ * @return QStringList liste des lieux de stockage
+ */
 QStringList  C_MySQLManager::getStockageList()
 {
     QStringList liste;
@@ -116,35 +127,49 @@ int C_MySQLManager::filmCount(QString titre)
     if(requete.exec("SELECT * FROM film WHERE titre="+titre)){
         if (requete.next()) {
             result= requete.value(0).toInt();
-            //DEBUG
-            // qWarning()<<"filmCount db: "<<result;
         }
     }
     return result;
 
 }
+/**
+ * @brief réinitialisation du memebre m_resultCounter correspondant au nombre de resultat lors d'une recherche de film dans la base de données
+ *
+ */
 void  C_MySQLManager::resetResultCounter()
 {
     m_resultCounter=0;
 }
 
+/**
+ * @fn videMinifilm()
+ * @author: Mercier Laurent
+ * @date 05/05/2020
+ * @brief vide le tableau des minifilm locaux
+ *
+ */
 void C_MySQLManager::videMinifilm()
 {
     //on vide le tableau de minifilm de resultat en local
     for(int i =0;i<150;i++){
         if(min1[i]){
-            //DEBUG
-            qWarning()<<"vidage de min1 : "<<i;
             min1[i]->~C_miniFilm();
-
         }
     }
 }
+/**
+ * @brief retourne le nombre de resultat trouvés lors d'une recherche dans la base de donnéees
+ *
+ * @return int  nombre de résultats trouvés
+ */
 int C_MySQLManager::getFilmCount()
 {
     return m_resultCounter;
 }
 /**
+ * @fn searchTitre(QString titre)
+ * @author: Mercier Laurent
+ * @date 04/05/2020
  * @brief recherche les titres corrrespondant au texte entré la recherche dans la fenetre principale et retourne les info contenues dans la db après création d'un C_miniFilm
  *
  * @return C_miniFilm*
@@ -181,7 +206,6 @@ void C_MySQLManager::searchTitre(QString titre)
             min1[i]->setGenre(getGenre(requete.value(16).toInt()));
             min1[i]->setLocal(true);
             i++;
-
         }
     }
     i=0;
@@ -189,33 +213,34 @@ void C_MySQLManager::searchTitre(QString titre)
     while(min1[i]){
         int j=0;
         requete.prepare(("SELECT * FROM genresfilm WHERE id_film = "+ QString::number(min1[i]->getIdLocal())));
-        //DEBUG
-       // qWarning()<<QString::number(min1[i]->getIdLocal());
         requete.exec();
         while(requete.next()){
             min1[i]->setGenres(j,requete.value(2).toInt());
             j++;
-
         }
         i++;
     }
     i=0;
-    //recupération des genre dans la table genresfilm et assignation au minifilm
+    //recupération du lieu de stockage du film dans la table stockagefilm et assignation au minifilm
     while(min1[i]){
 
         requete.prepare(("SELECT * FROM stockagefilm WHERE id_film = "+ QString::number(min1[i]->getIdLocal())));
-        //DEBUG
-        //qWarning()<<QString::number(min1[i]->getIdLocal());
         requete.exec();
         while(requete.next()){
             min1[i]->setStockage(requete.value(2).toString());
-            //DEBUG
-            qWarning()<<"Stockage trouver : "<<requete.value(2).toString();
-
         }
         i++;
     }
 }
+/**
+ * @fn saveFilm(C_miniFilm &film)
+ * @author: Mercier Laurent
+ * @date 09/05/2020
+ * @brief enregistrement d'un film dans la base de donées, des genres du film et du lieu de stockage
+ *
+ * @param film  film devant etre enregistré
+ * @return bool resultat de l'opération, retourne true si enregistrement ok, false sinon.
+ */
 bool C_MySQLManager::saveFilm(C_miniFilm &film)
 {
     bool result  =false;
@@ -247,7 +272,6 @@ bool C_MySQLManager::saveFilm(C_miniFilm &film)
         requete.addBindValue(film.getGenre(0));
         requete.exec();
         result =true;
-
     }
     catch(QException e){
 
@@ -278,7 +302,6 @@ bool C_MySQLManager::saveFilm(C_miniFilm &film)
     //sauvegarde du lieu de stockage du film
     try {
         requete.prepare("INSERT INTO `stockagefilm` (`ID`, `id_film`, `stockage`) VALUES (NULL, '"+ QString::number(idFilm) +"', '"+ film.getStockage()+"');");
-
         requete.exec();
         result = true;
     } catch (QException e) {
@@ -286,102 +309,92 @@ bool C_MySQLManager::saveFilm(C_miniFilm &film)
         result = false;
     }
     return result;
-
 }
 /**
  * @brief retourne le noom de la database
  *
- * @return QString
+ * @return QString   nom de la base de données
  */
 QString C_MySQLManager::getDb()
 {
     return m_db;
 }
-
 /**
  * @brief stock le nom de la database
  *
- * @param db
+ * @param db     nom de la base de données
  */
 void C_MySQLManager::setDb( QString db)
 {
     m_db = db;
 }
-
 /**
  * @brief retourne l'adresse ip de la database
  *
- * @return QString
+ * @return QString   adresse de la base de données
  */
 QString C_MySQLManager::getAdress()
 {
     return m_adress;
 }
-
 /**
  * @brief stock l'adresse ip de la database
  *
- * @param adress
+ * @param adress    adresse de la base de données
  */
 void C_MySQLManager::setAdress(QString adress)
 {
     m_adress = adress;
 }
-
 /**
  * @brief retourne le  port de la database
  *
- * @return int
+ * @return int  port de la base de données
  */
 int C_MySQLManager::getPort()
 {
     return m_port;
 }
-
 /**
  * @brief stock le  port de la database
  *
- * @param port
+ * @param port  port de la base de données
  */
 void C_MySQLManager::setPort(int port)
 {
     m_port = port;
 }
-
 /**
  * @brief retourne le nom de l'utilisateur de la db
  *
- * @return QString
+ * @return QString  nom de l'utilisateur de la base de données
  */
 QString C_MySQLManager::getUser()
 {
     return m_user;
 }
-
 /**
  * @brief stock le nom de l'utilisateur de la db
  *
- * @param user
+ * @param user  nom de l'utilisateur de la base de données
  */
 void C_MySQLManager::setUser(QString user)
 {
     m_user = user;
 }
-
 /**
  * @brief retourne le mot de passe de la db
  *
- * @return QString
+ * @return QString  mot de passe de l'utilisateur de la base de données
  */
 QString C_MySQLManager::getPassword()
 {
     return m_password;
 }
-
 /**
  * @brief stock le password de la db
  *
- * @param password
+ * @param password  mot de passe de l'utilisateur de la base de données
  */
 void C_MySQLManager::setPassword(QString password)
 {
