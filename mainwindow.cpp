@@ -16,6 +16,7 @@
 #include <QSqlRecord>			
 #include <C_minifilm.h>
 #include <C_mysqlmanager.h>
+#include <c_options.h>
 
 const QString key ="76532a92d48d6e7e7fb5d72eaf2029b3"; /**< clé de l'API themoviedb */
 const QString defaultUrl = " https://api.themoviedb.org/3/"; /**< adresse de l'API themoviedb */

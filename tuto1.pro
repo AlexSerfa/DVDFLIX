@@ -20,6 +20,7 @@ SOURCES += \
     C_downloadmanager.cpp \
     C_minifilm.cpp \
     C_mysqlmanager.cpp \
+    c_options.cpp \
     main.cpp \
     mainwindow.cpp \
     testclasse.cpp
@@ -29,12 +30,14 @@ HEADERS += \
     C_downloadmanager.h \
     C_minifilm.h \
     C_mysqlmanager.h \
+    c_options.h \
     mainwindow.h \
     testclasse.h
 
 FORMS += \
     C_details.ui \
     C_minifilm.ui \
+    c_options.ui \
     mainwindow.ui
 
 TRANSLATIONS += \
