@@ -22,6 +22,7 @@ const QString key ="76532a92d48d6e7e7fb5d72eaf2029b3"; /**< clé de l'API themov
 const QString defaultUrl = " https://api.themoviedb.org/3/"; /**< adresse de l'API themoviedb */
 const QString urlBaseAffiche="https://image.tmdb.org/t/p/w500"; /**< adresse pour la récupération des image */
 const QString directoryBase= "d:/tempo68"; /**< chemin du dossier de stockage */
+const QString directoryHard ="d:/tempo69";
 
 
 const QString database = "dvdflix";/**< nom de la base de donnée */
@@ -66,7 +67,36 @@ MainWindow::MainWindow(QWidget *parent)
  */
 MainWindow::~MainWindow()
 {
+    restoreValue();
     delete ui;
+}
+
+void MainWindow::rechercheFilm()
+{
+    //on vérifie que la db est bien connectée
+    if(m_DBState){
+        m_minifilmCountLocal= sql.filmCount(ui->lbl_titre->text());
+
+
+
+         sql.searchTitre(ui->lbl_titre->text());
+         m_minifilmCountLocal = sql.getFilmCount();
+         //DEBUG
+         qWarning()<<" m_minifilmCountLocal :"<<m_minifilmCountLocal;
+  //     min2[h]->setIcone(directoryBase+"/home.png");
+    }else
+    {
+      QMessageBox::warning(this,"Echec de connection","Echec de la connection à la base de données recherche locale impossible",QMessageBox::Ok);
+    }
+
+
+    //DEBUG
+    //qWarning()<<"ajout movie0.json a DL_MANAGER ok";
+    //on recupere la premiere page du film correspondant apres mise en forme du titre (remplacemant des espaces par de tirets)
+    m_dlmanager.append(QUrl::fromUserInput((m_dlmanager.formatUrl(formatSearch()))),"movie0.json");
+    //DEBUG
+    // qWarning()<<"connect au slot getpagenumber() ok";
+    connect(&m_dlmanager,SIGNAL(emptyQueue()),SLOT(getPageNumberJson()));
 }
 
 
@@ -101,6 +131,12 @@ void MainWindow::restoreValue()
     //on réinitialise les valeurs servant a la gestion de la bibliothèque
     ui->dvdtek->setCurrentIndex(0);
     getsion_prevNext_Btn(); //les bouton previous et next
+    //suppression des affiches dont les film n'ont pas été enregistrés
+    for(int i=0 ; i<affiches.count(); i++){
+        QFile::remove(directoryBase+affiches[i]);
+    }
+    //on vide la qvector des affiches
+    affiches.clear();
      //reset des divers membres utilisés
     m_minifilmMax=0;
     m_minifilmMini=0;
@@ -113,12 +149,12 @@ void MainWindow::restoreValue()
     bool result = QFile::remove(directoryBase+"/saveMovies.json");
     //DEBUG
     //qWarning()<<"Suppression du fichier: "<<result;
-  sql.videMinifilm();
+    sql.videMinifilm();
     //on vide le tableau de minifilm de resultat en ligne
     for(int i =0;i<150;i++){
         if(min2[i]){
             //DEBUG
-            qWarning()<<"vidage de min2 : "<<i;
+            //qWarning()<<"vidage de min2 : "<<i;
             min2[i]->~C_miniFilm();
 
         }
@@ -162,31 +198,8 @@ QString MainWindow::formatSearch()
 void MainWindow::on_btn_rechercher_clicked()
 {
     restoreValue();
+    rechercheFilm();
 
-    //on vérifie que la db est bien connectée
-    if(m_DBState){
-        m_minifilmCountLocal= sql.filmCount(ui->lbl_titre->text());
-
-
-
-         sql.searchTitre(ui->lbl_titre->text());
-         m_minifilmCountLocal = sql.getFilmCount();
-         //DEBUG
-         qWarning()<<" m_minifilmCountLocal :"<<m_minifilmCountLocal;
-  //     min2[h]->setIcone(directoryBase+"/home.png");
-    }else
-    {
-      QMessageBox::warning(this,"Echec de connection","Echec de la connection à la base de données recherche locale impossible",QMessageBox::Ok);
-    }
-
-
-    //DEBUG
-    //qWarning()<<"ajout movie0.json a DL_MANAGER ok";
-    //on recupere la premiere page du film correspondant apres mise en forme du titre (remplacemant des espaces par de tirets)
-    m_dlmanager.append(QUrl::fromUserInput((m_dlmanager.formatUrl(formatSearch()))),"movie0.json");
-    //DEBUG
-    // qWarning()<<"connect au slot getpagenumber() ok";
-    connect(&m_dlmanager,SIGNAL(emptyQueue()),SLOT(getPageNumberJson()));
 }
 
 
@@ -322,7 +335,7 @@ bool MainWindow::concatJSON(){
  */
 bool MainWindow::JsonMerge(){
     //DEBUG
-      qWarning()<<"->jsonmerge";
+    //qWarning()<<"->jsonmerge";
     QJsonArray result;
     for(int i =0; i< m_JsonSearch.count();i++){
       result.append(m_JsonSearch[i].value(QString("results")).toArray());
@@ -423,8 +436,23 @@ int counter =0 ;
            //telechargement de affiche des films
             if(child[j].toObject()["poster_path"].toString()!="")
             {
-                m_dlmanager.append(urlBaseAffiche+ child[j].toObject()["poster_path"].toString(),child[j].toObject()["poster_path"].toString());
+                //ajout de l'affiche a au qvector des affiches
+                affiches.push_back((child[j].toObject()["poster_path"].toString()));
+
+                //on verifie si le fichier existe deja dans le dossier temporaire des telechargement
+                QString basename = directoryBase +child[j].toObject()["poster_path"].toString();
+                if (!QFile::exists(basename)) {
+                    //on telecharge le fichier
+                    m_dlmanager.append(urlBaseAffiche+ child[j].toObject()["poster_path"].toString(),child[j].toObject()["poster_path"].toString());
+
+                }else{
+                    //DEBUG
+                    qWarning()<<"Le fichier "<< child[j].toObject()["poster_path"].toString() <<" existe deja dans le dossier";
+                }
+                //ajout de l'affiche au minifilm
                 min2[counter]->setAffiche(directoryBase+child[j].toObject()["poster_path"].toString());
+                //DEBUG
+                //qWarning()<<"<setAffiche: "<<directoryBase+child[j].toObject()["poster_path"].toString();
              }
             else{
               min2[counter]->setAffiche(directoryBase+"/noPicture.png");

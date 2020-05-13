@@ -32,18 +32,22 @@ public:
      */
     ~MainWindow();
     QGridLayout *grdt[21];
+
 public slots:
     void readJson();
     void status_dbConnectee();
     void status_dbDeconnectee();
+    void rechercheFilm();
+
 
 private slots:
-     void on_pushButton_clicked();
     /**
      * @brief
      *
      */
     void on_btn_rechercher_clicked();
+     void on_pushButton_clicked();
+
     /**
      * @brief
      *
@@ -90,6 +94,7 @@ private:
     C_downloadmanager  m_dlmanager; /*!< objet gérant le tééléchargement des fichier sur la toile et l'enregistrement sur le hdd */
     C_miniFilm *min2[150];   /*!< collection de minifiche après une recherche d'un film en ligne*/
 //    C_miniFilm *min1[150];   /*!< collection de minifiche après une recherche d'un film en local*/
+    QVector<QString> affiches; /*!< contient la liste des affiches*/
     bool m_DBState;         /*!< flag de connection a la database Mysql */
     bool m_searchType;      /*!< definit le type de recherche true: locale et web; false: locale uniquement*/
     int m_minifilmMini;     /*!< numero minimum de la minifiche affichée   */

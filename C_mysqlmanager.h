@@ -85,7 +85,8 @@ public:
     int getFilmCount();
     void resetResultCounter();
     void videMinifilm();
-bool saveFilm(C_miniFilm  &film);
+    bool saveFilm(C_miniFilm  &film);
+    bool updateFilm(C_miniFilm  &film);
 signals:
     /**
      * @brief
@@ -108,7 +109,7 @@ private:
     int m_port; /**< port de la db */
     QString m_user; /**< nom de l'utilisteur de la db */
     QString m_password; /**< password de la db */
-    int m_resultCounter=0;
+    int m_resultCounter=0;/**< pcompteur de resultat lors d'une recherche de film dans la db */
     /**
      * @brief
      *

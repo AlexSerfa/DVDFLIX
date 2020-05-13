@@ -5,6 +5,9 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <C_details.h>
+
+const QString directoryBase= "d:/tempo68"; /**< chemin du dossier de stockage */
+const QString directoryHard ="d:/tempo69";
 /**
  * @brief constructeur
  *
@@ -39,9 +42,9 @@ void C_miniFilm::on_btn_details_clicked()
  detail->addNote(m_notation);
  detail->addVote(m_vote);
  if(m_adult){
-    detail->addAdult("oui");
+    detail->addAdult(true);
  }else{
-    detail->addAdult("non");
+    detail->addAdult(false);
  }
  detail->addResum(m_resum);
  detail->addTitre(m_titre);
@@ -397,7 +400,12 @@ void C_miniFilm::setAffiche(QString img){
  *
  */
 void C_miniFilm::addAffiche(){
-    ui->lbl_affiche->setPixmap(m_Affiche);
+    if(m_local){
+    ui->lbl_affiche->setPixmap(directoryHard + "/"+ m_Affiche);
+    }
+    else{
+         ui->lbl_affiche->setPixmap(m_Affiche);
+    }
 }
 
 void C_miniFilm::setIcone(QString img)

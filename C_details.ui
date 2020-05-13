@@ -578,19 +578,6 @@
     </rect>
    </property>
   </widget>
-  <widget class="QLineEdit" name="txt_adult">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="geometry">
-    <rect>
-     <x>390</x>
-     <y>520</y>
-     <width>101</width>
-     <height>20</height>
-    </rect>
-   </property>
-  </widget>
   <widget class="QLabel" name="lbl_dispo">
    <property name="geometry">
     <rect>
@@ -715,6 +702,22 @@
    </property>
    <property name="text">
     <string>Lieu de stockage :</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="chk_adult">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>390</x>
+     <y>520</y>
+     <width>21</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
    </property>
   </widget>
  </widget>

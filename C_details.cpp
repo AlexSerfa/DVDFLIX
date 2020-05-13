@@ -2,7 +2,8 @@
 #include "ui_C_details.h"
 #include <C_mysqlmanager.h>
 #include <C_minifilm.h>
-
+#include <QMainWindow>
+#include <mainwindow.h>
 
 const QString database = "dvdflix";/**< nom de la base de donnée */
 const QString adress = "127.0.0.1";/**< adresse du serveur mysql */
@@ -97,7 +98,7 @@ void C_details::addAffichePicture(QPixmap( picture)){
 }
 
 /**
- * @fnaddTitreOri(QString titreOri)
+ * @fn addTitreOri(QString titreOri)
  * @author: Mercier Laurent
  * @date 01/05/2020
  * @brief affichage du titre original
@@ -151,16 +152,16 @@ void C_details::addBackdrop(QString backdrop)
 }
 
 /**
- * @fn addAdult(QString adult)
+ * @fn addAdult(bool value)
  * @author: Mercier Laurent
  * @date 01/05/2020
  * @brief affichage de film adulte ou non
  *
  * @param adult
  */
-void C_details::addAdult(QString adult)
+void C_details::addAdult(bool value)
 {
-    ui->txt_adult->setText(adult);
+        ui->chk_adult->setChecked(value);
 }
 
 /**
@@ -312,9 +313,10 @@ void C_details::addTitre(QString titre)
  */
 void C_details::on_btn_modifier_clicked()
 {
+    m_modif=true;
     ui->txt_titre->setEnabled(true);
     ui->txt_titreOri->setEnabled(true);
-    ui->txt_adult->setEnabled(true);
+    ui->chk_adult->setEnabled(true);
     ui->txt_resum->setEnabled(true);
     ui->txt_langue->setEnabled(true);
     ui->chk_soustitre->setEnabled(true);
@@ -346,7 +348,32 @@ void C_details::on_btn_enregistrer_clicked()
 {
     sql =new C_MySQLManager();
     m_film->setStockage(ui->txt_stock->text());
+    if(m_modif==false)
+    {
     sql->saveFilm(getFilm());
+    }
+   else{
+        m_film->setTitre(ui->txt_titre->text());
+        m_film->setLanguage(ui->txt_langue->text());
+        m_film->setTitreOri(ui->txt_titreOri->text());
+        m_film->setResum(ui->txt_resum->toPlainText());
+        m_film->setStockage(ui->txt_stock->text());
+        sql->updateFilm(getFilm());
+
+        //on bloque tous les controles
+        m_modif=true;
+        ui->txt_titre->setEnabled(false);
+        ui->txt_titreOri->setEnabled(false);
+        ui->chk_adult->setEnabled(false);
+        ui->txt_resum->setEnabled(false);
+        ui->txt_langue->setEnabled(false);
+        ui->chk_soustitre->setEnabled(false);
+        ui->cbb_stockage->setEnabled(false);
+    }
+    ui->btn_enregistrer->setEnabled(false);
+    MainWindow *mw = new MainWindow();
+    mw->rechercheFilm();
+
 }
 
 /**
@@ -357,4 +384,13 @@ void C_details::on_btn_enregistrer_clicked()
 void C_details::on_cbb_stockage_currentIndexChanged(const QString &arg1)
 {
     ui->txt_stock->setText(arg1);
+}
+
+void C_details::on_chk_adult_stateChanged(int arg1)
+{
+    if(ui->chk_adult->isChecked()){
+        m_film->setAdult(true);
+    }else{
+        m_film->setAdult(false);
+    }
 }

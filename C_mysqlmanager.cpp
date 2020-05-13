@@ -8,7 +8,7 @@
 #include <QPluginLoader>
 
 const QString directoryBase= "d:/tempo68"; /**< chemin du dossier de stockage */
-
+const QString directoryHard ="d:/tempo69";
 
 /**
  * @brief constructeur
@@ -69,6 +69,18 @@ QString C_MySQLManager::getGenre(int number)
     }
     return "Inconnu";
 }
+bool C_MySQLManager::updateFilm(C_miniFilm  &film){
+    QSqlQuery requete;
+    requete.prepare("UPDATE `film` SET `titre` = ?, `adulte` = ?, `resume` = ?, `titre_origin` = ?, `langue` = ? WHERE `film`.`ID` = ? ");
+    requete.addBindValue(film.getTitre());
+    requete.addBindValue(film.getAdult());
+    requete.addBindValue(film.getResum());
+    requete.addBindValue(film.getTitreOri());
+    requete.addBindValue(film.getLanguage());
+    requete.addBindValue(film.getIdLocal());
+    qWarning()<<requete.exec();
+    return true;
+}
 /**
  * @brief
  *
@@ -78,7 +90,7 @@ QString C_MySQLManager::getGenre(int number)
 QString C_MySQLManager::getStockage(int id_film)
 {
     QSqlQuery requete;
-    if(requete.exec("SELECT * FROM stockagefilm WHERE id_film="+QString::number(id_film))) {
+    if(requete.exec("SELECT * FROM film WHERE ID="+QString::number(id_film))) {
 
        if( requete.next()){
         return QVariant(requete.value("stockage")).toString();
@@ -176,6 +188,7 @@ int C_MySQLManager::getFilmCount()
  */
 void C_MySQLManager::searchTitre(QString titre)
 {
+     m_resultCounter=0;
     C_miniFilm *film = new C_miniFilm();
     int i=0;
     QSqlQuery requete;
@@ -257,7 +270,12 @@ bool C_MySQLManager::saveFilm(C_miniFilm &film)
         requete.addBindValue(film.getTitre());//titre
         requete.addBindValue(film.getAdult());//adulte
         requete.addBindValue(film.getResum());//resume
-        requete.addBindValue(film.getAffiche());//poster_path
+        QString basename = QFileInfo(film.getAffiche()).fileName();
+        bool resultCopy = QFile::copy(film.getAffiche(), directoryHard+"/"+QFileInfo(film.getAffiche()).fileName());
+        //DEbug
+        qWarning()<<"Fichier image copiée"<<resultCopy;
+        basename ="/"+ basename;
+        requete.addBindValue(basename);//poster_path
         requete.addBindValue(film.getBackdrop());//backdrop
         requete.addBindValue(film.getTitreOri());//titreOri
         requete.addBindValue(film.getLanguage());//language

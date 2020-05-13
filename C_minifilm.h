@@ -185,7 +185,8 @@ private slots:
 private:
 
     Ui::C_miniFilm *ui; /**< UI de la classeTODO: describe */
-    QString m_Affiche; /**< nom du fichier de l'affiche du film */
+    QString m_Affiche; /**< chemin du fichier de l'affiche du film */
+
     QString m_Icone;
     QString m_notation; /**< note obtenue par le film */
     int  m_idLocal; /**< identifiant dans la database locale */
