@@ -2,8 +2,8 @@
 #include "ui_C_details.h"
 #include <C_mysqlmanager.h>
 #include <C_minifilm.h>
-#include <QMainWindow>
-#include <mainwindow.h>
+
+
 
 const QString database = "dvdflix";/**< nom de la base de donnée */
 const QString adress = "127.0.0.1";/**< adresse du serveur mysql */
@@ -337,6 +337,15 @@ C_miniFilm & C_details::getFilm()
 {
     return   *m_film;
 }
+
+void C_details::modification()
+{
+
+    //DEBUG
+    qWarning()<<"SLOT modification de la classe c_detail";
+    connect(this,SIGNAL(modifier()),m_film,SLOT(modification()));
+    emit modifier();
+}
 /**
  * @fn on_btn_enregistrer_clicked()
  * @author: Mercier Laurent
@@ -371,8 +380,9 @@ void C_details::on_btn_enregistrer_clicked()
         ui->cbb_stockage->setEnabled(false);
     }
     ui->btn_enregistrer->setEnabled(false);
-    MainWindow *mw = new MainWindow();
-    mw->rechercheFilm();
+    //DEBUG
+    qWarning()<<"emission du signal de details enregister";
+    emit modifier();
 
 }
 
@@ -394,3 +404,4 @@ void C_details::on_chk_adult_stateChanged(int arg1)
         m_film->setAdult(false);
     }
 }
+

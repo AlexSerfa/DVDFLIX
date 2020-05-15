@@ -3,6 +3,7 @@
 
 #include <QWidget>
 
+
 namespace Ui {
 class C_miniFilm;
 }
@@ -27,8 +28,6 @@ public:
      *
      */
     ~C_miniFilm();
-
-
     /**
      * @brief
      *
@@ -36,7 +35,6 @@ public:
      */
     void setTitre(QString);
     QString getTitre();
-
     /**
      * @brief
      *
@@ -56,11 +54,9 @@ public:
      */
     QString getAffiche();
     void addAffiche();
-
     QString getIcone();
     void setIcone(QString);
     void addIcone();
-
     /**
      * @brief
      *
@@ -73,14 +69,12 @@ public:
      * @param note
      */
     void setNote(QString note);
-
     /**
      * @brief
      *
      * @param annee
      */
     void setAnnee(QString annee);
-
     /**
      * @brief
      *
@@ -93,7 +87,6 @@ public:
      * @param adult
      */
     void setAdult(bool adult);
-
     /**
      * @brief
      *
@@ -106,7 +99,6 @@ public:
      * @param backdrop
      */
     void setBackdrop(const QString &backdrop);
-
     /**
      * @brief
      *
@@ -174,6 +166,13 @@ public:
     void setStockage(QString stock);
     QString getStockage();
 
+
+public slots:
+    void modification();
+
+signals:
+    void modifier();
+
 private slots:
 
     /**
@@ -185,6 +184,8 @@ private slots:
 private:
 
     Ui::C_miniFilm *ui; /**< UI de la classeTODO: describe */
+
+
     QString m_Affiche; /**< chemin du fichier de l'affiche du film */
 
     QString m_Icone;

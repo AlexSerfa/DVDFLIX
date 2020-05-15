@@ -16,8 +16,8 @@ const QString directoryBase= "d:/tempo68"; /**< TODO: describe */
  */
 C_downloadmanager::C_downloadmanager(QObject *parent)
     : QObject(parent)
-      ,m_numeroPage(0)
       ,m_uniqueFile(true)
+      ,m_numeroPage(0)
 {
 
 }
@@ -52,9 +52,9 @@ QString C_downloadmanager::formatUrl(QString film){
 */
 QString C_downloadmanager::formatUrl(QString film,int page){
     QString completUrl;
-       completUrl =defaultUrl+"search/movie?api_key="+key+"&language=fr&query="+film+"&page="+QString::number(page);
- qWarning()<<"fichier pageX: "<<completUrl;
-
+    completUrl =defaultUrl+"search/movie?api_key="+key+"&language=fr&query="+film+"&page="+QString::number(page);
+    //DEBUG
+    //qWarning()<<"fichier pageX: "<<completUrl;
     return completUrl;
 }
 
@@ -86,7 +86,7 @@ void C_downloadmanager::append(const QStringList &urls, QStringList &filename)
 void C_downloadmanager::append(const QUrl &url, QString filename)
 {
     //DEBUG
-    qWarning()<<"qurl dlmanager: "<<url;
+    //qWarning()<<"qurl dlmanager: "<<url;
     if (downloadQueue.isEmpty()){
         QTimer::singleShot(3000, this,SLOT(startNextDownload()));
         qWarning()<<"demarrage telechargement";

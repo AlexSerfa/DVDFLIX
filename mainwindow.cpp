@@ -31,7 +31,9 @@ const int port = 3308;/**< port du serveur mysql */
 const QString user ="root";/**< nom utilisateur sur le server mysql */
 const QString password = "coucou256!";/**< mot de passe du serveur mysql */
 
-
+const QString databaseSecu ="SECU";
+const QString  userSecu = "root";
+const QString passSecu = "admin";
 /**
  * @brief constructeur
  *
@@ -57,6 +59,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(&sql,SIGNAL(disconnected()),this,SLOT(status_dbDeconnectee()));
     //on se connect a la db
     sql.connection(database,adress,port,user,password);
+    const bool connected =connect(&sql,SIGNAL(modifier()),this, SLOT(miseAJourAffichage()));
+    //DEBUG
+   // qDebug() << "Connection established?" << connected;
 }
 
 /**
@@ -73,6 +78,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::rechercheFilm()
 {
+    //DEBUG
+    qWarning()<<"rechercher film";
     //on vérifie que la db est bien connectée
     if(m_DBState){
         m_minifilmCountLocal= sql.filmCount(ui->lbl_titre->text());
@@ -82,7 +89,7 @@ void MainWindow::rechercheFilm()
          sql.searchTitre(ui->lbl_titre->text());
          m_minifilmCountLocal = sql.getFilmCount();
          //DEBUG
-         qWarning()<<" m_minifilmCountLocal :"<<m_minifilmCountLocal;
+         //qWarning()<<" m_minifilmCountLocal :"<<m_minifilmCountLocal;
   //     min2[h]->setIcone(directoryBase+"/home.png");
     }else
     {
@@ -407,7 +414,7 @@ int counter =0 ;
                //qWarning()<<"readJson->boucle: "<<i<<"-"<<j;
 
                //creation d'une fiche de miniature
-               C_miniFilm *min3 =new C_miniFilm();
+               C_miniFilm *min3 =new C_miniFilm(this);
                 //ajout de la fiche a la colletion
                 min2[counter] =min3;														
                 //ajout des donnés d'un film
@@ -425,11 +432,16 @@ int counter =0 ;
                 min2[counter]->setBackdrop(child[j].toObject()["backdrop_path"].toString());
                 min2[counter]->setIcone(directoryBase+"/online.png");
                 min2[counter]->setLocal(false);
+                const bool connected = connect(min2[counter],SIGNAL(modifier()),this,SLOT(miseAJourAffichage()));
+                //DEBUG
+                //qDebug() << "Connection established?" << connected;
+               // min2[counter]->setMain(this);
                 QJsonArray genreArray = child[j].toObject()["genre_ids"].toArray();
                 for(int i =0; i<genreArray.count();i++)
                 {
                     min2[counter]->setGenres(i,genreArray[i].toInt());
                 }
+
                 int genreCode =genreArray[0].toInt();
                 QString  genrePrincipal = sql.getGenre(genreCode);
                  min2[counter]->setGenre(genrePrincipal);
@@ -655,6 +667,13 @@ void MainWindow::on_rdb_rechDist_toggled(bool checked)
     if(checked==true)
     sql.connection(database,adress,port,user,password);
     m_searchType=true;
+
+}
+
+void MainWindow::miseAJourAffichage()
+{
+ restoreValue();
+ rechercheFilm();
 
 }
 void MainWindow::on_pushButton_clicked()

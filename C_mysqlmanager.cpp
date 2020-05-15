@@ -79,13 +79,26 @@ bool C_MySQLManager::updateFilm(C_miniFilm  &film){
     requete.addBindValue(film.getLanguage());
     requete.addBindValue(film.getIdLocal());
     qWarning()<<requete.exec();
+
     return true;
 }
+
+void C_MySQLManager::modification()
+{
+ //DEBUG
+    qWarning()<<"emission du signal depuis sqlManager";
+    emit modifier();
+}
+
+
 /**
- * @brief
+ * @fn getGenre(int number)
+ * @author: Mercier Laurent
+ * @date 12/05/2020
+ * @brief recupere le lieu de stockage du film
  *
- * @param id_film
- * @return QString
+ * @param id_film   identifiant du film
+ * @return QString  lieu de stockage du film
  */
 QString C_MySQLManager::getStockage(int id_film)
 {
@@ -127,6 +140,9 @@ QStringList  C_MySQLManager::getStockageList()
     return liste;
 }
 /**
+ * @fn getGenre(int number)
+ * @author: Mercier Laurent
+ * @date 05/05/2020
  * @brief recherche le nombre de film corrrespondant au texte entré la recherche dans la fenetre principale et retourne les info contenues dans la db après création d'un C_miniFilm
  *
  * @return int
@@ -145,6 +161,9 @@ int C_MySQLManager::filmCount(QString titre)
 
 }
 /**
+ * @fn getGenre(int number)
+ * @author: Mercier Laurent
+ * @date 06/05/2020
  * @brief réinitialisation du memebre m_resultCounter correspondant au nombre de resultat lors d'une recherche de film dans la base de données
  *
  */
@@ -218,6 +237,9 @@ void C_MySQLManager::searchTitre(QString titre)
             min1[i]->addIcone();
             min1[i]->setGenre(getGenre(requete.value(16).toInt()));
             min1[i]->setLocal(true);
+            connect(min1[i],SIGNAL(modifier()),this,SLOT(modification()));
+           // connect(this,SIGNAL(modifier()),))
+
             i++;
         }
     }
@@ -258,11 +280,11 @@ bool C_MySQLManager::saveFilm(C_miniFilm &film)
 {
     bool result  =false;
     QDate dateR;
-    dateR= QDate::fromString(film.getRelease());
+    dateR= QstringToQDate( film.getRelease());
     //DEBUG 3l
-    // qWarning()<<"date: "<< film.getRelease();
-    // qWarning()<<"date: "<< QDate::fromString(film.getRelease());
-    // qWarning()<<"date: "<< dateR;
+    //qWarning()<<"date: "<< film.getRelease();
+    //qWarning()<<"date: "<< QDate::fromString(film.getRelease());
+    //qWarning()<<"date: "<< dateR.toString();
     QSqlQuery requete;
     try{
         requete.prepare("INSERT INTO `film` (`ID`, `titre`, `adulte`, `resume`, `poster_path`, `backdrop`, `titre_origin`, `langue`, `date_real`, `video`, `note`, `vote_count`, `popularity`, `id_film`, `date_enr`, `stockage`, `genre`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
@@ -272,10 +294,10 @@ bool C_MySQLManager::saveFilm(C_miniFilm &film)
         requete.addBindValue(film.getResum());//resume
         QString basename = QFileInfo(film.getAffiche()).fileName();
         bool resultCopy = QFile::copy(film.getAffiche(), directoryHard+"/"+QFileInfo(film.getAffiche()).fileName());
-        //DEbug
-        qWarning()<<"Fichier image copiée"<<resultCopy;
-        basename ="/"+ basename;
-        requete.addBindValue(basename);//poster_path
+        //DEBUG
+        //qWarning()<<"Fichier image copiée"<<resultCopy;
+        //basename =basename;
+        requete.addBindValue(directoryHard+"/"+ basename);//poster_path
         requete.addBindValue(film.getBackdrop());//backdrop
         requete.addBindValue(film.getTitreOri());//titreOri
         requete.addBindValue(film.getLanguage());//language
@@ -326,6 +348,7 @@ bool C_MySQLManager::saveFilm(C_miniFilm &film)
         qWarning()<<"Erreur lors de la requete d'insertion du lieu  de stockage: "<<requete.lastError();
         result = false;
     }
+
     return result;
 }
 /**
@@ -417,4 +440,9 @@ QString C_MySQLManager::getPassword()
 void C_MySQLManager::setPassword(QString password)
 {
     m_password = password;
+}
+QDate C_MySQLManager::QstringToQDate(QString date){
+
+    QDate Date = QDate::fromString(date,"yyyy-MM-dd");
+    return Date;
 }

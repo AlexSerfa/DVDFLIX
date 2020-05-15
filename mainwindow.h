@@ -38,7 +38,7 @@ public slots:
     void status_dbConnectee();
     void status_dbDeconnectee();
     void rechercheFilm();
-
+    void miseAJourAffichage();
 
 private slots:
     /**
@@ -107,6 +107,7 @@ private:
     QVector<QJsonObject> m_JsonSearch;  /*!< stockage des objet Json contenu dans les fichier telecharger lors d'une recherche de film avant concatenation*/
     QUrl url;
     Ui::MainWindow *ui;        /*!< interface graphique de la fenetre principale*/
+
     /**
      * @brief restore les valeurs des menbres concernant l'affichage des minifilm
      *

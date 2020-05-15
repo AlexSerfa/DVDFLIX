@@ -5,6 +5,7 @@
 #include <C_mysqlmanager.h>
 #include <C_minifilm.h>
 
+
 namespace Ui {
 class C_details;
 }
@@ -39,13 +40,17 @@ public:
     void listStockage();
 
     C_miniFilm & getFilm();
+    QMainWindow *getMain() const;
+    void setMain(QMainWindow *main);
+
+public slots:
+    void modification();
+signals:
+    void modifier();
 private slots:
     void on_btn_modifier_clicked();
-
     void on_btn_enregistrer_clicked();
-
     void on_cbb_stockage_currentIndexChanged(const QString &arg1);
-
     void on_chk_adult_stateChanged(int arg1);
 
 private:
@@ -58,6 +63,7 @@ private:
     bool m_local;
     bool m_modif=false;
     C_miniFilm *m_film;
+
 };
 
 #endif // C_DETAILS_H

@@ -6,6 +6,7 @@
 #include <QSqlError>
 #include <C_details.h>
 
+
 const QString directoryBase= "d:/tempo68"; /**< chemin du dossier de stockage */
 const QString directoryHard ="d:/tempo69";
 /**
@@ -58,10 +59,11 @@ void C_miniFilm::on_btn_details_clicked()
  detail->addDispo(m_Icone);
  detail->setLocal(m_local);
  detail->setFilm(*this);
-detail->listStockage();
+ detail->listStockage();
  int i=0;
  QSqlQuery requete;
  C_MySQLManager  *sql =new C_MySQLManager();
+
  while(m_genres[i]!=0){
      QString genre =sql->getGenre(m_genres[i]);
 
@@ -73,7 +75,17 @@ detail->listStockage();
   * @TODO gérer le passage de la backdrop après téléchargement de l'image
   */
  detail->addAffichePicture(this->getAffiche());
+ connect(detail,SIGNAL(modifier()),this,SLOT(modification()));
+
+
+
+
 }
+
+
+
+
+
 
 /**
  * @brief retournourne le nombre de vote pour ce film
@@ -123,6 +135,14 @@ void C_miniFilm::setStockage(QString stock)
 QString C_miniFilm::getStockage()
 {
     return m_stockage;
+}
+
+void C_miniFilm::modification()
+{
+   //DEBUG
+   // qWarning()<<"emission du signal de minifilm";
+
+    emit modifier();
 }
 
 /**
@@ -400,12 +420,12 @@ void C_miniFilm::setAffiche(QString img){
  *
  */
 void C_miniFilm::addAffiche(){
-    if(m_local){
-    ui->lbl_affiche->setPixmap(directoryHard + "/"+ m_Affiche);
-    }
-    else{
+  //  if(m_local){
+  //  ui->lbl_affiche->setPixmap(directoryHard + "/"+ m_Affiche);
+  //  }
+  //  else{
          ui->lbl_affiche->setPixmap(m_Affiche);
-    }
+  //  }
 }
 
 void C_miniFilm::setIcone(QString img)

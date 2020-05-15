@@ -4,6 +4,8 @@
 #include <QSql>
 #include <QSqlDatabase>
 #include <C_minifilm.h>
+
+#include <QMainWindow>
 /**
  * @brief
  *
@@ -87,7 +89,11 @@ public:
     void videMinifilm();
     bool saveFilm(C_miniFilm  &film);
     bool updateFilm(C_miniFilm  &film);
+
+public slots:
+    void modification();
 signals:
+    void modifier();
     /**
      * @brief
      *
@@ -98,6 +104,7 @@ signals:
      *
      */
     void disconnected();
+
 
 //void setFilm(C_miniFilm  &film);
 private:
@@ -110,6 +117,7 @@ private:
     QString m_user; /**< nom de l'utilisteur de la db */
     QString m_password; /**< password de la db */
     int m_resultCounter=0;/**< pcompteur de resultat lors d'une recherche de film dans la db */
+    QDate QstringToQDate(QString date);
     /**
      * @brief
      *
