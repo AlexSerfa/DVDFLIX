@@ -1,0 +1,15 @@
+release/C_details.o
+release/C_downloadmanager.o
+release/C_minifilm.o
+release/C_mysqlmanager.o
+release/c_bddsecu.o
+release/c_options.o
+release/main.o
+release/mainwindow.o
+release/testclasse.o
+release/moc_C_details.o
+release/moc_C_downloadmanager.o
+release/moc_C_minifilm.o
+release/moc_C_mysqlmanager.o
+release/moc_c_options.o
+release/moc_mainwindow.o

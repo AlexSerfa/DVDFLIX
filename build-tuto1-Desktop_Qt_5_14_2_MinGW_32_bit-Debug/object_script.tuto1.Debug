@@ -1,0 +1,15 @@
+debug/C_details.o
+debug/C_downloadmanager.o
+debug/C_minifilm.o
+debug/C_mysqlmanager.o
+debug/c_bddsecu.o
+debug/c_options.o
+debug/main.o
+debug/mainwindow.o
+debug/testclasse.o
+debug/moc_C_details.o
+debug/moc_C_downloadmanager.o
+debug/moc_C_minifilm.o
+debug/moc_C_mysqlmanager.o
+debug/moc_c_options.o
+debug/moc_mainwindow.o
