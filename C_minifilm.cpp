@@ -424,6 +424,8 @@ void C_miniFilm::addAffiche(){
   //  ui->lbl_affiche->setPixmap(directoryHard + "/"+ m_Affiche);
   //  }
   //  else{
+    //DEBUG
+    qWarning()<<"affiche: "<<m_Affiche;
          ui->lbl_affiche->setPixmap(m_Affiche);
   //  }
 }

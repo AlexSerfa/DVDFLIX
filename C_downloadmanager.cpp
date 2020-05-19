@@ -140,6 +140,7 @@ void C_downloadmanager::startNextDownload()
         return;
     }
     QUrl url = downloadQueue.dequeue();
+    totalCount--;
     QString m_filename= fileNameQueue.dequeue();
     //QString filename = saveFileName(url);
     QString downloadDirectory = QDir::cleanPath(directoryBase);
@@ -191,6 +192,7 @@ void C_downloadmanager::downloadFinished()
             qWarning()<<"Succes.\n";
             ++downloadedCount;
             if(downloadQueue.isEmpty() ){
+                totalCount=0;
                emit emptyQueue();
             }
         }

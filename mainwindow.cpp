@@ -269,16 +269,20 @@ void MainWindow::getPageNumberJson(){
 
     //qstring pour stocker le nom du fichier
     QString filename;
-
+    //on limite le nombre de page a 7
+   if(  m_totalPage>5) m_totalPage =5 ;
     if(m_totalPage>1){
         for(int i =2;i<=m_totalPage;i++){
             //on connect le signal avertissant de la fin du dernier telechargement a la fonction concatJSON()
             if(i==m_totalPage) connect(&m_dlmanager,SIGNAL(emptyQueue()),this,SLOT(concatJSON()));
-            m_pageNumber++;
-            //on format le nom du fichier suivant
-            filename= "movie"+QString::number(i-1)+".json";
-            //on ajoute le telechargement du fichier au downloadManager
-            m_dlmanager.append(QUrl::fromUserInput((m_dlmanager.formatUrl(ui->ln_titre->text(),i))),filename);
+            //limiation du nombre de page a telecharger
+            if(i<=5){
+                m_pageNumber++;
+                //on format le nom du fichier suivant
+                filename= "movie"+QString::number(i-1)+".json";
+                //on ajoute le telechargement du fichier au downloadManager
+                m_dlmanager.append(QUrl::fromUserInput((m_dlmanager.formatUrl(ui->ln_titre->text(),i))),filename);
+            }
         }
     }
     //DEBUG
@@ -399,11 +403,11 @@ void MainWindow::readJson()
       QJsonArray arry= JsonObj.value(QString("results")).toArray();
 
 
-
+int filmAjouter=0;
 
 //boucle créant les miniature pour chaque film dans le json movie.json
 int counter =0 ;
-      for(int i =0 ; i<arry.count();i++)
+      for(int i =0 ; i<arry.count() && i<7;i++)
       {
           QJsonArray child =arry[i].toArray();
           //DEBUG				 
@@ -412,7 +416,8 @@ int counter =0 ;
 
                 //DEBUG
                //qWarning()<<"readJson->boucle: "<<i<<"-"<<j;
-
+              filmAjouter++;
+qWarning()<<"nb film ajouter: "<<filmAjouter;
                //creation d'une fiche de miniature
                C_miniFilm *min3 =new C_miniFilm(this);
                 //ajout de la fiche a la colletion
@@ -514,8 +519,12 @@ bool MainWindow::createMinifilm(){
    int lastPage = 0;
    int totalResult= m_minifilmCountLocal+m_minifilmCountOnline;
 
+   if(totalResult>99) {
+       totalResult = 100;
+       m_minifilmCountOnline = 100;
+   }
     //remplissage des page completes (10 minifilms)
-    for(int i = filmCounter;i<totalResult/10 && i<150;i++){
+    for(int i = filmCounter;i<totalResult/10 ;i++){
         for(int j =0; j<2;j++){ //pour les lignes
             for(int k =0; k<5; k++){ //pour les colones
                 if (filmCounter<m_minifilmCountLocal){
@@ -524,31 +533,41 @@ bool MainWindow::createMinifilm(){
                     filmCounter++;
                     lastPage =i+1;
                 }else{
-                    min2[filmCounter-m_minifilmCountLocal]->addAffiche();
-                    grdt[i]->addWidget(min2[filmCounter-m_minifilmCountLocal],j,k);
+                    //DEBUG
+                    qWarning()<<"partie page COMPLETES, :";
+                    qWarning()<<"filmCounter : " <<filmCounter;
+                    qWarning()<<"m_minifilmCountLocal : "<< m_minifilmCountLocal;
+                    qWarning()<<"filmCounter-(m_minifilmCountLocal-1) :" << filmCounter-(m_minifilmCountLocal-1);
+                    min2[filmCounter-(m_minifilmCountLocal)]->addAffiche();
+                    grdt[i]->addWidget(min2[filmCounter-(m_minifilmCountLocal)],j,k);
                     filmCounter++;
                     lastPage =i+1;
                 }
             }
         }							   
     }
+    //DEBUG
+    qWarning()<<"-------------------------------------";
+    qWarning()<<"FIN DES PAGES COMPLETESCPMPLETES";
+     qWarning()<<"------------------------------------------";
+
    for(int j =0; j<2;j++){ //pour les lignes
         for(int k =0; k<5; k++){ //pour les colones
             if(filmCounter <m_minifilmCountOnline){
-                if (filmCounter<m_minifilmCountLocal){
+             /*   if (filmCounter<m_minifilmCountLocal){
                     sql.min1[filmCounter]->addAffiche();
                     grdt[lastPage]->addWidget(sql.min1[filmCounter],j,k);
                     filmCounter++;
-                }else{
-                    min2[filmCounter]->addAffiche();
-                    grdt[lastPage]->addWidget(min2[filmCounter],j,k);
+                }else{*/
+                    min2[filmCounter-(m_minifilmCountLocal)]->addAffiche();
+                    grdt[lastPage]->addWidget(min2[filmCounter-(m_minifilmCountLocal)],j,k);
                     filmCounter++;
-                }
+                //}
             }						
         }
     }
     getsion_prevNext_Btn();
-    min2[0]->addAffiche();
+   // min2[0]->addAffiche();
     return true;
 }
 /**
