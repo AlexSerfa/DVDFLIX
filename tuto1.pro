@@ -20,6 +20,8 @@ SOURCES += \
     C_downloadmanager.cpp \
     C_minifilm.cpp \
     C_mysqlmanager.cpp \
+    c_bddsecu.cpp \
+    c_filesaver.cpp \
     c_options.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -30,6 +32,8 @@ HEADERS += \
     C_downloadmanager.h \
     C_minifilm.h \
     C_mysqlmanager.h \
+    c_bddsecu.h \
+    c_filesaver.h \
     c_options.h \
     mainwindow.h \
     testclasse.h
@@ -49,5 +53,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 DISTFILES += \
+    ../build-tuto1-Desktop_Qt_5_14_2_MinGW_32_bit-Debug/debug/dvdflix.ini \
+    dvdflix.ini \
     model-wsBCTe.qmodel \
     movie0.json

@@ -839,6 +839,9 @@ background-color: rgb(0, 85, 255);</string>
      <property name="text">
       <string>Locale +web</string>
      </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
     </widget>
    </widget>
    <widget class="QPushButton" name="pushButton">
@@ -851,7 +854,7 @@ background-color: rgb(0, 85, 255);</string>
      </rect>
     </property>
     <property name="text">
-     <string>options</string>
+     <string>Options</string>
     </property>
    </widget>
   </widget>

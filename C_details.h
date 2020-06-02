@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <C_mysqlmanager.h>
 #include <C_minifilm.h>
+#include <c_bddsecu.h>
 
 
 namespace Ui {

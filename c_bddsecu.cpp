@@ -39,11 +39,12 @@ void C_bddSecu::LireIni()
 {
     ifstream f;
     QDir::setCurrent(qApp->applicationDirPath());
+    //DEBUG
+    qWarning()<<"appli path: "<<qApp->applicationDirPath();
     f.open("dvdflix.ini");
 
     string adr;
     int prt;
-
     f>>adr;
     QString adresse =QString::fromStdString(adr);
     setBDdvdAdr(adresse);
@@ -73,6 +74,11 @@ void C_bddSecu::connection()
             m_dvdFlixPass = requete.value(2).toString();
             m_dvdFlixAdr = requete.value(3).toString();
             m_dvdFlixPort =  requete.value(4).toInt();
+            //DEBUG 4l
+            qWarning()<<m_dvdFlixAdr;
+            qWarning()<<m_dvdFlixPort;
+            qWarning()<<m_dvdFlixPass;
+            qWarning()<<m_dvdFlixUser;
         }
         qDebug()<<"Connection SECU ok";
     }else{

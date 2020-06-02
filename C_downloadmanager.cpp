@@ -192,7 +192,7 @@ void C_downloadmanager::downloadFinished()
             qWarning()<<"Succes.\n";
             ++downloadedCount;
             if(downloadQueue.isEmpty() ){
-                totalCount=0;
+                 totalCount=0;
                emit emptyQueue();
             }
         }

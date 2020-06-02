@@ -17,23 +17,26 @@
 #include <C_minifilm.h>
 #include <C_mysqlmanager.h>
 #include <c_options.h>
+#include "c_bddsecu.h"
+#include <fstream>
+#include <iostream>
+
+using namespace std;
 
 const QString key ="76532a92d48d6e7e7fb5d72eaf2029b3"; /**< clé de l'API themoviedb */
 const QString defaultUrl = " https://api.themoviedb.org/3/"; /**< adresse de l'API themoviedb */
 const QString urlBaseAffiche="https://image.tmdb.org/t/p/w500"; /**< adresse pour la récupération des image */
-const QString directoryBase= "d:/tempo68"; /**< chemin du dossier de stockage */
-const QString directoryHard ="d:/tempo69";
+const QString directoryBase= "x:/tempo68"; /**< chemin du dossier de stockage */
+const QString directoryHard ="x:/tempo69";
 
 
 const QString database = "dvdflix";/**< nom de la base de donnée */
 const QString adress = "127.0.0.1";/**< adresse du serveur mysql */
 const int port = 3308;/**< port du serveur mysql */
 const QString user ="root";/**< nom utilisateur sur le server mysql */
-const QString password = "coucou256!";/**< mot de passe du serveur mysql */
+const QString password = "admin";/**< mot de passe du serveur mysql */
 
-const QString databaseSecu ="SECU";
-const QString  userSecu = "root";
-const QString passSecu = "admin";
+
 /**
  * @brief constructeur
  *
@@ -51,17 +54,31 @@ MainWindow::MainWindow(QWidget *parent)
     , m_pageNumber(0)
     , ui(new Ui::MainWindow)
 {
+
      ui->setupUi(this);
-    //on check le bouton locale +distant par defaut pour le recherche
-    ui->rdb_rechDist->setChecked(true);
+
+     /**
+      * @fn c_bddsecu
+      * @author: Jovanovic Milan
+      * @date 15/05/2020
+      * @brief
+      *         connexion à la base secu
+      *
+      *
+      */
+    C_bddSecu Secu = C_bddSecu();
+    Secu.LireIni();
+    Secu.connection();
+    Secu.close();
+
     //on connect les signaux de connection a la db
-    connect(&sql,SIGNAL(connected()),this,SLOT(status_dbConnectee()));
-    connect(&sql,SIGNAL(disconnected()),this,SLOT(status_dbDeconnectee()));
+   connect(&sql,SIGNAL(connected()),this,SLOT(status_dbConnectee()));
+   connect(&sql,SIGNAL(disconnected()),this,SLOT(status_dbDeconnectee()));
     //on se connect a la db
-    sql.connection(database,adress,port,user,password);
-    const bool connected =connect(&sql,SIGNAL(modifier()),this, SLOT(miseAJourAffichage()));
-    //DEBUG
-   // qDebug() << "Connection established?" << connected;
+
+   sql.connection(database,Secu.getDvdFlixAdr(),Secu.getDvdFlixPort(),Secu.getDvdFlixUser(),Secu.getDvdFlixPass());
+    connect(&sql,SIGNAL(modifier()),this, SLOT(miseAJourAffichage()));
+
 }
 
 /**
@@ -180,7 +197,6 @@ void MainWindow::restoreValue()
 */
 QString MainWindow::formatSearch()
 {
-
     QString recherche = ui->ln_titre->text();
     int i=0;
     do{
@@ -403,11 +419,11 @@ void MainWindow::readJson()
       QJsonArray arry= JsonObj.value(QString("results")).toArray();
 
 
-int filmAjouter=0;
+      int filmAjouter=0;
 
-//boucle créant les miniature pour chaque film dans le json movie.json
-int counter =0 ;
-      for(int i =0 ; i<arry.count() && i<7;i++)
+      //boucle créant les miniature pour chaque film dans le json movie.json
+      int counter =0 ;
+            for(int i =0 ; i<arry.count() && i<7;i++)
       {
           QJsonArray child =arry[i].toArray();
           //DEBUG				 
@@ -417,7 +433,7 @@ int counter =0 ;
                 //DEBUG
                //qWarning()<<"readJson->boucle: "<<i<<"-"<<j;
               filmAjouter++;
-qWarning()<<"nb film ajouter: "<<filmAjouter;
+              qWarning()<<"nb film ajouter: "<<filmAjouter;
                //creation d'une fiche de miniature
                C_miniFilm *min3 =new C_miniFilm(this);
                 //ajout de la fiche a la colletion
@@ -518,57 +534,58 @@ bool MainWindow::createMinifilm(){
 
    int lastPage = 0;
    int totalResult= m_minifilmCountLocal+m_minifilmCountOnline;
-
    if(totalResult>99) {
        totalResult = 100;
        m_minifilmCountOnline = 100;
    }
-    //remplissage des page completes (10 minifilms)
-    for(int i = filmCounter;i<totalResult/10 ;i++){
-        for(int j =0; j<2;j++){ //pour les lignes
-            for(int k =0; k<5; k++){ //pour les colones
-                if (filmCounter<m_minifilmCountLocal){
-                    sql.min1[filmCounter]->addAffiche();
-                    grdt[i]->addWidget(sql.min1[filmCounter],j,k);
-                    filmCounter++;
-                    lastPage =i+1;
-                }else{
-                    //DEBUG
-                    qWarning()<<"partie page COMPLETES, :";
-                    qWarning()<<"filmCounter : " <<filmCounter;
-                    qWarning()<<"m_minifilmCountLocal : "<< m_minifilmCountLocal;
-                    qWarning()<<"filmCounter-(m_minifilmCountLocal-1) :" << filmCounter-(m_minifilmCountLocal-1);
-                    min2[filmCounter-(m_minifilmCountLocal)]->addAffiche();
-                    grdt[i]->addWidget(min2[filmCounter-(m_minifilmCountLocal)],j,k);
-                    filmCounter++;
-                    lastPage =i+1;
-                }
-            }
-        }							   
-    }
-    //DEBUG
-    qWarning()<<"-------------------------------------";
-    qWarning()<<"FIN DES PAGES COMPLETESCPMPLETES";
-     qWarning()<<"------------------------------------------";
+   //remplissage des page completes (10 minifilms)
+   for(int i = filmCounter;i<totalResult/10 && i<150;i++){
+       for(int j =0; j<2;j++){ //pour les lignes
+           for(int k =0; k<5; k++){ //pour les colones
+               if (filmCounter<m_minifilmCountLocal){
+                   sql.min1[filmCounter]->addAffiche();
+                   grdt[i]->addWidget(sql.min1[filmCounter],j,k);
+                   filmCounter++;
+                   lastPage =i+1;
+               }else{
+
+
+                   //DEBUG
+                   qWarning()<<"partie page COMPLETES, :";
+                   qWarning()<<"filmCounter : " <<filmCounter;
+                   qWarning()<<"m_minifilmCountLocal : "<< m_minifilmCountLocal;
+                   qWarning()<<"filmCounter-(m_minifilmCountLocal-1) :" << filmCounter-(m_minifilmCountLocal-1);
+                   min2[filmCounter-(m_minifilmCountLocal)]->addAffiche();
+                   grdt[i]->addWidget(min2[filmCounter-(m_minifilmCountLocal)],j,k);
+                   filmCounter++;
+                   lastPage =i+1;
+               }
+           }
+       }
+   }
+   //DEBUG
+   qWarning()<<"-------------------------------------";
+   qWarning()<<"FIN DES PAGES COMPLETESCPMPLETES";
+   qWarning()<<"------------------------------------------";
 
    for(int j =0; j<2;j++){ //pour les lignes
-        for(int k =0; k<5; k++){ //pour les colones
-            if(filmCounter <m_minifilmCountOnline){
-             /*   if (filmCounter<m_minifilmCountLocal){
-                    sql.min1[filmCounter]->addAffiche();
-                    grdt[lastPage]->addWidget(sql.min1[filmCounter],j,k);
-                    filmCounter++;
-                }else{*/
-                    min2[filmCounter-(m_minifilmCountLocal)]->addAffiche();
-                    grdt[lastPage]->addWidget(min2[filmCounter-(m_minifilmCountLocal)],j,k);
-                    filmCounter++;
-                //}
-            }						
-        }
-    }
-    getsion_prevNext_Btn();
+       for(int k =0; k<5; k++){ //pour les colones
+           if(filmCounter <m_minifilmCountOnline){
+               /*   if (filmCounter<m_minifilmCountLocal){
+    sql.min1[filmCounter]->addAffiche();
+    grdt[lastPage]->addWidget(sql.min1[filmCounter],j,k);
+    filmCounter++;
+}else{*/
+               min2[filmCounter-(m_minifilmCountLocal)]->addAffiche();
+               grdt[lastPage]->addWidget(min2[filmCounter-(m_minifilmCountLocal)],j,k);
+               filmCounter++;
+               //}
+           }
+       }
+   }
+   getsion_prevNext_Btn();
    // min2[0]->addAffiche();
-    return true;
+   return true;
 }
 /**
  * @brief
@@ -684,7 +701,7 @@ void MainWindow::on_rdb_rechLoc_toggled(bool checked)
 void MainWindow::on_rdb_rechDist_toggled(bool checked)
 {
     if(checked==true)
-    sql.connection(database,adress,port,user,password);
+     sql.connection(database,Secu.getDvdFlixAdr(),Secu.getDvdFlixPort(),Secu.getDvdFlixUser(),Secu.getDvdFlixPass());
     m_searchType=true;
 
 }
@@ -695,8 +712,20 @@ void MainWindow::miseAJourAffichage()
  rechercheFilm();
 
 }
+/**
+ * @fn c_option button
+ * @author: Jovanovic Milan
+ * @date 11/05/2020
+ * @brief
+ *
+ *
+ */
 void MainWindow::on_pushButton_clicked()
 {
    C_options *options = new  C_options();
    options->show();
+}
+
+void MainWindow::on_btn_option_clicked()
+{
 }

@@ -21,6 +21,7 @@ C_MySQLManager::C_MySQLManager(QObject *parent)
 {
 
 }
+
 /**
  * @brief gere la connection à la base de donnée
  *

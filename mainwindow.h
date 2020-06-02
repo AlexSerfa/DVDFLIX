@@ -9,6 +9,7 @@
 #include <C_minifilm.h>
 #include <C_downloadmanager.h>
 #include <C_mysqlmanager.h>
+#include "c_bddsecu.h"
 #include <QVBoxLayout>
 
 QT_BEGIN_NAMESPACE
@@ -88,8 +89,10 @@ private slots:
     void on_rdb_rechLoc_toggled(bool checked);
     void on_rdb_rechDist_toggled(bool checked);
 
-private:
+    void on_btn_option_clicked();
 
+private:
+    C_bddSecu Secu;
     C_MySQLManager sql;     /*!< objet gérant la partie Mysql */
     C_downloadmanager  m_dlmanager; /*!< objet gérant le tééléchargement des fichier sur la toile et l'enregistrement sur le hdd */
     C_miniFilm *min2[150];   /*!< collection de minifiche après une recherche d'un film en ligne*/
