@@ -21,6 +21,9 @@ using namespace std;
 const QString  userSecu = "root";
 const QString passSecu = "admin";
 
+
+
+
 /**
  * @fn c_option
  * @author: Jovanovic Milan
@@ -49,7 +52,7 @@ C_options::C_options(QWidget *parent) :
      }
 */
 
-/**
+    /**
 * @fn c_option
 * @author: Jovanovic Milan
 * @date 11/05/2020
@@ -131,12 +134,12 @@ void C_options::on_pushButton_clicked()
         bool ok = upd_param.open();
 
 
-//sql names
+        //sql names
         QString tempoPath = ui->txt_tempo->text();
         QString hardPath = ui->txt_fixe->text();
         QString code = ui->txt_code->text();
 
-/**
+        /**
 * @fn c_option
 * @author: Jovanovic Milan
 * @date 23/05/2020
@@ -225,27 +228,47 @@ void C_options::update(QString nomUt, QString pass, QString adr, int port)
     upd_secu.setPassword(passSecu);
     upd_secu.setPort(secu.getBDdvdPort());
     bool ok = upd_secu.open();
-//DEBUG
+    //DEBUG
     qWarning()<<"adresse: "<<secu.getBDdvdAdr();
-     qWarning()<<"port: "<<secu.getBDdvdPort();
-      qWarning()<<"usser: "<<userSecu;
-      qWarning()<<"usser: "<<passSecu;
-
-
+    qWarning()<<"port: "<<secu.getBDdvdPort();
+    qWarning()<<"usser: "<<userSecu;
+    qWarning()<<"pass: "<<passSecu;
     if(ok){
         qDebug()<<"connexion ok";
         QSqlQuery query(upd_secu);
-    query.prepare("UPDATE `security`.`bddsecu` SET `utilisateurBdd` = '"+nomUt+"', `motDePasseBdd` = '"+pass+"', `adresse` = '"+adr+"', `port` =  '"+QString::number(port)+"' WHERE `bddsecu`.`ID` = 1;");
-     //   query.exec("UPDATE `bddsecu` SET `utilisateurBdd` = '"+nomUt+"' WHERE `ID` = 1;");
-     //   query.exec("UPDATE `bddsecu` SET `motDePasseBdd` = '"+pass+"' WHERE `ID` = 1;");
-     //   query.exec("UPDATE `bddsecu` SET `adresse` = '"+adr+"' WHERE `ID` = 1;");
-     //   query.exec("UPDATE `bddsecu` SET `port` = '"+QString::number(port)+"' WHERE `ID` = 1;");
-query.exec();
+        query.prepare("UPDATE `security`.`bddsecu` SET `utilisateurBdd` = '"+nomUt+"', `motDePasseBdd` = '"+pass+"', `adresse` = '"+adr+"', `port` =  '"+QString::number(port)+"' WHERE `bddsecu`.`ID` = 1;");
+        //   query.exec("UPDATE `bddsecu` SET `utilisateurBdd` = '"+nomUt+"' WHERE `ID` = 1;");
+        //   query.exec("UPDATE `bddsecu` SET `motDePasseBdd` = '"+pass+"' WHERE `ID` = 1;");
+        //   query.exec("UPDATE `bddsecu` SET `adresse` = '"+adr+"' WHERE `ID` = 1;");
+        //   query.exec("UPDATE `bddsecu` SET `port` = '"+QString::number(port)+"' WHERE `ID` = 1;");
+        query.exec();
     }else{
         qDebug()<<"connexion n'est pas OK";
     }
 }
 
+
+
+void C_options::TexteChemin(QLineEdit *champTexte){
+    QFileDialog f;
+    f.setFileMode(QFileDialog::DirectoryOnly);
+    f.setOption(QFileDialog::ShowDirsOnly,false);
+
+    f.exec();
+
+    qDebug()<<f.directory().absolutePath();
+
+    //création dossier
+    QString folder = "/chemin temporaire";
+    QString chemin = f.directory().absolutePath();
+
+    qDebug()<<"chemin tempo: "<<chemin;
+
+    champTexte->setText(chemin);
+
+    QDir d = QDir::root();
+    qDebug()<<d.mkpath(chemin+folder);
+}
 
 /**
  * @fn c_options
@@ -256,11 +279,17 @@ query.exec();
  */
 void C_options::on_pushButton_cheminTempo_clicked()
 {
-    QFileDialog f;
+    TexteChemin(ui->txt_tempo);
+ /*   QFileDialog f;
+
     f.setFileMode(QFileDialog::DirectoryOnly);
     f.setOption(QFileDialog::ShowDirsOnly,false);
-    f.exec();
 
+
+    QStringList fileNames;
+    if (f.exec())
+        fileNames = f.selectedFiles();
+    qDebug()<<"fichier selectionné: "<<fileNames;
     qDebug()<<f.directory().absolutePath();
 
     //création dossier
@@ -273,7 +302,9 @@ void C_options::on_pushButton_cheminTempo_clicked()
 
     QDir d = QDir::root();
     qDebug()<<d.mkpath(chemin+folder);
+    */
 }
+
 /**
  * @fn c_options
  * @author: Jovanovic Milan
@@ -283,19 +314,29 @@ void C_options::on_pushButton_cheminTempo_clicked()
  */
 void C_options::on_pushButton_cheminFixe_clicked()
 {
+    TexteChemin(ui->txt_fixe);
+    /*
     QFileDialog f;
     f.setFileMode(QFileDialog::DirectoryOnly);
     f.setOption(QFileDialog::ShowDirsOnly,false);
-    f.exec();
+
+
+    QStringList fileNames;
+    if (f.exec())
+        fileNames = f.selectedFiles();
+    qDebug()<<"fichier selectionné: "<<fileNames;
+    qDebug()<<f.directory().absolutePath();
 
     qDebug()<<f.directory().absolutePath();
     //création dossier
     QString folder = "/chemin fixe";
     QString chemin = f.directory().absolutePath();
-    qDebug()<<"chemin fixe: "<<chemin;
+    //qDebug()<<"chemin fixe: "<<chemin;
 
     ui->txt_fixe->setText(chemin);
 
     QDir d = QDir::root();
-    qDebug()<<d.mkpath(chemin+folder);
+    qDebug()<<d.mkpath(chemin+folder);*/
 }
+
+

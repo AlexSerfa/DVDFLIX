@@ -2,6 +2,7 @@
 #define C_OPTIONS_H
 
 #include <QDialog>
+#include <QLineEdit>
 #include "C_mysqlmanager.h"
 #include "c_bddsecu.h"
 
@@ -49,6 +50,7 @@ private:
     QSqlDatabase upd_param;
     C_bddSecu secu;
 
+    void TexteChemin(QLineEdit *champTexte);
 };
 
 #endif // C_OPTIONS_H

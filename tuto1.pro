@@ -55,5 +55,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 DISTFILES += \
     ../build-tuto1-Desktop_Qt_5_14_2_MinGW_32_bit-Debug/debug/dvdflix.ini \
     dvdflix.ini \
+    img_tempo/dummy.txt \
+    lib_img/dummy.txt \
     model-wsBCTe.qmodel \
     movie0.json
