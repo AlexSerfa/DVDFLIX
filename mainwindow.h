@@ -41,6 +41,8 @@ public slots:
     void rechercheFilm();
     void miseAJourAffichage();
 
+    void imageChemin();
+
 private slots:
     /**
      * @brief

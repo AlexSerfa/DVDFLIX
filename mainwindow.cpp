@@ -20,6 +20,8 @@
 #include "c_bddsecu.h"
 #include <fstream>
 #include <iostream>
+#include <QDir>
+#include <QFileDialog>
 
 using namespace std;
 
@@ -55,9 +57,17 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
 
-     ui->setupUi(this);
+    ui->setupUi(this);
 
-     /**
+    /**
+     * @brief imageChemin
+     * @author: Jovanovic Milan
+     * @date: 03/06/2020
+     * appel fonction chemin
+     */
+    imageChemin();
+
+    /**
       * @fn c_bddsecu
       * @author: Jovanovic Milan
       * @date 15/05/2020
@@ -72,11 +82,11 @@ MainWindow::MainWindow(QWidget *parent)
     Secu.close();
 
     //on connect les signaux de connection a la db
-   connect(&sql,SIGNAL(connected()),this,SLOT(status_dbConnectee()));
-   connect(&sql,SIGNAL(disconnected()),this,SLOT(status_dbDeconnectee()));
+    connect(&sql,SIGNAL(connected()),this,SLOT(status_dbConnectee()));
+    connect(&sql,SIGNAL(disconnected()),this,SLOT(status_dbDeconnectee()));
     //on se connect a la db
 
-   sql.connection(database,Secu.getDvdFlixAdr(),Secu.getDvdFlixPort(),Secu.getDvdFlixUser(),Secu.getDvdFlixPass());
+    sql.connection(database,Secu.getDvdFlixAdr(),Secu.getDvdFlixPort(),Secu.getDvdFlixUser(),Secu.getDvdFlixPass());
     connect(&sql,SIGNAL(modifier()),this, SLOT(miseAJourAffichage()));
 
 }
@@ -93,6 +103,46 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+
+/**
+ * @brief MainWindow::imageChemin
+ * @author: Jovanovic Milan
+ * @date 03/06/2020
+ * @brief
+ *     vérification et création des dossier img_tempo et lib_img
+ */
+void MainWindow::imageChemin()
+{
+    QDir cheminTempo(qApp->applicationDirPath()+"/img_tempoTest2");
+    QDir cheminFixe(qApp->applicationDirPath()+"/lib_imgTest2");
+
+    if(cheminTempo.exists())
+    {
+        qWarning()<<"TEMPO: ok "<<qApp->applicationDirPath();
+    }
+    else
+    {
+        QDir::setCurrent(qApp->applicationDirPath());
+        QDir().mkdir(qApp->applicationDirPath()+"/img_tempoTest2");
+        qWarning()<<"TEMPO: n'existe pas "<<qApp->applicationDirPath();
+    }
+    if(cheminFixe.exists())
+    {
+
+        qWarning()<<"FIXE: ok "<<qApp->applicationDirPath();
+    }
+    else
+    {
+        QDir::setCurrent(qApp->applicationDirPath());
+        QDir().mkdir(qApp->applicationDirPath()+"/lib_imgTest2");
+        qWarning()<<"FIXE: n'existe pas "<<qApp->applicationDirPath();
+    }
+
+}
+
+
+
+
 void MainWindow::rechercheFilm()
 {
     //DEBUG
@@ -103,14 +153,14 @@ void MainWindow::rechercheFilm()
 
 
 
-         sql.searchTitre(ui->lbl_titre->text());
-         m_minifilmCountLocal = sql.getFilmCount();
-         //DEBUG
-         //qWarning()<<" m_minifilmCountLocal :"<<m_minifilmCountLocal;
-  //     min2[h]->setIcone(directoryBase+"/home.png");
+        sql.searchTitre(ui->lbl_titre->text());
+        m_minifilmCountLocal = sql.getFilmCount();
+        //DEBUG
+        //qWarning()<<" m_minifilmCountLocal :"<<m_minifilmCountLocal;
+        //     min2[h]->setIcone(directoryBase+"/home.png");
     }else
     {
-      QMessageBox::warning(this,"Echec de connection","Echec de la connection à la base de données recherche locale impossible",QMessageBox::Ok);
+        QMessageBox::warning(this,"Echec de connection","Echec de la connection à la base de données recherche locale impossible",QMessageBox::Ok);
     }
 
 
@@ -161,7 +211,7 @@ void MainWindow::restoreValue()
     }
     //on vide la qvector des affiches
     affiches.clear();
-     //reset des divers membres utilisés
+    //reset des divers membres utilisés
     m_minifilmMax=0;
     m_minifilmMini=0;
     m_minifilmCountLocal=0;
@@ -286,7 +336,7 @@ void MainWindow::getPageNumberJson(){
     //qstring pour stocker le nom du fichier
     QString filename;
     //on limite le nombre de page a 7
-   if(  m_totalPage>5) m_totalPage =5 ;
+    if(  m_totalPage>5) m_totalPage =5 ;
     if(m_totalPage>1){
         for(int i =2;i<=m_totalPage;i++){
             //on connect le signal avertissant de la fin du dernier telechargement a la fonction concatJSON()
@@ -365,7 +415,7 @@ bool MainWindow::JsonMerge(){
     //qWarning()<<"->jsonmerge";
     QJsonArray result;
     for(int i =0; i< m_JsonSearch.count();i++){
-      result.append(m_JsonSearch[i].value(QString("results")).toArray());
+        result.append(m_JsonSearch[i].value(QString("results")).toArray());
     }
     QJsonObject resultat{
         {"results",result}};
@@ -402,71 +452,71 @@ bool MainWindow::JsonMerge(){
  * @todo redécouper cette fonction car elle fait trop de chose à elle seule
  */
 void MainWindow::readJson()
-   {
-      //DEBUG
-      //qWarning()<<"->readJson";
+{
+    //DEBUG
+    //qWarning()<<"->readJson";
 
-      QFile filej;
-      filej.setFileName(directoryBase+"/saveMovies.json");
-      filej.open(QIODevice::ReadOnly | QIODevice::Text);
-      QByteArray val = filej.readAll();
-      filej.close();
-      //DEBUG
-      //qWarning()<<"readJson->lecture fichier";
+    QFile filej;
+    filej.setFileName(directoryBase+"/saveMovies.json");
+    filej.open(QIODevice::ReadOnly | QIODevice::Text);
+    QByteArray val = filej.readAll();
+    filej.close();
+    //DEBUG
+    //qWarning()<<"readJson->lecture fichier";
 
-      QJsonDocument doc = QJsonDocument::fromJson(val);
-      QJsonObject JsonObj= doc.object();
-      QJsonArray arry= JsonObj.value(QString("results")).toArray();
+    QJsonDocument doc = QJsonDocument::fromJson(val);
+    QJsonObject JsonObj= doc.object();
+    QJsonArray arry= JsonObj.value(QString("results")).toArray();
 
 
-      int filmAjouter=0;
+    int filmAjouter=0;
 
-      //boucle créant les miniature pour chaque film dans le json movie.json
-      int counter =0 ;
-            for(int i =0 ; i<arry.count() && i<7;i++)
-      {
-          QJsonArray child =arry[i].toArray();
-          //DEBUG				 
-          //qWarning()<<"arry"<<i<<" child: " <<child.count();
-          for(int j =0 ; j<child.count();j++){
+    //boucle créant les miniature pour chaque film dans le json movie.json
+    int counter =0 ;
+    for(int i =0 ; i<arry.count() && i<7;i++)
+    {
+        QJsonArray child =arry[i].toArray();
+        //DEBUG
+        //qWarning()<<"arry"<<i<<" child: " <<child.count();
+        for(int j =0 ; j<child.count();j++){
 
-                //DEBUG
-               //qWarning()<<"readJson->boucle: "<<i<<"-"<<j;
-              filmAjouter++;
-              qWarning()<<"nb film ajouter: "<<filmAjouter;
-               //creation d'une fiche de miniature
-               C_miniFilm *min3 =new C_miniFilm(this);
-                //ajout de la fiche a la colletion
-                min2[counter] =min3;														
-                //ajout des donnés d'un film
-                //qWarning()<<"Ajout des données du film";
-                min2[counter]->setTitre(child[j].toObject()["title"].toString());
-                min2[counter]->setAnnee((child[j].toObject()["release_date"].toString()));
-                min2[counter]->setNote(QString::number(child[j].toObject()["vote_average"].toDouble()));
-                min2[counter]->setPop(child[j].toObject()["popularity"].toString());
-                min2[counter]->setAdult(child[j].toObject()["adult"].toBool());
-                min2[counter]->setId_online( child[j].toObject()["id"].toInt());
-                min2[counter]->setVote(child[j].toObject()["vote_count"].toString());
-                min2[counter]->setResum(child[j].toObject()["overview"].toString());
-                min2[counter]->setLanguage(child[j].toObject()["original_language"].toString());
-                min2[counter]->setTitreOri(child[j].toObject()["original_title"].toString());
-                min2[counter]->setBackdrop(child[j].toObject()["backdrop_path"].toString());
-                min2[counter]->setIcone(directoryBase+"/online.png");
-                min2[counter]->setLocal(false);
-                const bool connected = connect(min2[counter],SIGNAL(modifier()),this,SLOT(miseAJourAffichage()));
-                //DEBUG
-                //qDebug() << "Connection established?" << connected;
-               // min2[counter]->setMain(this);
-                QJsonArray genreArray = child[j].toObject()["genre_ids"].toArray();
-                for(int i =0; i<genreArray.count();i++)
-                {
-                    min2[counter]->setGenres(i,genreArray[i].toInt());
-                }
+            //DEBUG
+            //qWarning()<<"readJson->boucle: "<<i<<"-"<<j;
+            filmAjouter++;
+            qWarning()<<"nb film ajouter: "<<filmAjouter;
+            //creation d'une fiche de miniature
+            C_miniFilm *min3 =new C_miniFilm(this);
+            //ajout de la fiche a la colletion
+            min2[counter] =min3;
+            //ajout des donnés d'un film
+            //qWarning()<<"Ajout des données du film";
+            min2[counter]->setTitre(child[j].toObject()["title"].toString());
+            min2[counter]->setAnnee((child[j].toObject()["release_date"].toString()));
+            min2[counter]->setNote(QString::number(child[j].toObject()["vote_average"].toDouble()));
+            min2[counter]->setPop(child[j].toObject()["popularity"].toString());
+            min2[counter]->setAdult(child[j].toObject()["adult"].toBool());
+            min2[counter]->setId_online( child[j].toObject()["id"].toInt());
+            min2[counter]->setVote(child[j].toObject()["vote_count"].toString());
+            min2[counter]->setResum(child[j].toObject()["overview"].toString());
+            min2[counter]->setLanguage(child[j].toObject()["original_language"].toString());
+            min2[counter]->setTitreOri(child[j].toObject()["original_title"].toString());
+            min2[counter]->setBackdrop(child[j].toObject()["backdrop_path"].toString());
+            min2[counter]->setIcone(directoryBase+"/online.png");
+            min2[counter]->setLocal(false);
+            const bool connected = connect(min2[counter],SIGNAL(modifier()),this,SLOT(miseAJourAffichage()));
+            //DEBUG
+            //qDebug() << "Connection established?" << connected;
+            // min2[counter]->setMain(this);
+            QJsonArray genreArray = child[j].toObject()["genre_ids"].toArray();
+            for(int i =0; i<genreArray.count();i++)
+            {
+                min2[counter]->setGenres(i,genreArray[i].toInt());
+            }
 
-                int genreCode =genreArray[0].toInt();
-                QString  genrePrincipal = sql.getGenre(genreCode);
-                 min2[counter]->setGenre(genrePrincipal);
-           //telechargement de affiche des films
+            int genreCode =genreArray[0].toInt();
+            QString  genrePrincipal = sql.getGenre(genreCode);
+            min2[counter]->setGenre(genrePrincipal);
+            //telechargement de affiche des films
             if(child[j].toObject()["poster_path"].toString()!="")
             {
                 //ajout de l'affiche a au qvector des affiches
@@ -486,106 +536,106 @@ void MainWindow::readJson()
                 min2[counter]->setAffiche(directoryBase+child[j].toObject()["poster_path"].toString());
                 //DEBUG
                 //qWarning()<<"<setAffiche: "<<directoryBase+child[j].toObject()["poster_path"].toString();
-             }
+            }
             else{
-              min2[counter]->setAffiche(directoryBase+"/noPicture.png");
-              }
+                min2[counter]->setAffiche(directoryBase+"/noPicture.png");
+            }
             counter++;
-          }
-      }
-      //DEBUG
-      //qWarning()<<"fin de la lecture du fichier saveMovie.json";
-      connect(&m_dlmanager,SIGNAL(startCreateMini()),this ,SLOT(createMinifilm()));
-      createMinifilm();
-   }
+        }
+    }
+    //DEBUG
+    //qWarning()<<"fin de la lecture du fichier saveMovie.json";
+    connect(&m_dlmanager,SIGNAL(startCreateMini()),this ,SLOT(createMinifilm()));
+    createMinifilm();
+}
 /**
  * @brief
  *
  * @return bool
  */
 bool MainWindow::createMinifilm(){
-   grdt[0]= ui->grd1;
-   grdt[1]= ui->grd2;
-   grdt[2]= ui->grd3;
-   grdt[3]= ui->grd4;
-   grdt[4]= ui->grd5;
-   grdt[5]= ui->grd6;
-   grdt[6]= ui->grd7;
-   grdt[7]= ui->grd8;
-   grdt[8]= ui->grd9;
-   grdt[9]= ui->grd10;
-   grdt[10]= ui->grd11;
-   grdt[11]= ui->grd12;
-   grdt[12]= ui->grd13;
-   grdt[13]= ui->grd14;
-   grdt[14]= ui->grd15;
-   grdt[15]= ui->grd16;
-   grdt[16]= ui->grd17;
-   grdt[17]= ui->grd18;
-   grdt[18]= ui->grd19;
-   grdt[19]= ui->grd20;
-   grdt[20]= ui->grd21;
+    grdt[0]= ui->grd1;
+    grdt[1]= ui->grd2;
+    grdt[2]= ui->grd3;
+    grdt[3]= ui->grd4;
+    grdt[4]= ui->grd5;
+    grdt[5]= ui->grd6;
+    grdt[6]= ui->grd7;
+    grdt[7]= ui->grd8;
+    grdt[8]= ui->grd9;
+    grdt[9]= ui->grd10;
+    grdt[10]= ui->grd11;
+    grdt[11]= ui->grd12;
+    grdt[12]= ui->grd13;
+    grdt[13]= ui->grd14;
+    grdt[14]= ui->grd15;
+    grdt[15]= ui->grd16;
+    grdt[16]= ui->grd17;
+    grdt[17]= ui->grd18;
+    grdt[18]= ui->grd19;
+    grdt[19]= ui->grd20;
+    grdt[20]= ui->grd21;
 
     for(int i = 0 ; i<21; i++){
         videLayout(grdt[i]);
     }
 
-   int filmCounter=0;
+    int filmCounter=0;
 
-   int lastPage = 0;
-   int totalResult= m_minifilmCountLocal+m_minifilmCountOnline;
-   if(totalResult>99) {
-       totalResult = 100;
-       m_minifilmCountOnline = 100;
-   }
-   //remplissage des page completes (10 minifilms)
-   for(int i = filmCounter;i<totalResult/10 && i<150;i++){
-       for(int j =0; j<2;j++){ //pour les lignes
-           for(int k =0; k<5; k++){ //pour les colones
-               if (filmCounter<m_minifilmCountLocal){
-                   sql.min1[filmCounter]->addAffiche();
-                   grdt[i]->addWidget(sql.min1[filmCounter],j,k);
-                   filmCounter++;
-                   lastPage =i+1;
-               }else{
+    int lastPage = 0;
+    int totalResult= m_minifilmCountLocal+m_minifilmCountOnline;
+    if(totalResult>99) {
+        totalResult = 100;
+        m_minifilmCountOnline = 100;
+    }
+    //remplissage des page completes (10 minifilms)
+    for(int i = filmCounter;i<totalResult/10 && i<150;i++){
+        for(int j =0; j<2;j++){ //pour les lignes
+            for(int k =0; k<5; k++){ //pour les colones
+                if (filmCounter<m_minifilmCountLocal){
+                    sql.min1[filmCounter]->addAffiche();
+                    grdt[i]->addWidget(sql.min1[filmCounter],j,k);
+                    filmCounter++;
+                    lastPage =i+1;
+                }else{
 
 
-                   //DEBUG
-                   qWarning()<<"partie page COMPLETES, :";
-                   qWarning()<<"filmCounter : " <<filmCounter;
-                   qWarning()<<"m_minifilmCountLocal : "<< m_minifilmCountLocal;
-                   qWarning()<<"filmCounter-(m_minifilmCountLocal-1) :" << filmCounter-(m_minifilmCountLocal-1);
-                   min2[filmCounter-(m_minifilmCountLocal)]->addAffiche();
-                   grdt[i]->addWidget(min2[filmCounter-(m_minifilmCountLocal)],j,k);
-                   filmCounter++;
-                   lastPage =i+1;
-               }
-           }
-       }
-   }
-   //DEBUG
-   qWarning()<<"-------------------------------------";
-   qWarning()<<"FIN DES PAGES COMPLETESCPMPLETES";
-   qWarning()<<"------------------------------------------";
+                    //DEBUG
+                    qWarning()<<"partie page COMPLETES, :";
+                    qWarning()<<"filmCounter : " <<filmCounter;
+                    qWarning()<<"m_minifilmCountLocal : "<< m_minifilmCountLocal;
+                    qWarning()<<"filmCounter-(m_minifilmCountLocal-1) :" << filmCounter-(m_minifilmCountLocal-1);
+                    min2[filmCounter-(m_minifilmCountLocal)]->addAffiche();
+                    grdt[i]->addWidget(min2[filmCounter-(m_minifilmCountLocal)],j,k);
+                    filmCounter++;
+                    lastPage =i+1;
+                }
+            }
+        }
+    }
+    //DEBUG
+    qWarning()<<"-------------------------------------";
+    qWarning()<<"FIN DES PAGES COMPLETESCPMPLETES";
+    qWarning()<<"------------------------------------------";
 
-   for(int j =0; j<2;j++){ //pour les lignes
-       for(int k =0; k<5; k++){ //pour les colones
-           if(filmCounter <m_minifilmCountOnline){
-               /*   if (filmCounter<m_minifilmCountLocal){
+    for(int j =0; j<2;j++){ //pour les lignes
+        for(int k =0; k<5; k++){ //pour les colones
+            if(filmCounter <m_minifilmCountOnline){
+                /*   if (filmCounter<m_minifilmCountLocal){
     sql.min1[filmCounter]->addAffiche();
     grdt[lastPage]->addWidget(sql.min1[filmCounter],j,k);
     filmCounter++;
 }else{*/
-               min2[filmCounter-(m_minifilmCountLocal)]->addAffiche();
-               grdt[lastPage]->addWidget(min2[filmCounter-(m_minifilmCountLocal)],j,k);
-               filmCounter++;
-               //}
-           }
-       }
-   }
-   getsion_prevNext_Btn();
-   // min2[0]->addAffiche();
-   return true;
+                min2[filmCounter-(m_minifilmCountLocal)]->addAffiche();
+                grdt[lastPage]->addWidget(min2[filmCounter-(m_minifilmCountLocal)],j,k);
+                filmCounter++;
+                //}
+            }
+        }
+    }
+    getsion_prevNext_Btn();
+    // min2[0]->addAffiche();
+    return true;
 }
 /**
  * @brief
@@ -654,7 +704,7 @@ void MainWindow::on_btn_next_clicked()
     //on passe a la page precedente du stackedWidget dvdtek
     ui->dvdtek->setCurrentIndex(ui->dvdtek->currentIndex()+1);
     //on gere l'activiter des bouton
-    getsion_prevNext_Btn();					   
+    getsion_prevNext_Btn();
 }
 
 /**
@@ -666,10 +716,10 @@ void MainWindow::on_btn_next_clicked()
  */
 void MainWindow::on_btn_previous_clicked()
 {
-   //on passe a la page precedente du stackedWidget dvdtek
-   ui->dvdtek->setCurrentIndex(ui->dvdtek->currentIndex()-1);
-   //on gere l'activiter des bouton
-   getsion_prevNext_Btn();
+    //on passe a la page precedente du stackedWidget dvdtek
+    ui->dvdtek->setCurrentIndex(ui->dvdtek->currentIndex()-1);
+    //on gere l'activiter des bouton
+    getsion_prevNext_Btn();
 }
 
 /**
@@ -688,7 +738,7 @@ void MainWindow::on_rdb_rechLoc_toggled(bool checked)
         m_searchType =false;
     }
 }
-					  								
+
 /**
  * @fn on_rdb_rechDist_toggled(bool checked)
  * @author: Mercier Laurent
@@ -701,15 +751,15 @@ void MainWindow::on_rdb_rechLoc_toggled(bool checked)
 void MainWindow::on_rdb_rechDist_toggled(bool checked)
 {
     if(checked==true)
-     sql.connection(database,Secu.getDvdFlixAdr(),Secu.getDvdFlixPort(),Secu.getDvdFlixUser(),Secu.getDvdFlixPass());
+        sql.connection(database,Secu.getDvdFlixAdr(),Secu.getDvdFlixPort(),Secu.getDvdFlixUser(),Secu.getDvdFlixPass());
     m_searchType=true;
 
 }
 
 void MainWindow::miseAJourAffichage()
 {
- restoreValue();
- rechercheFilm();
+    restoreValue();
+    rechercheFilm();
 
 }
 /**
@@ -722,8 +772,8 @@ void MainWindow::miseAJourAffichage()
  */
 void MainWindow::on_pushButton_clicked()
 {
-   C_options *options = new  C_options();
-   options->show();
+    C_options *options = new  C_options();
+    options->show();
 }
 
 void MainWindow::on_btn_option_clicked()
