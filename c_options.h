@@ -15,9 +15,30 @@ class C_options : public QDialog
     Q_OBJECT
 
 public:
-    explicit C_options(QWidget *parent = nullptr);
+    explicit C_options(QWidget *parent = nullptr, QString _dvdAdr="", QString _dvdPass="",QString _dvdUser="",int _dvdport=0);
     ~C_options();
 
+
+    QString getDvdAdr() const;
+    void setDvdAdr(const QString value);
+
+    QString getDvdPass() const;
+    void setDvdPass(const QString value);
+
+    QString getDvdUser() const;
+    void setDvdUser(const QString value);
+
+    int getDvdport() const;
+    void setDvdport(int value);
+
+    QString getHardPath() const;
+    void setHardPath(const QString hardPath);
+
+    QString getTempoPath() const;
+    void setTempoPath(const QString tempoPath);
+
+    QString getCodeParental() const;
+    void setCodeParental(const QString codeParental);
 
 private slots:
     void on_pushButton_clicked();
@@ -49,8 +70,15 @@ private:
     QSqlDatabase upd_secu;
     QSqlDatabase upd_param;
     C_bddSecu secu;
-
+    QString dvdAdr;
+    QString dvdPass;
+    QString dvdUser;
+    int dvdport;
+    QString m_hardPath;
+    QString m_tempoPath;
+    QString m_codeParental;
     void TexteChemin(QLineEdit *champTexte);
+    void LectureInfoDB();
 };
 
 #endif // C_OPTIONS_H

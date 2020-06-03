@@ -15,7 +15,7 @@
 #include <QDir>
 #include "c_bddsecu.h"
 #include <fstream>
-
+#include "C_mysqlmanager.h"
 using namespace std;
 
 const QString  userSecu = "root";
@@ -35,12 +35,19 @@ const QString passSecu = "admin";
  *
  */
 
-C_options::C_options(QWidget *parent) :
+C_options::C_options(QWidget *parent , QString _dvdAd, QString _dvdPass,QString _dvdUser,int _dvdport) :
     QDialog(parent),
     ui(new Ui::C_options)
   ,secu()
 {
+    setDvdAdr(_dvdAd);
+    setDvdPass(_dvdPass);
+    setDvdUser(_dvdUser);
+    setDvdport(_dvdport);
     ui->setupUi(this);
+    LectureInfoDB();
+
+
 
     /*
      ifstream a;
@@ -81,7 +88,33 @@ C_options::~C_options()
 {
     delete ui;
 }
+/**
+* @fn LectureInfoDB()
+* @author: Mercier Laurent
+* @date 03/06/2020
+* @brief lecture des inofrmation de la table param de la DB dvdflix
+*/
+void C_options::LectureInfoDB(){
+    C_MySQLManager *sql = new C_MySQLManager();
+    sql->connection("dvdflix",getDvdAdr(),getDvdport(),getDvdUser(),getDvdPass());
 
+    QSqlQuery requete;
+    if(requete.exec("SELECT * FROM param WHERE ID=1"))
+    {
+       if( requete.next()){
+        QString tempoPath =  QVariant(requete.value(1)).toString();
+        QString hardPath =  QVariant(requete.value(2)).toString();
+        QString codeParental =  QVariant(requete.value(3)).toString();
+        setHardPath(hardPath);
+        setTempoPath(tempoPath);
+        setCodeParental(codeParental);
+        qDebug()<<tempoPath;
+        ui->txt_fixe->setText(getHardPath());
+        ui->txt_tempo->setText(getTempoPath());
+
+       }
+    }
+}
 /**
  * @fn c_option
  * @author: Jovanovic Milan
@@ -181,6 +214,76 @@ void C_options::infoDeconnection()
     ui->error_list->setText("Connexion non réussie");
     disconnect(sql,SIGNAL(connected()),this,SLOT(infoConnection()));
     disconnect(sql,SIGNAL(disconnected()),this,SLOT(infoDeconnection()));
+}
+
+QString C_options::getCodeParental() const
+{
+    return m_codeParental;
+}
+
+void C_options::setCodeParental(const QString codeParental)
+{
+    m_codeParental = codeParental;
+}
+
+QString C_options::getTempoPath() const
+{
+    return m_tempoPath;
+}
+
+void C_options::setTempoPath(const QString tempoPath)
+{
+    m_tempoPath = tempoPath;
+}
+
+QString C_options::getHardPath() const
+{
+    return m_hardPath;
+}
+
+void C_options::setHardPath(const QString hardPath)
+{
+    m_hardPath = hardPath;
+}
+
+int C_options::getDvdport() const
+{
+    return dvdport;
+}
+
+void C_options::setDvdport(int value)
+{
+    dvdport = value;
+}
+
+QString C_options::getDvdUser() const
+{
+    return dvdUser;
+}
+
+void C_options::setDvdUser(const QString value)
+{
+    dvdUser = value;
+}
+
+QString C_options::getDvdPass() const
+{
+    return dvdPass;
+}
+
+void C_options::setDvdPass(const QString value)
+{
+    dvdPass = value;
+}
+
+QString C_options::getDvdAdr() const
+{
+    return dvdAdr;
+}
+
+void C_options::setDvdAdr(const QString value)
+{
+    dvdAdr = value;
 }
 
 /**

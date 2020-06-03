@@ -113,8 +113,8 @@ MainWindow::~MainWindow()
  */
 void MainWindow::imageChemin()
 {
-    QDir cheminTempo(qApp->applicationDirPath()+"/img_tempoTest2");
-    QDir cheminFixe(qApp->applicationDirPath()+"/lib_imgTest2");
+    QDir cheminTempo(qApp->applicationDirPath()+"/img_tempo");
+    QDir cheminFixe(qApp->applicationDirPath()+"/lib_img");
 
     if(cheminTempo.exists())
     {
@@ -123,7 +123,7 @@ void MainWindow::imageChemin()
     else
     {
         QDir::setCurrent(qApp->applicationDirPath());
-        QDir().mkdir(qApp->applicationDirPath()+"/img_tempoTest2");
+        QDir().mkdir(qApp->applicationDirPath()+"/img_tempo");
         qWarning()<<"TEMPO: n'existe pas "<<qApp->applicationDirPath();
     }
     if(cheminFixe.exists())
@@ -134,7 +134,7 @@ void MainWindow::imageChemin()
     else
     {
         QDir::setCurrent(qApp->applicationDirPath());
-        QDir().mkdir(qApp->applicationDirPath()+"/lib_imgTest2");
+        QDir().mkdir(qApp->applicationDirPath()+"/lib_img");
         qWarning()<<"FIXE: n'existe pas "<<qApp->applicationDirPath();
     }
 
@@ -772,7 +772,9 @@ void MainWindow::miseAJourAffichage()
  */
 void MainWindow::on_pushButton_clicked()
 {
-    C_options *options = new  C_options();
+    Secu.LireIni();
+    Secu.connection();
+    C_options *options = new  C_options(this,Secu.getDvdFlixAdr(),Secu.getDvdFlixPass(),Secu.getDvdFlixUser(),Secu.getDvdFlixPort());
     options->show();
 }
 
