@@ -85,6 +85,14 @@ void C_bddSecu::connection()
         qDebug()<<"Connection SECU échec";
     }
 }
+
+bool C_bddSecu::verifCodeParent(QString codeLu, QString codeSaisi)
+{
+    if(codeLu==codeSaisi){
+        return true;
+    }
+    return false;
+}
 void C_bddSecu::close(){
     db.close();
 }

@@ -9,7 +9,8 @@
 #include <C_minifilm.h>
 #include <C_downloadmanager.h>
 #include <C_mysqlmanager.h>
-#include "c_bddsecu.h"
+#include <c_bddsecu.h>
+#include <c_options.h>
 #include <QVBoxLayout>
 
 QT_BEGIN_NAMESPACE
@@ -93,13 +94,23 @@ private slots:
 
     void on_btn_option_clicked();
 
+
+
+    void on_txt_codeParent_textChanged(const QString &arg1);
+
+    void on_btn_valideCodeparent_clicked();
+
 private:
+    C_options param;
     C_bddSecu Secu;
     C_MySQLManager sql;     /*!< objet gérant la partie Mysql */
     C_downloadmanager  m_dlmanager; /*!< objet gérant le tééléchargement des fichier sur la toile et l'enregistrement sur le hdd */
     C_miniFilm *min2[150];   /*!< collection de minifiche après une recherche d'un film en ligne*/
 //    C_miniFilm *min1[150];   /*!< collection de minifiche après une recherche d'un film en local*/
     QVector<QString> affiches; /*!< contient la liste des affiches*/
+    QString codeParentLu;
+    QString codeParentSaisi;
+    bool codeParentValid;
     bool m_DBState;         /*!< flag de connection a la database Mysql */
     bool m_searchType;      /*!< definit le type de recherche true: locale et web; false: locale uniquement*/
     int m_minifilmMini;     /*!< numero minimum de la minifiche affichée   */
