@@ -14,6 +14,7 @@ class C_MySQLManager: public QObject
 {
     Q_OBJECT
 public:
+     QString getCodeParental();
      C_miniFilm *min1[150];   /*!< collection de minifiche après une recherche d'un film en local*/
     /**
      * @brief
@@ -148,6 +149,7 @@ private:
      * @return QString
      */
     QString getPassword();
+
 
 
 };

@@ -433,6 +433,21 @@ QString C_MySQLManager::getPassword()
 {
     return m_password;
 }
+
+QString C_MySQLManager::getCodeParental()
+{
+      QString result="";
+      QSqlQuery requete;
+      requete.prepare("SELECT * FROM param WHERE ID=1");
+      requete.exec();
+      if(requete.next()){
+          result = requete.value(3).toString();
+          //DEBUG
+          qWarning()<<" code parental lu dans la DB"<< result;
+      }
+      return result;
+
+}
 /**
  * @brief stock le password de la db
  *

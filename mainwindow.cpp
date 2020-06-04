@@ -13,7 +13,7 @@
 #include <QObject>
 #include <QPair>
 #include <QSqlQuery>
-#include <QSqlRecord>			
+#include <QSqlRecord>
 #include <C_minifilm.h>
 #include <C_mysqlmanager.h>
 #include <c_options.h>
@@ -636,7 +636,7 @@ bool MainWindow::createMinifilm(){
 
     for(int j =0; j<2;j++){ //pour les lignes
         for(int k =0; k<5; k++){ //pour les colones
-            if(filmCounter <m_minifilmCountOnline){ 
+            if(filmCounter <m_minifilmCountOnline){
                 //on verfie si le code paental a été entré
                 if(!codeParentValid){
                     //on verifie que le film n'est pas classé adult et on l'affiche
@@ -700,7 +700,7 @@ void MainWindow::videLayout(QLayout *layout)
         layout -> removeItem(item);
         delete item;
     }
-}								  
+}
 /**
  * @fn getsion_prevNext_Btn()
  * @author: Mercier Laurent
@@ -818,6 +818,7 @@ void MainWindow::on_btn_option_clicked()
 
 
 
+
 /**
  * @fn on_txt_codeParent_textChanged(const QString &arg1)
  * @author: Mercier Laurent
@@ -856,4 +857,3 @@ void MainWindow::on_btn_valideCodeparent_clicked()
         ui->btn_valideCodeparent->setEnabled(false);
     }
 }
-
