@@ -22,6 +22,7 @@
 #include <iostream>
 #include <QDir>
 #include <QFileDialog>
+#include <c_dbconfig.h>
 #include <C_censure.h>
 
 using namespace std;
@@ -65,6 +66,12 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->setupUi(this);
     imageChemin();
+
+
+    C_DbConfig *Config = new C_DbConfig(this);
+    Config->MainDbConfig();
+    Config->~C_DbConfig();
+
 
     C_bddSecu Secu = C_bddSecu();
     Secu.LireIni();
