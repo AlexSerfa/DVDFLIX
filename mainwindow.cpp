@@ -48,6 +48,9 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , m_dlmanager(this)
     , min2()
+    ,codeParentLu("")
+    ,codeParentSaisi("")
+    ,codeParentValid(false)
     , m_minifilmMini(0)
     , m_minifilmMax(0)
     , m_minifilmCountLocal(0)
@@ -58,24 +61,8 @@ MainWindow::MainWindow(QWidget *parent)
 {
 
     ui->setupUi(this);
-
-    /**
-     * @brief imageChemin
-     * @author: Jovanovic Milan
-     * @date: 03/06/2020
-     * appel fonction chemin
-     */
     imageChemin();
 
-    /**
-      * @fn c_bddsecu
-      * @author: Jovanovic Milan
-      * @date 15/05/2020
-      * @brief
-      *         connexion à la base secu
-      *
-      *
-      */
     C_bddSecu Secu = C_bddSecu();
     Secu.LireIni();
     Secu.connection();
@@ -88,7 +75,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     sql.connection(database,Secu.getDvdFlixAdr(),Secu.getDvdFlixPort(),Secu.getDvdFlixUser(),Secu.getDvdFlixPass());
     connect(&sql,SIGNAL(modifier()),this, SLOT(miseAJourAffichage()));
-
+    codeParentLu  = sql.getCodeParental();
+    //DEBUG
+    qWarning()<< "code parent lu dans mainwindows"<<codeParentLu;
 }
 
 /**
@@ -543,13 +532,16 @@ void MainWindow::readJson()
             counter++;
         }
     }
-    //DEBUG
-    //qWarning()<<"fin de la lecture du fichier saveMovie.json";
     connect(&m_dlmanager,SIGNAL(startCreateMini()),this ,SLOT(createMinifilm()));
     createMinifilm();
 }
 /**
- * @brief
+ * @fn createMinifilm()
+ * @author: Mercier Laurent
+ * @date 10/04/2020
+ * @brief   -affection des layout grd* au vector grdt
+ *          -affichage des mifilm de resultat d'une recherche de film dans les layouts
+ *          -affiche un fiche de film censuré si c'est un film adulte et que le code parental n'a pas été saisi
  *
  * @return bool
  */
@@ -593,20 +585,44 @@ bool MainWindow::createMinifilm(){
         for(int j =0; j<2;j++){ //pour les lignes
             for(int k =0; k<5; k++){ //pour les colones
                 if (filmCounter<m_minifilmCountLocal){
-                    sql.min1[filmCounter]->addAffiche();
-                    grdt[i]->addWidget(sql.min1[filmCounter],j,k);
+                    //on verfie si le code paental a été entré
+                    if(!codeParentValid){
+                        //on verifie que le film n'est pas classé adult et on l'affiche
+                        if(!sql.min1[filmCounter]->getAdult()){
+                            sql.min1[filmCounter]->addAffiche();
+                            grdt[i]->addWidget(sql.min1[filmCounter],j,k);
+                        }
+                        //sinon on affiche un minifilm de censure
+                        else
+                        {
+                            //affiche un minifilm de censure
+                        }
+                    }else{
+                        sql.min1[filmCounter]->addAffiche();
+                        grdt[i]->addWidget(sql.min1[filmCounter],j,k);
+                    }
                     filmCounter++;
                     lastPage =i+1;
-                }else{
+                }
+                else
+                {
+                    //on verfie si le code paental a été entré
+                    if(!codeParentValid){
+                        //on verifie que le film n'est pas classé adult et on l'affiche
+                        if(!min2[filmCounter-(m_minifilmCountLocal)]->getAdult()){
+                            min2[filmCounter-(m_minifilmCountLocal)]->addAffiche();
+                            grdt[i]->addWidget(min2[filmCounter-(m_minifilmCountLocal)],j,k);
+                        }
+                        //sinon on affiche un minifilm de censure
+                        else
+                        {
+                            //affiche un minifilm de censure
+                        }
+                    }else{
+                        min2[filmCounter-(m_minifilmCountLocal)]->addAffiche();
+                        grdt[i]->addWidget(min2[filmCounter-(m_minifilmCountLocal)],j,k);
 
-
-                    //DEBUG
-                    qWarning()<<"partie page COMPLETES, :";
-                    qWarning()<<"filmCounter : " <<filmCounter;
-                    qWarning()<<"m_minifilmCountLocal : "<< m_minifilmCountLocal;
-                    qWarning()<<"filmCounter-(m_minifilmCountLocal-1) :" << filmCounter-(m_minifilmCountLocal-1);
-                    min2[filmCounter-(m_minifilmCountLocal)]->addAffiche();
-                    grdt[i]->addWidget(min2[filmCounter-(m_minifilmCountLocal)],j,k);
+                    }
                     filmCounter++;
                     lastPage =i+1;
                 }
@@ -615,25 +631,31 @@ bool MainWindow::createMinifilm(){
     }
     //DEBUG
     qWarning()<<"-------------------------------------";
-    qWarning()<<"FIN DES PAGES COMPLETESCPMPLETES";
+    qWarning()<<"FIN DES PAGES COMPLETES";
     qWarning()<<"------------------------------------------";
 
     for(int j =0; j<2;j++){ //pour les lignes
         for(int k =0; k<5; k++){ //pour les colones
-            if(filmCounter <m_minifilmCountOnline){
-                /*   if (filmCounter<m_minifilmCountLocal){
-    sql.min1[filmCounter]->addAffiche();
-    grdt[lastPage]->addWidget(sql.min1[filmCounter],j,k);
-    filmCounter++;
-}else{*/
-                min2[filmCounter-(m_minifilmCountLocal)]->addAffiche();
-                grdt[lastPage]->addWidget(min2[filmCounter-(m_minifilmCountLocal)],j,k);
+            if(filmCounter <m_minifilmCountOnline){ 
+                //on verfie si le code paental a été entré
+                if(!codeParentValid){
+                    //on verifie que le film n'est pas classé adult et on l'affiche
+                    if(!min2[filmCounter-(m_minifilmCountLocal)]->getAdult()){
+                        min2[filmCounter-(m_minifilmCountLocal)]->addAffiche();
+                        grdt[lastPage]->addWidget(min2[filmCounter-(m_minifilmCountLocal)],j,k);
+                    }
+                    //sinon on affiche un minifilm de censure
+                    else
+                    {
+                        //affiche un minifilm de censure
+                    }
+                }
                 filmCounter++;
-                //}
             }
         }
     }
     getsion_prevNext_Btn();
+    //DEBUG
     // min2[0]->addAffiche();
     return true;
 }
@@ -646,7 +668,11 @@ void MainWindow::status_dbConnectee(){
     ui->lbl_db_status->setText("Database connectée");
 }
 /**
- * @brief
+ * @fn status_dbDeconnectee()
+ * @author: Mercier Laurent
+ * @date 17/04/2020
+ * @brief   -affichage d'une messageBox avertissant d'un probleme de connection a la base de données dvdflix
+ *          -modification du text dans le QLabel du grp_statut en relation avec l'informaation de connexion a la DB
  *
  */
 void MainWindow::status_dbDeconnectee(){
@@ -756,6 +782,13 @@ void MainWindow::on_rdb_rechDist_toggled(bool checked)
 
 }
 
+/**
+ * @fn miseAJourAffichage()
+ * @author: Mercier Laurent
+ * @date 12/05/2020
+ * @brief   -appel de la fonction de restoration des valeurs par defaut
+ *          -appel de la fonction de recherche de films
+ */
 void MainWindow::miseAJourAffichage()
 {
     restoreValue();
@@ -763,11 +796,12 @@ void MainWindow::miseAJourAffichage()
 
 }
 /**
- * @fn c_option button
- * @author: Jovanovic Milan
- * @date 11/05/2020
- * @brief
- *
+ * @fn on_pushButton_clicked()
+ * @author: Jovanovic Milan / Mercier Laurent
+ * @date 02/06/2020
+ * @brief   -Lecture du fichier dvdfllix.ini
+ *          -connection à la base de données Security
+ *          -création et affichage de la fenetre option avec passage des parametre de connection à la base de donnée dvdflix
  *
  */
 void MainWindow::on_pushButton_clicked()
@@ -781,3 +815,45 @@ void MainWindow::on_pushButton_clicked()
 void MainWindow::on_btn_option_clicked()
 {
 }
+
+
+
+/**
+ * @fn on_txt_codeParent_textChanged(const QString &arg1)
+ * @author: Mercier Laurent
+ * @date 03/06/2020
+ * @brief   -verfication du nombre de caractere du QLineEdit du code parental
+ *          -Activation et désactivations des controles de saisie et de validation du control parental
+ * @param &arg1   Qstring contenu dans le controle
+ */
+void MainWindow::on_txt_codeParent_textChanged(const QString &arg1)
+{
+    if(ui->txt_codeParent->text().count()==4){
+        ui->txt_codeParent->setEnabled(false);
+        ui->btn_valideCodeparent->setEnabled(true);
+    }
+}
+/**
+ * @fn on_btn_valideCodeparent_clicked()
+ * @author: Mercier Laurent
+ * @date 03/06/2020
+ * @brief   -gestion du click sur le bouton de validation du control parental
+ *          -appel de la fonction de control du code parental de la classe C_bddSecu au traver de l'objet Secu
+ *          -modification du texte concernant le code parental dans le groupBox de Statut grp_statut
+ *          -initialisation du texte dans le QLineEDit de saisie du controle parental
+ *          -Activation et désactivations des controles de saisie et de validation du control parental
+ *
+ */
+void MainWindow::on_btn_valideCodeparent_clicked()
+{
+    if(ui->txt_codeParent->text().count()==4){
+        codeParentSaisi =ui->txt_codeParent->text();
+        codeParentValid = Secu.verifCodeParent(codeParentLu,codeParentSaisi);
+        qWarning()<<codeParentValid;
+        if(codeParentValid) ui->lbl_codeParentEtat->setText("Control parental inactif");
+        ui->txt_codeParent->setText("");
+        ui->txt_codeParent->setEnabled(true);
+        ui->btn_valideCodeparent->setEnabled(false);
+    }
+}
+
