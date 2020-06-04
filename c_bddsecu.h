@@ -24,6 +24,7 @@ public:
     void LireIni();
     void connection();
 
+    bool verifCodeParent(QString codeLu, QString codeSaisi);
     //QString rnt_username();
     QSqlDatabase getDb() const;
     void setDb(const QSqlDatabase &value);
