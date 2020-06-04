@@ -12,6 +12,7 @@
 #include <c_bddsecu.h>
 #include <c_options.h>
 #include <QVBoxLayout>
+#include <C_censure.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -106,7 +107,7 @@ private:
     C_MySQLManager sql;     /*!< objet gérant la partie Mysql */
     C_downloadmanager  m_dlmanager; /*!< objet gérant le tééléchargement des fichier sur la toile et l'enregistrement sur le hdd */
     C_miniFilm *min2[150];   /*!< collection de minifiche après une recherche d'un film en ligne*/
-//    C_miniFilm *min1[150];   /*!< collection de minifiche après une recherche d'un film en local*/
+    C_Censure *minC[300];
     QVector<QString> affiches; /*!< contient la liste des affiches*/
     QString codeParentLu;
     QString codeParentSaisi;
@@ -118,6 +119,7 @@ private:
     int m_minifilmCountLocal;    /*!< nombre de film pour la derniere recherche en local*/
     int m_minifilmCountOnline;    /*!< nombre de film pour la derniere recherche en ligne*/
     int m_minifilmCount=0;
+    int m_censureCount;
     int m_totalPage;        /*!< nombre total de page pour la recherche d'un film   */
     int m_pageNumber;       /*!< stock le nombre de page deja telecharger lors d'un recherche contenant plusieurs pages*/
     QVector<QJsonObject> m_JsonSearch;  /*!< stockage des objet Json contenu dans les fichier telecharger lors d'une recherche de film avant concatenation*/

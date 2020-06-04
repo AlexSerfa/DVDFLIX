@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>C_Censure</class>
+ <widget class="QWidget" name="C_Censure">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>230</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color : rgb(255, 255, 255)</string>
+  </property>
+  <widget class="QWidget" name="verticalLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>-11</x>
+     <y>-11</y>
+     <width>242</width>
+     <height>311</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QLabel" name="lbl_censure">
+      <property name="maximumSize">
+       <size>
+        <width>240</width>
+        <height>200</height>
+       </size>
+      </property>
+      <property name="baseSize">
+       <size>
+        <width>150</width>
+        <height>150</height>
+       </size>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="pixmap">
+       <pixmap>D:/tempo68/censored.png</pixmap>
+      </property>
+      <property name="scaledContents">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="label">
+      <property name="maximumSize">
+       <size>
+        <width>230</width>
+        <height>80</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Entrez le code parental pour voir cette fiche</string>
+      </property>
+      <property name="scaledContents">
+       <bool>false</bool>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+      <property name="wordWrap">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

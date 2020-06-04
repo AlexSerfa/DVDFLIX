@@ -22,14 +22,15 @@
 #include <iostream>
 #include <QDir>
 #include <QFileDialog>
+#include <C_censure.h>
 
 using namespace std;
 
 const QString key ="76532a92d48d6e7e7fb5d72eaf2029b3"; /**< clé de l'API themoviedb */
 const QString defaultUrl = " https://api.themoviedb.org/3/"; /**< adresse de l'API themoviedb */
 const QString urlBaseAffiche="https://image.tmdb.org/t/p/w500"; /**< adresse pour la récupération des image */
-const QString directoryBase= "x:/tempo68"; /**< chemin du dossier de stockage */
-const QString directoryHard ="x:/tempo69";
+const QString directoryBase= "d:/tempo68"; /**< chemin du dossier de stockage */
+const QString directoryHard ="d:/tempo69";
 
 
 const QString database = "dvdflix";/**< nom de la base de donnée */
@@ -48,13 +49,15 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , m_dlmanager(this)
     , min2()
-    ,codeParentLu("")
-    ,codeParentSaisi("")
-    ,codeParentValid(false)
+    , minC()
+    , codeParentLu("")
+    , codeParentSaisi("")
+    , codeParentValid(false)
     , m_minifilmMini(0)
     , m_minifilmMax(0)
     , m_minifilmCountLocal(0)
     , m_minifilmCountOnline(0)
+    , m_censureCount(0)
     , m_totalPage(0)
     , m_pageNumber(0)
     , ui(new Ui::MainWindow)
@@ -207,6 +210,7 @@ void MainWindow::restoreValue()
     m_minifilmCountOnline=0;
     m_totalPage=0;
     m_pageNumber=0;
+    m_censureCount=0;
     m_JsonSearch.clear();
     //suppression du fichier saveMovies.json
     bool result = QFile::remove(directoryBase+"/saveMovies.json");
@@ -219,6 +223,15 @@ void MainWindow::restoreValue()
             //DEBUG
             //qWarning()<<"vidage de min2 : "<<i;
             min2[i]->~C_miniFilm();
+
+        }
+    }
+    //on vide le tableau des censures
+    for(int i =0;i<300;i++){
+        if(minC[i]){
+            //DEBUG
+            //qWarning()<<"vidage de min2 : "<<i;
+            minC[i]->~C_Censure();
 
         }
     }
@@ -595,7 +608,10 @@ bool MainWindow::createMinifilm(){
                         //sinon on affiche un minifilm de censure
                         else
                         {
-                            //affiche un minifilm de censure
+                            C_Censure *miniCensure = new C_Censure();
+                            minC[ m_censureCount]=miniCensure;
+                            m_censureCount++;
+                            grdt[i]->addWidget(miniCensure,j,k);
                         }
                     }else{
                         sql.min1[filmCounter]->addAffiche();
@@ -616,7 +632,10 @@ bool MainWindow::createMinifilm(){
                         //sinon on affiche un minifilm de censure
                         else
                         {
-                            //affiche un minifilm de censure
+                            C_Censure *miniCensure = new C_Censure();
+                            minC[ m_censureCount]=miniCensure;
+                            m_censureCount++;
+                            grdt[i]->addWidget(miniCensure,j,k);
                         }
                     }else{
                         min2[filmCounter-(m_minifilmCountLocal)]->addAffiche();
@@ -647,7 +666,10 @@ bool MainWindow::createMinifilm(){
                     //sinon on affiche un minifilm de censure
                     else
                     {
-                        //affiche un minifilm de censure
+                        C_Censure *miniCensure = new C_Censure();
+                        minC[ m_censureCount]=miniCensure;
+                        m_censureCount++;
+                        grdt[lastPage]->addWidget(miniCensure,j,k);
                     }
                 }
                 filmCounter++;
@@ -855,5 +877,6 @@ void MainWindow::on_btn_valideCodeparent_clicked()
         ui->txt_codeParent->setText("");
         ui->txt_codeParent->setEnabled(true);
         ui->btn_valideCodeparent->setEnabled(false);
+        miseAJourAffichage();
     }
 }

@@ -40,6 +40,8 @@ public:
     QString getCodeParental() const;
     void setCodeParental(const QString codeParental);
 
+
+
 private slots:
     void on_pushButton_clicked();
 
@@ -77,6 +79,7 @@ private:
     QString m_hardPath;
     QString m_tempoPath;
     QString m_codeParental;
+    QString m_nouveauCodeParental;
     void TexteChemin(QLineEdit *champTexte);
     void LectureInfoDB();
 };

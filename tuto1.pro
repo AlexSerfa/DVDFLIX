@@ -16,6 +16,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    C_censure.cpp \
     C_details.cpp \
     C_downloadmanager.cpp \
     C_minifilm.cpp \
@@ -28,6 +29,7 @@ SOURCES += \
     testclasse.cpp
 
 HEADERS += \
+    C_censure.h \
     C_details.h \
     C_downloadmanager.h \
     C_minifilm.h \
@@ -39,6 +41,7 @@ HEADERS += \
     testclasse.h
 
 FORMS += \
+    C_censure.ui \
     C_details.ui \
     C_minifilm.ui \
     c_options.ui \

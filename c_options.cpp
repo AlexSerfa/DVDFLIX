@@ -16,6 +16,10 @@
 #include "c_bddsecu.h"
 #include <fstream>
 #include "C_mysqlmanager.h"
+
+#include <QLineEdit>
+#include <QIntValidator>
+#include <QValidator>
 using namespace std;
 
 const QString  userSecu = "root";
@@ -131,6 +135,7 @@ void C_options::on_pushButton_clicked()
     QString tempo = ui->txt_tempo->text();
     QString fixe = ui->txt_fixe->text();
     QString codeP = ui->txt_code->text();
+    QString nouveauCodeP = ui->txt_nCode->text();
 
 
 
@@ -170,7 +175,22 @@ void C_options::on_pushButton_clicked()
         //sql names
         QString tempoPath = ui->txt_tempo->text();
         QString hardPath = ui->txt_fixe->text();
-        QString code = ui->txt_code->text();
+        QString code ;
+
+        if(codeP == nouveauCodeP)
+        {
+
+            code = ui->txt_code->text();
+            qDebug()<<"Code parental actuel et nouveau code parental -- OK";
+
+        }
+        else
+        {
+
+            qDebug()<<"error code actuel bd: "<< codeP;
+            qDebug()<<"error nouveau code bd: "<< nouveauCodeP;
+
+        }
 
         /**
 * @fn c_option
@@ -383,29 +403,6 @@ void C_options::TexteChemin(QLineEdit *champTexte){
 void C_options::on_pushButton_cheminTempo_clicked()
 {
     TexteChemin(ui->txt_tempo);
- /*   QFileDialog f;
-
-    f.setFileMode(QFileDialog::DirectoryOnly);
-    f.setOption(QFileDialog::ShowDirsOnly,false);
-
-
-    QStringList fileNames;
-    if (f.exec())
-        fileNames = f.selectedFiles();
-    qDebug()<<"fichier selectionné: "<<fileNames;
-    qDebug()<<f.directory().absolutePath();
-
-    //création dossier
-    QString folder = "/chemin temporaire";
-    QString chemin = f.directory().absolutePath();
-
-    qDebug()<<"chemin tempo: "<<chemin;
-
-    ui->txt_tempo->setText(chemin);
-
-    QDir d = QDir::root();
-    qDebug()<<d.mkpath(chemin+folder);
-    */
 }
 
 /**
@@ -418,28 +415,7 @@ void C_options::on_pushButton_cheminTempo_clicked()
 void C_options::on_pushButton_cheminFixe_clicked()
 {
     TexteChemin(ui->txt_fixe);
-    /*
-    QFileDialog f;
-    f.setFileMode(QFileDialog::DirectoryOnly);
-    f.setOption(QFileDialog::ShowDirsOnly,false);
 
-
-    QStringList fileNames;
-    if (f.exec())
-        fileNames = f.selectedFiles();
-    qDebug()<<"fichier selectionné: "<<fileNames;
-    qDebug()<<f.directory().absolutePath();
-
-    qDebug()<<f.directory().absolutePath();
-    //création dossier
-    QString folder = "/chemin fixe";
-    QString chemin = f.directory().absolutePath();
-    //qDebug()<<"chemin fixe: "<<chemin;
-
-    ui->txt_fixe->setText(chemin);
-
-    QDir d = QDir::root();
-    qDebug()<<d.mkpath(chemin+folder);*/
 }
 
 
