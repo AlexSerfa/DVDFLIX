@@ -113,7 +113,6 @@ private:
     QString codeParentSaisi;
     bool codeParentValid;
     bool m_DBState;         /*!< flag de connection a la database Mysql */
-    bool m_searchType;      /*!< definit le type de recherche true: locale et web; false: locale uniquement*/
     int m_minifilmMini;     /*!< numero minimum de la minifiche affichée   */
     int m_minifilmMax;      /*!< numero maximum de la minifiche affichée   */
     int m_minifilmCountLocal;    /*!< nombre de film pour la derniere recherche en local*/
@@ -125,7 +124,7 @@ private:
     QVector<QJsonObject> m_JsonSearch;  /*!< stockage des objet Json contenu dans les fichier telecharger lors d'une recherche de film avant concatenation*/
     QUrl url;
     Ui::MainWindow *ui;        /*!< interface graphique de la fenetre principale*/
-
+    void initLayout();
     /**
      * @brief restore les valeurs des menbres concernant l'affichage des minifilm
      *

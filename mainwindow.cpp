@@ -48,7 +48,8 @@ const QString password = "admin";/**< mot de passe du serveur mysql */
  */
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , m_dlmanager(this)
+    , Secu()
+    , m_dlmanager(this)    
     , min2()
     , minC()
     , codeParentLu("")
@@ -73,7 +74,7 @@ MainWindow::MainWindow(QWidget *parent)
     Config->~C_DbConfig();
 
 
-    C_bddSecu Secu = C_bddSecu();
+   // C_bddSecu Secu = C_bddSecu();
     Secu.LireIni();
     Secu.connection();
     Secu.close();
@@ -162,7 +163,7 @@ void MainWindow::rechercheFilm()
         QMessageBox::warning(this,"Echec de connection","Echec de la connection à la base de données recherche locale impossible",QMessageBox::Ok);
     }
 
-
+if(ui->rdb_rechDist->isChecked()){
     //DEBUG
     //qWarning()<<"ajout movie0.json a DL_MANAGER ok";
     //on recupere la premiere page du film correspondant apres mise en forme du titre (remplacemant des espaces par de tirets)
@@ -170,6 +171,10 @@ void MainWindow::rechercheFilm()
     //DEBUG
     // qWarning()<<"connect au slot getpagenumber() ok";
     connect(&m_dlmanager,SIGNAL(emptyQueue()),SLOT(getPageNumberJson()));
+}
+else {
+    createMinifilm();
+}
 }
 
 
@@ -556,16 +561,14 @@ void MainWindow::readJson()
     createMinifilm();
 }
 /**
- * @fn createMinifilm()
+ * @fn initLayout()
  * @author: Mercier Laurent
- * @date 10/04/2020
- * @brief   -affection des layout grd* au vector grdt
- *          -affichage des mifilm de resultat d'une recherche de film dans les layouts
- *          -affiche un fiche de film censuré si c'est un film adulte et que le code parental n'a pas été saisi
+ * @date 04/06/2020
+ * @brief   -affection des layouts grd* au vector grdt
+ *          -vidage des Layouts
  *
- * @return bool
  */
-bool MainWindow::createMinifilm(){
+void MainWindow::initLayout(){
     grdt[0]= ui->grd1;
     grdt[1]= ui->grd2;
     grdt[2]= ui->grd3;
@@ -592,10 +595,25 @@ bool MainWindow::createMinifilm(){
         videLayout(grdt[i]);
     }
 
-    int filmCounter=0;
+}
 
+/**
+ * @fn createMinifilm()
+ * @author: Mercier Laurent
+ * @date 10/04/2020
+ * @brief
+ *          -affichage des mifilm de resultat d'une recherche de film dans les layouts
+ *          -affiche un fiche de film censuré si c'est un film adulte et que le code parental n'a pas été saisi
+ *
+ * @return bool
+ */
+bool MainWindow::createMinifilm(){
+
+    initLayout();
+    int filmCounter=0;
     int lastPage = 0;
-    int totalResult= m_minifilmCountLocal+m_minifilmCountOnline;
+if(ui->rdb_rechDist->isChecked()|| m_minifilmCountLocal > 10)
+{    int totalResult= m_minifilmCountLocal+m_minifilmCountOnline;
     if(totalResult>99) {
         totalResult = 100;
         m_minifilmCountOnline = 100;
@@ -683,6 +701,37 @@ bool MainWindow::createMinifilm(){
             }
         }
     }
+
+}
+else{
+    for(int i = 0;i<m_minifilmCountLocal && i<10;i++){
+    for(int j =0; j<2;j++){ //pour les lignes
+        for(int k =0; k<5; k++){ //pour les colones
+            if(filmCounter <m_minifilmCountLocal){
+                //on verfie si le code paental a été entré
+                if(!codeParentValid){
+                    //on verifie que le film n'est pas classé adult et on l'affiche
+                    if(!sql.min1[filmCounter]->getAdult()){
+                        sql.min1[filmCounter]->addAffiche();
+                        grdt[i]->addWidget(sql.min1[filmCounter],j,k);
+                    }
+                    //sinon on affiche un minifilm de censure
+                    else
+                    {
+                        C_Censure *miniCensure = new C_Censure();
+                        minC[ m_censureCount]=miniCensure;
+                        m_censureCount++;
+                        grdt[lastPage]->addWidget(miniCensure,j,k);
+                    }
+                }
+                filmCounter++;
+            }
+        }
+    }
+
+}
+}
+
     getsion_prevNext_Btn();
     //DEBUG
     // min2[0]->addAffiche();
@@ -788,10 +837,10 @@ void MainWindow::on_btn_previous_clicked()
  */
 void MainWindow::on_rdb_rechLoc_toggled(bool checked)
 {
-    if(checked==true){
+   /* if(checked==true){
         sql.deconnection();
-        m_searchType =false;
-    }
+
+    }*/
 }
 
 /**
@@ -805,11 +854,17 @@ void MainWindow::on_rdb_rechLoc_toggled(bool checked)
  */
 void MainWindow::on_rdb_rechDist_toggled(bool checked)
 {
-    if(checked==true)
+    /*
+    if(checked==false)
         sql.connection(database,Secu.getDvdFlixAdr(),Secu.getDvdFlixPort(),Secu.getDvdFlixUser(),Secu.getDvdFlixPass());
-    m_searchType=true;
+    qWarning()<<"adr: "<<Secu.getDvdFlixAdr();
+    qWarning()<<"port: "<<Secu.getDvdFlixPort();
+      qWarning()<<"user: "<<Secu.getDvdFlixUser();
+       qWarning()<<"Pass: "<<Secu.getDvdFlixPass();
+       */
 
 }
+
 
 /**
  * @fn miseAJourAffichage()
