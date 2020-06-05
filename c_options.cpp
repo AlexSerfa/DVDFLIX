@@ -190,12 +190,18 @@ void C_options::on_pushButton_clicked()
         qWarning()<<"code LU  :"<<m_codeParentalLu;
         if(codeP  == m_codeParentalLu && codeP.length() ==4)
         {
+            /* création de la Regex */
+            QRegExp Exp ("^[0-9]{4}$");
+            if( nouveauCodeP.contains(Exp)){
+                QSqlQuery c(upd_param);
+                c.exec("UPDATE `param` SET `codeParental` = '"+nouveauCodeP+"' WHERE `ID` = 1;");
 
-            QSqlQuery c(upd_param);
-            c.exec("UPDATE `param` SET `codeParental` = '"+nouveauCodeP+"' WHERE `ID` = 1;");
-
-            //DEBUG
-            qDebug()<<"Code parental actuel et nouveau code parental -- OK";
+                //DEBUG
+                qDebug()<<"Code parental modifié";
+            }else{
+                qWarning()<<"erreur de format";
+                ui->error_list->setText("Le code parental doit etre de 4 chiffres");
+            }
 
         }
 
