@@ -6,6 +6,7 @@
 #include "C_mysqlmanager.h"
 #include "c_bddsecu.h"
 
+
 namespace Ui {
 class C_options;
 }
@@ -15,7 +16,7 @@ class C_options : public QDialog
     Q_OBJECT
 
 public:
-    explicit C_options(QWidget *parent = nullptr, QString _dvdAdr="", QString _dvdPass="",QString _dvdUser="",int _dvdport=0);
+    explicit C_options(QWidget *parent = nullptr, QString _dvdAdr="", QString _dvdPass="",QString _dvdUser="",int _dvdport=0, QString code="");
     ~C_options();
 
 
@@ -78,6 +79,7 @@ private:
     int dvdport;
     QString m_hardPath;
     QString m_tempoPath;
+    QString m_codeParentalLu;
     QString m_codeParental;
     QString m_nouveauCodeParental;
     void TexteChemin(QLineEdit *champTexte);

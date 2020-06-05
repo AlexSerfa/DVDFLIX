@@ -17,9 +17,14 @@
 #include <fstream>
 #include "C_mysqlmanager.h"
 
+
 #include <QLineEdit>
 #include <QIntValidator>
 #include <QValidator>
+#include <QRegExpValidator>
+#include <QIntValidator>
+
+
 using namespace std;
 
 const QString  userSecu = "root";
@@ -39,7 +44,7 @@ const QString passSecu = "admin";
  *
  */
 
-C_options::C_options(QWidget *parent , QString _dvdAd, QString _dvdPass,QString _dvdUser,int _dvdport) :
+C_options::C_options(QWidget *parent , QString _dvdAd, QString _dvdPass,QString _dvdUser,int _dvdport, QString code) :
     QDialog(parent),
     ui(new Ui::C_options)
   ,secu()
@@ -50,6 +55,7 @@ C_options::C_options(QWidget *parent , QString _dvdAd, QString _dvdPass,QString 
     setDvdport(_dvdport);
     ui->setupUi(this);
     LectureInfoDB();
+    m_codeParentalLu = code;
 
 
 
@@ -128,6 +134,8 @@ void C_options::LectureInfoDB(){
  */
 void C_options::on_pushButton_clicked()
 {
+
+
     QString nom_utilisateur = ui->txt_utilisateur->text();
     QString mdp = ui->txt_mdp->text();
     QString adresse = ui->txt_adresse->text();
@@ -137,6 +145,11 @@ void C_options::on_pushButton_clicked()
     QString codeP = ui->txt_code->text();
     QString nouveauCodeP = ui->txt_nCode->text();
 
+    //QINTVALIDATOR
+    /*
+    QLineEdit test;
+    test.setValidator(new QRegExpValidator(QRegExp("[0-9]*"), &test));
+    */
 
 
 
@@ -158,10 +171,7 @@ void C_options::on_pushButton_clicked()
     else
     {
 
-        sql =new C_MySQLManager();
-        connect(sql,SIGNAL(connected()),SLOT(infoConnection()));
-        connect(sql,SIGNAL(disconnected()),SLOT(infoDeconnection()));
-        sql->connection("dvdflix",adresse,port.toInt(),nom_utilisateur,mdp);
+
         this->update(nom_utilisateur, mdp, adresse, port.toInt());
 
         this->upd_param = QSqlDatabase::addDatabase("QMYSQL","aaa");
@@ -169,47 +179,33 @@ void C_options::on_pushButton_clicked()
         upd_param.setDatabaseName("dvdflix");
         upd_param.setUserName(nom_utilisateur);
         upd_param.setPassword(mdp);
+        upd_param.setPort(port.toInt());
         bool ok = upd_param.open();
-
 
         //sql names
         QString tempoPath = ui->txt_tempo->text();
         QString hardPath = ui->txt_fixe->text();
-        QString code ;
-
-        if(codeP == nouveauCodeP)
+        //DEBUG
+        qWarning()<<"codep :"<<codeP;
+        qWarning()<<"code LU  :"<<m_codeParentalLu;
+        if(codeP  == m_codeParentalLu && codeP.length() ==4)
         {
 
-            code = ui->txt_code->text();
+            QSqlQuery c(upd_param);
+            c.exec("UPDATE `param` SET `codeParental` = '"+nouveauCodeP+"' WHERE `ID` = 1;");
+
+            //DEBUG
             qDebug()<<"Code parental actuel et nouveau code parental -- OK";
 
         }
-        else
-        {
-
-            qDebug()<<"error code actuel bd: "<< codeP;
-            qDebug()<<"error nouveau code bd: "<< nouveauCodeP;
-
-        }
-
-        /**
-* @fn c_option
-* @author: Jovanovic Milan
-* @date 23/05/2020
-* @brief
-*          Update table param*/
 
         if(ok)
         {
             QSqlQuery q(upd_param);
             q.exec("UPDATE `param` SET `tempoPath` = '"+tempoPath+"' WHERE `ID` = 1;");
             q.exec("UPDATE `param` SET `hardPath` = '"+hardPath+"' WHERE `ID` = 1;");
-            q.exec("UPDATE `param` SET `codeParental` = '"+code+"' WHERE `ID` = 1;");
 
-        }
-        else
-        {
-            qDebug()<<"error";
+
         }
 
     }
@@ -220,9 +216,9 @@ void C_options::on_pushButton_clicked()
 
 void C_options::infoConnection()
 {
-    qDebug() << "Ok - ouverture de la base de donnée";
-    ui->error_list->setText("Connexion réussie");
-    disconnect(sql,SIGNAL(connected()),this,SLOT(infoConnection()));
+  //  qDebug() << "Ok - ouverture de la base de donnée";
+  //  ui->error_list->setText("Connexion réussie");
+  //  disconnect(sql,SIGNAL(connected()),this,SLOT(infoConnection()));
 
 
 
@@ -230,10 +226,10 @@ void C_options::infoConnection()
 
 void C_options::infoDeconnection()
 {
-    qDebug() << "KO - ouverture de la base de donnée échec";
-    ui->error_list->setText("Connexion non réussie");
-    disconnect(sql,SIGNAL(connected()),this,SLOT(infoConnection()));
-    disconnect(sql,SIGNAL(disconnected()),this,SLOT(infoDeconnection()));
+  //  qDebug() << "KO - ouverture de la base de donnée échec";
+  //  ui->error_list->setText("Connexion non réussie");
+  //  disconnect(sql,SIGNAL(connected()),this,SLOT(infoConnection()));
+  //  disconnect(sql,SIGNAL(disconnected()),this,SLOT(infoDeconnection()));
 }
 
 QString C_options::getCodeParental() const
@@ -360,10 +356,6 @@ void C_options::update(QString nomUt, QString pass, QString adr, int port)
         qDebug()<<"connexion ok";
         QSqlQuery query(upd_secu);
         query.prepare("UPDATE `security`.`bddsecu` SET `utilisateurBdd` = '"+nomUt+"', `motDePasseBdd` = '"+pass+"', `adresse` = '"+adr+"', `port` =  '"+QString::number(port)+"' WHERE `bddsecu`.`ID` = 1;");
-        //   query.exec("UPDATE `bddsecu` SET `utilisateurBdd` = '"+nomUt+"' WHERE `ID` = 1;");
-        //   query.exec("UPDATE `bddsecu` SET `motDePasseBdd` = '"+pass+"' WHERE `ID` = 1;");
-        //   query.exec("UPDATE `bddsecu` SET `adresse` = '"+adr+"' WHERE `ID` = 1;");
-        //   query.exec("UPDATE `bddsecu` SET `port` = '"+QString::number(port)+"' WHERE `ID` = 1;");
         query.exec();
     }else{
         qDebug()<<"connexion n'est pas OK";
@@ -376,21 +368,8 @@ void C_options::TexteChemin(QLineEdit *champTexte){
     QFileDialog f;
     f.setFileMode(QFileDialog::DirectoryOnly);
     f.setOption(QFileDialog::ShowDirsOnly,false);
-
     f.exec();
-
-    qDebug()<<f.directory().absolutePath();
-
-    //création dossier
-    QString folder = "/chemin temporaire";
-    QString chemin = f.directory().absolutePath();
-
-    qDebug()<<"chemin tempo: "<<chemin;
-
-    champTexte->setText(chemin);
-
-    QDir d = QDir::root();
-    qDebug()<<d.mkpath(chemin+folder);
+    champTexte->setText(f.selectedFiles().at(0));
 }
 
 /**

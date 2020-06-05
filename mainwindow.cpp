@@ -892,7 +892,7 @@ void MainWindow::on_pushButton_clicked()
 {
     Secu.LireIni();
     Secu.connection();
-    C_options *options = new  C_options(this,Secu.getDvdFlixAdr(),Secu.getDvdFlixPass(),Secu.getDvdFlixUser(),Secu.getDvdFlixPort());
+    C_options *options = new  C_options(this,Secu.getDvdFlixAdr(),Secu.getDvdFlixPass(),Secu.getDvdFlixUser(),Secu.getDvdFlixPort(),codeParentLu);
     options->show();
 }
 
