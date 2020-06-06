@@ -14,7 +14,8 @@
    <string>Form</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color : rgb(255, 255, 255)</string>
+   <string notr="true">background-color : rgb(255, 255, 255);
+border-color: rgb(0, 85, 255);</string>
   </property>
   <widget class="QWidget" name="verticalLayoutWidget">
    <property name="geometry">
@@ -65,6 +66,9 @@
         <weight>75</weight>
         <bold>true</bold>
        </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
       </property>
       <property name="text">
        <string>Entrez le code parental pour voir cette fiche</string>

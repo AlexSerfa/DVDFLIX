@@ -13,6 +13,9 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(255, 255, 255);</string>
+  </property>
   <widget class="QWidget" name="formLayoutWidget">
    <property name="geometry">
     <rect>
@@ -53,6 +56,12 @@
     </item>
     <item row="0" column="1">
      <widget class="QLineEdit" name="txt_utilisateur">
+      <property name="styleSheet">
+       <string notr="true">border-color: rgb(0, 85, 255);
+border-radius:15px;
+border-width: 1px;
+border-style: solid;</string>
+      </property>
       <property name="text">
        <string>root</string>
       </property>
@@ -60,6 +69,12 @@
     </item>
     <item row="1" column="1">
      <widget class="QLineEdit" name="txt_mdp">
+      <property name="styleSheet">
+       <string notr="true">border-color: rgb(0, 85, 255);
+border-radius:15px;
+border-width: 1px;
+border-style: solid;</string>
+      </property>
       <property name="text">
        <string>admin</string>
       </property>
@@ -67,6 +82,12 @@
     </item>
     <item row="2" column="1">
      <widget class="QLineEdit" name="txt_adresse">
+      <property name="styleSheet">
+       <string notr="true">border-color: rgb(0, 85, 255);
+border-radius:15px;
+border-width: 1px;
+border-style: solid;</string>
+      </property>
       <property name="text">
        <string/>
       </property>
@@ -77,6 +98,12 @@
     </item>
     <item row="3" column="1">
      <widget class="QLineEdit" name="txt_port">
+      <property name="styleSheet">
+       <string notr="true">border-color: rgb(0, 85, 255);
+border-radius:15px;
+border-width: 1px;
+border-style: solid;</string>
+      </property>
       <property name="text">
        <string/>
       </property>
@@ -87,8 +114,14 @@
     </item>
     <item row="4" column="1">
      <widget class="QLineEdit" name="txt_tempo">
+      <property name="styleSheet">
+       <string notr="true">border-color: rgb(0, 85, 255);
+border-radius:15px;
+border-width: 1px;
+border-style: solid;</string>
+      </property>
       <property name="text">
-       <string>azerty</string>
+       <string/>
       </property>
       <property name="readOnly">
        <bool>true</bool>
@@ -97,8 +130,14 @@
     </item>
     <item row="5" column="1">
      <widget class="QLineEdit" name="txt_fixe">
+      <property name="styleSheet">
+       <string notr="true">border-color: rgb(0, 85, 255);
+border-radius:15px;
+border-width: 1px;
+border-style: solid;</string>
+      </property>
       <property name="text">
-       <string>aaaaaaa</string>
+       <string/>
       </property>
       <property name="readOnly">
        <bool>true</bool>
@@ -134,6 +173,12 @@
     </item>
     <item row="6" column="1">
      <widget class="QLineEdit" name="txt_code">
+      <property name="styleSheet">
+       <string notr="true">border-color: rgb(0, 85, 255);
+border-radius:15px;
+border-width: 1px;
+border-style: solid;</string>
+      </property>
       <property name="inputMask">
        <string/>
       </property>
@@ -159,13 +204,27 @@
         <height>30</height>
        </size>
       </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: qlineargradient(spread:pad, x1:0.482412, y1:0.983, x2:0.493025, y2:0.239, stop:0 rgba(85, 170, 255, 255), stop:1 rgba(255, 255, 255, 255));
+border-color: rgb(0, 85, 255);
+border-radius: 10px;
+border-width: 1px;
+border-style: solid;</string>
+      </property>
       <property name="text">
        <string>Enregistrer</string>
       </property>
      </widget>
     </item>
     <item row="7" column="1">
-     <widget class="QLineEdit" name="txt_nCode"/>
+     <widget class="QLineEdit" name="txt_nCode">
+      <property name="styleSheet">
+       <string notr="true">border-color: rgb(0, 85, 255);
+border-radius:15px;
+border-width: 1px;
+border-style: solid;</string>
+      </property>
+     </widget>
     </item>
     <item row="7" column="0">
      <widget class="QLabel" name="label_11">
@@ -212,6 +271,16 @@
       </property>
      </widget>
     </item>
+    <item row="0" column="1">
+     <widget class="QLineEdit" name="txt_adrDbSecu">
+      <property name="styleSheet">
+       <string notr="true">border-color: rgb(0, 85, 255);
+border-radius:15px;
+border-width: 1px;
+border-style: solid;</string>
+      </property>
+     </widget>
+    </item>
     <item row="1" column="0">
      <widget class="QLabel" name="label_8">
       <property name="text">
@@ -219,14 +288,31 @@
       </property>
      </widget>
     </item>
-    <item row="0" column="1">
-     <widget class="QLineEdit" name="txt_adrDbSecu"/>
-    </item>
     <item row="1" column="1">
-     <widget class="QLineEdit" name="txt_portDbSecu"/>
+     <widget class="QLineEdit" name="txt_portDbSecu">
+      <property name="styleSheet">
+       <string notr="true">border-color: rgb(0, 85, 255);
+border-radius:15px;
+border-width: 1px;
+border-style: solid;</string>
+      </property>
+     </widget>
     </item>
     <item row="2" column="1">
      <widget class="QPushButton" name="pushButton_modifier">
+      <property name="maximumSize">
+       <size>
+        <width>150</width>
+        <height>30</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: qlineargradient(spread:pad, x1:0.482412, y1:0.983, x2:0.493025, y2:0.239, stop:0 rgba(85, 170, 255, 255), stop:1 rgba(255, 255, 255, 255));
+border-color: rgb(0, 85, 255);
+border-radius: 10px;
+border-width: 1px;
+border-style: solid;</string>
+      </property>
       <property name="text">
        <string>Modifier</string>
       </property>

@@ -7,11 +7,14 @@
     <x>0</x>
     <y>0</y>
     <width>1368</width>
-    <height>800</height>
+    <height>807</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>DVDFLIX</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(255, 255, 255);</string>
   </property>
   <property name="tabShape">
    <enum>QTabWidget::Rounded</enum>
@@ -23,37 +26,44 @@
    <widget class="QPushButton" name="btn_rechercher">
     <property name="geometry">
      <rect>
-      <x>300</x>
-      <y>650</y>
-      <width>101</width>
-      <height>31</height>
+      <x>350</x>
+      <y>670</y>
+      <width>151</width>
+      <height>61</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>18</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: qlineargradient(spread:pad, x1:0.482412, y1:0.983, x2:0.493025, y2:0.239, stop:0 rgba(85, 170, 255, 255), stop:1 rgba(255, 255, 255, 255));
+border-color: rgb(0, 85, 255);
+border-radius: 10px;
+border-width: 1px;
+border-style: solid;</string>
     </property>
     <property name="text">
      <string>Rechercher</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="btn_option">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>10</y>
-      <width>61</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>OPTION</string>
-    </property>
-   </widget>
    <widget class="QLineEdit" name="ln_titre">
     <property name="geometry">
      <rect>
-      <x>80</x>
+      <x>130</x>
       <y>650</y>
       <width>211</width>
       <height>20</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border-color: rgb(0, 85, 255);
+border-radius:15px;
+border-width: 1px;
+border-style: solid;</string>
     </property>
     <property name="text">
      <string>rambo</string>
@@ -62,7 +72,7 @@
    <widget class="QLabel" name="lbl_titre">
     <property name="geometry">
      <rect>
-      <x>20</x>
+      <x>70</x>
       <y>650</y>
       <width>47</width>
       <height>13</height>
@@ -80,7 +90,7 @@
    <widget class="QLabel" name="lbl__Acteur">
     <property name="geometry">
      <rect>
-      <x>20</x>
+      <x>70</x>
       <y>680</y>
       <width>47</width>
       <height>13</height>
@@ -98,17 +108,23 @@
    <widget class="QLineEdit" name="ln_titre_2">
     <property name="geometry">
      <rect>
-      <x>80</x>
+      <x>130</x>
       <y>680</y>
       <width>211</width>
       <height>20</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">border-color: rgb(0, 85, 255);
+border-radius:15px;
+border-width: 1px;
+border-style: solid;</string>
+    </property>
    </widget>
    <widget class="QLabel" name="lbl_date">
     <property name="geometry">
      <rect>
-      <x>20</x>
+      <x>70</x>
       <y>710</y>
       <width>47</width>
       <height>13</height>
@@ -126,21 +142,33 @@
    <widget class="QLineEdit" name="ln_titre_3">
     <property name="geometry">
      <rect>
-      <x>80</x>
+      <x>130</x>
       <y>710</y>
       <width>211</width>
       <height>20</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">border-color: rgb(0, 85, 255);
+border-radius:15px;
+border-width: 1px;
+border-style: solid;</string>
+    </property>
    </widget>
    <widget class="QComboBox" name="cb_genre">
     <property name="geometry">
      <rect>
-      <x>80</x>
+      <x>130</x>
       <y>740</y>
       <width>211</width>
       <height>22</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border-color: rgb(0, 85, 255);
+border-radius:15px;
+border-width: 1px;
+border-style: solid;</string>
     </property>
     <item>
      <property name="text">
@@ -171,7 +199,7 @@
    <widget class="QLabel" name="lbl_date_2">
     <property name="geometry">
      <rect>
-      <x>20</x>
+      <x>70</x>
       <y>740</y>
       <width>47</width>
       <height>13</height>
@@ -195,6 +223,13 @@
       <height>23</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: qlineargradient(spread:pad, x1:0.482412, y1:0.983, x2:0.493025, y2:0.239, stop:0 rgba(85, 170, 255, 255), stop:1 rgba(255, 255, 255, 255));
+border-color: rgb(0, 85, 255);
+border-radius: 10px;
+border-width: 1px;
+border-style: solid;</string>
+    </property>
     <property name="text">
      <string>&lt;&lt;</string>
     </property>
@@ -207,6 +242,13 @@
       <width>75</width>
       <height>23</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: qlineargradient(spread:pad, x1:0.482412, y1:0.983, x2:0.493025, y2:0.239, stop:0 rgba(85, 170, 255, 255), stop:1 rgba(255, 255, 255, 255));
+border-color: rgb(0, 85, 255);
+border-radius: 10px;
+border-width: 1px;
+border-style: solid;</string>
     </property>
     <property name="text">
      <string>&gt;&gt;</string>
@@ -776,14 +818,26 @@ background-color: rgb(0, 85, 255);</string>
    <widget class="QGroupBox" name="grp_rechercheType">
     <property name="geometry">
      <rect>
-      <x>300</x>
-      <y>690</y>
+      <x>550</x>
+      <y>700</y>
       <width>211</width>
       <height>51</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">border-color: rgb(0, 85, 255);
+border-radius:15px;
+border-width: 1px;
+border-style: solid;</string>
+    </property>
     <property name="title">
      <string>Type de recherche</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
     </property>
     <widget class="QRadioButton" name="rdb_rechLoc">
      <property name="geometry">
@@ -818,63 +872,43 @@ background-color: rgb(0, 85, 255);</string>
    <widget class="QPushButton" name="pushButton">
     <property name="geometry">
      <rect>
-      <x>1230</x>
-      <y>640</y>
+      <x>1220</x>
+      <y>660</y>
       <width>75</width>
       <height>23</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: qlineargradient(spread:pad, x1:0.482412, y1:0.983, x2:0.493025, y2:0.239, stop:0 rgba(85, 170, 255, 255), stop:1 rgba(255, 255, 255, 255));
+border-color: rgb(0, 85, 255);
+border-radius: 10px;
+border-width: 1px;
+border-style: solid;</string>
     </property>
     <property name="text">
      <string>Options</string>
     </property>
    </widget>
-   <widget class="QLabel" name="lbl_codeParent">
-    <property name="geometry">
-     <rect>
-      <x>560</x>
-      <y>720</y>
-      <width>81</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Code parental:</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="txt_codeParent">
-    <property name="geometry">
-     <rect>
-      <x>640</x>
-      <y>720</y>
-      <width>61</width>
-      <height>20</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="btn_valideCodeparent">
-    <property name="geometry">
-     <rect>
-      <x>710</x>
-      <y>720</y>
-      <width>75</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Valider</string>
-    </property>
-   </widget>
    <widget class="QGroupBox" name="grp_statut">
     <property name="geometry">
      <rect>
-      <x>970</x>
-      <y>640</y>
+      <x>990</x>
+      <y>650</y>
       <width>201</width>
-      <height>71</height>
+      <height>81</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border-color: rgb(0, 85, 255);
+border-radius:15px;
+border-width: 1px;
+border-style: solid;</string>
     </property>
     <property name="title">
      <string>STATUT</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
     </property>
     <widget class="QLabel" name="lbl_db_status">
      <property name="geometry">
@@ -903,6 +937,64 @@ background-color: rgb(0, 85, 255);</string>
      </property>
      <property name="text">
       <string>Control parental actif</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox">
+    <property name="geometry">
+     <rect>
+      <x>850</x>
+      <y>650</y>
+      <width>120</width>
+      <height>80</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border-color: rgb(0, 85, 255);
+border-radius:15px;
+border-width: 1px;
+border-style: solid;</string>
+    </property>
+    <property name="title">
+     <string>Code parental</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+    <widget class="QLineEdit" name="txt_codeParent">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>20</y>
+       <width>61</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-color: rgb(0, 85, 255);
+border-radius:15px;
+border-width: 1px;
+border-style: solid;</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btn_valideCodeparent">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>50</y>
+       <width>81</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: qlineargradient(spread:pad, x1:0.482412, y1:0.983, x2:0.493025, y2:0.239, stop:0 rgba(85, 170, 255, 255), stop:1 rgba(255, 255, 255, 255));
+border-color: rgb(0, 85, 255);
+border-radius: 10px;
+border-width: 1px;
+border-style: solid;</string>
+     </property>
+     <property name="text">
+      <string>Valider</string>
      </property>
     </widget>
    </widget>

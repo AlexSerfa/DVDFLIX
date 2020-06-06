@@ -14,7 +14,8 @@
    <string>Form</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color : rgb(255, 255, 255)</string>
+   <string notr="true">background-color : rgb(255, 255, 255);
+border-color: rgb(0, 85, 255);</string>
   </property>
   <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
@@ -57,6 +58,12 @@
         <height>50</height>
        </size>
       </property>
+      <property name="styleSheet">
+       <string notr="true">border-color: rgb(0, 85, 255);
+border-radius:15px;
+border-width: 1px;
+border-style: solid;</string>
+      </property>
       <property name="text">
        <string/>
       </property>
@@ -67,6 +74,19 @@
     </item>
     <item row="5" column="2" rowspan="2">
      <widget class="QPushButton" name="btn_details">
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>25</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: qlineargradient(spread:pad, x1:0.482412, y1:0.983, x2:0.493025, y2:0.239, stop:0 rgba(85, 170, 255, 255), stop:1 rgba(255, 255, 255, 255));
+border-color: rgb(0, 85, 255);
+border-radius: 10px;
+border-width: 1px;
+border-style: solid;</string>
+      </property>
       <property name="text">
        <string>Détails</string>
       </property>
@@ -103,6 +123,12 @@
        <font>
         <pointsize>12</pointsize>
        </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">border-color: rgb(0, 85, 255);
+border-radius:15px;
+border-width: 1px;
+border-style: solid;</string>
       </property>
       <property name="text">
        <string>Inconnu</string>

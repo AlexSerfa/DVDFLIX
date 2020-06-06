@@ -319,7 +319,6 @@ void C_details::on_btn_modifier_clicked()
     ui->chk_adult->setEnabled(true);
     ui->txt_resum->setEnabled(true);
     ui->txt_langue->setEnabled(true);
-    ui->chk_soustitre->setEnabled(true);
     ui->cbb_stockage->setEnabled(true);
     if(m_local){
         ui->btn_enregistrer->setEnabled(true);
@@ -376,7 +375,6 @@ void C_details::on_btn_enregistrer_clicked()
         ui->chk_adult->setEnabled(false);
         ui->txt_resum->setEnabled(false);
         ui->txt_langue->setEnabled(false);
-        ui->chk_soustitre->setEnabled(false);
         ui->cbb_stockage->setEnabled(false);
     }
     ui->btn_enregistrer->setEnabled(false);

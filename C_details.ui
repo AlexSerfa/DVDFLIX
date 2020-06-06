@@ -16,6 +16,11 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(255, 255, 255);
+
+</string>
+  </property>
   <widget class="QLabel" name="lbl_front">
    <property name="geometry">
     <rect>
@@ -24,6 +29,12 @@
      <width>311</width>
      <height>421</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">border-color: rgb(0, 85, 255);
+border-radius:15px;
+border-width: 1px;
+border-style: solid;</string>
    </property>
    <property name="text">
     <string/>
@@ -37,6 +48,12 @@
      <width>311</width>
      <height>421</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">border-color: rgb(0, 85, 255);
+border-radius:15px;
+border-width: 1px;
+border-style: solid;</string>
    </property>
    <property name="text">
     <string/>
@@ -138,6 +155,12 @@
      <height>131</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">border-color: rgb(0, 85, 255);
+border-radius:15px;
+border-width: 1px;
+border-style: solid;</string>
+   </property>
   </widget>
   <widget class="QPushButton" name="btn_enregistrer">
    <property name="geometry">
@@ -147,6 +170,13 @@
      <width>91</width>
      <height>23</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: qlineargradient(spread:pad, x1:0.482412, y1:0.983, x2:0.493025, y2:0.239, stop:0 rgba(85, 170, 255, 255), stop:1 rgba(255, 255, 255, 255));
+border-color: rgb(0, 85, 255);
+border-radius: 10px;
+border-width: 1px;
+border-style: solid;</string>
    </property>
    <property name="text">
     <string>ENREGISTRER</string>
@@ -161,6 +191,13 @@
      <height>23</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: qlineargradient(spread:pad, x1:0.482412, y1:0.983, x2:0.493025, y2:0.239, stop:0 rgba(85, 170, 255, 255), stop:1 rgba(255, 255, 255, 255));
+border-color: rgb(0, 85, 255);
+border-radius: 10px;
+border-width: 1px;
+border-style: solid;</string>
+   </property>
    <property name="text">
     <string>MODIFER</string>
    </property>
@@ -173,6 +210,12 @@
      <width>111</width>
      <height>22</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">border-color: rgb(0, 85, 255);
+border-radius:15px;
+border-width: 1px;
+border-style: solid;</string>
    </property>
   </widget>
   <widget class="QLabel" name="lbl_stockge">
@@ -210,6 +253,12 @@
      <height>22</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">border-color: rgb(0, 85, 255);
+border-radius:15px;
+border-width: 1px;
+border-style: solid;</string>
+   </property>
   </widget>
   <widget class="QDateEdit" name="dateEdit">
    <property name="geometry">
@@ -219,6 +268,12 @@
      <width>110</width>
      <height>22</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">border-color: rgb(0, 85, 255);
+border-radius:15px;
+border-width: 1px;
+border-style: solid;</string>
    </property>
   </widget>
   <widget class="QLabel" name="lbl_dateEnregistrement">
@@ -242,6 +297,17 @@
      <width>91</width>
      <height>23</height>
     </rect>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: qlineargradient(spread:pad, x1:0.482412, y1:0.983, x2:0.493025, y2:0.239, stop:0 rgba(85, 170, 255, 255), stop:1 rgba(255, 255, 255, 255));
+border-color: rgb(0, 85, 255);
+border-radius: 10px;
+border-width: 1px;
+border-style: solid;
+</string>
    </property>
    <property name="text">
     <string>Bande-annonce</string>
@@ -282,6 +348,12 @@
      <height>151</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">border-color: rgb(0, 85, 255);
+border-radius:15px;
+border-width: 1px;
+border-style: solid;</string>
+   </property>
    <property name="title">
     <string>Informations complémentaires</string>
    </property>
@@ -302,42 +374,13 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>50</y>
+      <y>60</y>
       <width>81</width>
       <height>16</height>
      </rect>
     </property>
     <property name="text">
      <string>Met. en scène :</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="lbl_sousTitrage">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>110</y>
-      <width>61</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Sous-titres :</string>
-    </property>
-   </widget>
-   <widget class="QCheckBox" name="chk_soustitre">
-    <property name="enabled">
-     <bool>false</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>80</x>
-      <y>110</y>
-      <width>70</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>oui</string>
     </property>
    </widget>
    <widget class="QTextEdit" name="txt_acteur">
@@ -348,16 +391,21 @@
      <rect>
       <x>90</x>
       <y>20</y>
-      <width>481</width>
+      <width>471</width>
       <height>31</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border-color: rgb(0, 85, 255);
+border-width: 1px;
+border-style: solid;</string>
     </property>
    </widget>
    <widget class="QLabel" name="lbl_realisateur">
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>70</y>
+      <y>90</y>
       <width>61</width>
       <height>16</height>
      </rect>
@@ -373,7 +421,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>90</y>
+      <y>120</y>
       <width>71</width>
       <height>16</height>
      </rect>
@@ -389,26 +437,19 @@
     <property name="geometry">
      <rect>
       <x>90</x>
-      <y>50</y>
+      <y>60</y>
       <width>231</width>
       <height>20</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border-color: rgb(0, 85, 255);
+border-radius:15px;
+border-width: 1px;
+border-style: solid;</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="txt_realisateur">
-    <property name="enabled">
-     <bool>false</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>90</x>
-      <y>70</y>
-      <width>231</width>
-      <height>20</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="txt_producteur">
     <property name="enabled">
      <bool>false</bool>
     </property>
@@ -419,6 +460,31 @@
       <width>231</width>
       <height>20</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border-color: rgb(0, 85, 255);
+border-radius:15px;
+border-width: 1px;
+border-style: solid;</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="txt_producteur">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>120</y>
+      <width>231</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border-color: rgb(0, 85, 255);
+border-radius:15px;
+border-width: 1px;
+border-style: solid;</string>
     </property>
    </widget>
    <widget class="QPushButton" name="btn_acteur">
@@ -430,6 +496,13 @@
       <height>31</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: qlineargradient(spread:pad, x1:0.482412, y1:0.983, x2:0.493025, y2:0.239, stop:0 rgba(85, 170, 255, 255), stop:1 rgba(255, 255, 255, 255));
+border-color: rgb(0, 85, 255);
+border-radius: 10px;
+border-width: 1px;
+border-style: solid;</string>
+    </property>
     <property name="text">
      <string>Ajouter</string>
     </property>
@@ -437,11 +510,18 @@
    <widget class="QPushButton" name="btn_metteurEnScene">
     <property name="geometry">
      <rect>
-      <x>320</x>
-      <y>50</y>
+      <x>330</x>
+      <y>60</y>
       <width>75</width>
       <height>23</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: qlineargradient(spread:pad, x1:0.482412, y1:0.983, x2:0.493025, y2:0.239, stop:0 rgba(85, 170, 255, 255), stop:1 rgba(255, 255, 255, 255));
+border-color: rgb(0, 85, 255);
+border-radius: 10px;
+border-width: 1px;
+border-style: solid;</string>
     </property>
     <property name="text">
      <string>Ajouter</string>
@@ -450,11 +530,18 @@
    <widget class="QPushButton" name="btn_realisateur">
     <property name="geometry">
      <rect>
-      <x>320</x>
-      <y>70</y>
+      <x>330</x>
+      <y>90</y>
       <width>75</width>
       <height>23</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: qlineargradient(spread:pad, x1:0.482412, y1:0.983, x2:0.493025, y2:0.239, stop:0 rgba(85, 170, 255, 255), stop:1 rgba(255, 255, 255, 255));
+border-color: rgb(0, 85, 255);
+border-radius: 10px;
+border-width: 1px;
+border-style: solid;</string>
     </property>
     <property name="text">
      <string>Ajouter</string>
@@ -463,11 +550,18 @@
    <widget class="QPushButton" name="btn_producteur">
     <property name="geometry">
      <rect>
-      <x>320</x>
-      <y>90</y>
+      <x>330</x>
+      <y>120</y>
       <width>75</width>
       <height>23</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: qlineargradient(spread:pad, x1:0.482412, y1:0.983, x2:0.493025, y2:0.239, stop:0 rgba(85, 170, 255, 255), stop:1 rgba(255, 255, 255, 255));
+border-color: rgb(0, 85, 255);
+border-radius: 10px;
+border-width: 1px;
+border-style: solid;</string>
     </property>
     <property name="text">
      <string>Ajouter</string>
@@ -486,6 +580,12 @@
      <height>20</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">border-color: rgb(0, 85, 255);
+border-radius:15px;
+border-width: 1px;
+border-style: solid;</string>
+   </property>
   </widget>
   <widget class="QLineEdit" name="txt_titreOri">
    <property name="enabled">
@@ -498,6 +598,12 @@
      <width>191</width>
      <height>20</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">border-color: rgb(0, 85, 255);
+border-radius:15px;
+border-width: 1px;
+border-style: solid;</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="txt_real">
@@ -512,6 +618,12 @@
      <height>20</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">border-color: rgb(0, 85, 255);
+border-radius:15px;
+border-width: 1px;
+border-style: solid;</string>
+   </property>
   </widget>
   <widget class="QLineEdit" name="txt_genre">
    <property name="enabled">
@@ -524,6 +636,12 @@
      <width>221</width>
      <height>20</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">border-color: rgb(0, 85, 255);
+border-radius:15px;
+border-width: 1px;
+border-style: solid;</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="txt_langue">
@@ -538,6 +656,12 @@
      <height>20</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">border-color: rgb(0, 85, 255);
+border-radius:15px;
+border-width: 1px;
+border-style: solid;</string>
+   </property>
   </widget>
   <widget class="QLineEdit" name="txt_id_distant">
    <property name="enabled">
@@ -550,6 +674,12 @@
      <width>101</width>
      <height>20</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">border-color: rgb(0, 85, 255);
+border-radius:15px;
+border-width: 1px;
+border-style: solid;</string>
    </property>
   </widget>
   <widget class="QLabel" name="lbl_id_local">
@@ -577,6 +707,12 @@
      <height>20</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">border-color: rgb(0, 85, 255);
+border-radius:15px;
+border-width: 1px;
+border-style: solid;</string>
+   </property>
   </widget>
   <widget class="QLabel" name="lbl_dispo">
    <property name="geometry">
@@ -586,6 +722,12 @@
      <width>81</width>
      <height>81</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">border-color: rgb(0, 85, 255);
+border-radius:15px;
+border-width: 1px;
+border-style: solid;</string>
    </property>
    <property name="text">
     <string/>
@@ -608,6 +750,12 @@
      <pointsize>12</pointsize>
     </font>
    </property>
+   <property name="styleSheet">
+    <string notr="true">border-color: rgb(0, 85, 255);
+border-radius:15px;
+border-width: 1px;
+border-style: solid;</string>
+   </property>
    <property name="text">
     <string>Note:</string>
    </property>
@@ -628,6 +776,12 @@
     <font>
      <pointsize>16</pointsize>
     </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">border-color: rgb(0, 85, 255);
+border-radius:15px;
+border-width: 1px;
+border-style: solid;</string>
    </property>
    <property name="text">
     <string>0</string>
@@ -650,6 +804,12 @@
      <pointsize>12</pointsize>
     </font>
    </property>
+   <property name="styleSheet">
+    <string notr="true">border-color: rgb(0, 85, 255);
+border-radius:15px;
+border-width: 1px;
+border-style: solid;</string>
+   </property>
    <property name="text">
     <string>Nb. votes :</string>
    </property>
@@ -662,7 +822,7 @@
     <rect>
      <x>720</x>
      <y>290</y>
-     <width>75</width>
+     <width>81</width>
      <height>25</height>
     </rect>
    </property>
@@ -670,6 +830,12 @@
     <font>
      <pointsize>16</pointsize>
     </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">border-color: rgb(0, 85, 255);
+border-radius:15px;
+border-width: 1px;
+border-style: solid;</string>
    </property>
    <property name="text">
     <string>0</string>
@@ -690,11 +856,17 @@
      <height>20</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">border-color: rgb(0, 85, 255);
+border-radius:15px;
+border-width: 1px;
+border-style: solid;</string>
+   </property>
   </widget>
   <widget class="QLabel" name="lbl_stock">
    <property name="geometry">
     <rect>
-     <x>500</x>
+     <x>490</x>
      <y>520</y>
      <width>91</width>
      <height>16</height>
