@@ -121,7 +121,7 @@ border-width: 1px;
 border-style: solid;</string>
       </property>
       <property name="text">
-       <string/>
+       <string>a</string>
       </property>
       <property name="readOnly">
        <bool>true</bool>
@@ -137,7 +137,7 @@ border-width: 1px;
 border-style: solid;</string>
       </property>
       <property name="text">
-       <string/>
+       <string>b</string>
       </property>
       <property name="readOnly">
        <bool>true</bool>

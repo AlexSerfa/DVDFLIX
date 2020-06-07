@@ -392,7 +392,7 @@ border-style: solid;</string>
       <x>90</x>
       <y>20</y>
       <width>471</width>
-      <height>31</height>
+      <height>30</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -430,63 +430,6 @@ border-style: solid;</string>
      <string>Producteur :</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="txt_metteurEnScene">
-    <property name="enabled">
-     <bool>false</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>90</x>
-      <y>60</y>
-      <width>231</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">border-color: rgb(0, 85, 255);
-border-radius:15px;
-border-width: 1px;
-border-style: solid;</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="txt_realisateur">
-    <property name="enabled">
-     <bool>false</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>90</x>
-      <y>90</y>
-      <width>231</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">border-color: rgb(0, 85, 255);
-border-radius:15px;
-border-width: 1px;
-border-style: solid;</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="txt_producteur">
-    <property name="enabled">
-     <bool>false</bool>
-    </property>
-    <property name="geometry">
-     <rect>
-      <x>90</x>
-      <y>120</y>
-      <width>231</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">border-color: rgb(0, 85, 255);
-border-radius:15px;
-border-width: 1px;
-border-style: solid;</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="btn_acteur">
     <property name="geometry">
      <rect>
@@ -511,7 +454,7 @@ border-style: solid;</string>
     <property name="geometry">
      <rect>
       <x>330</x>
-      <y>60</y>
+      <y>50</y>
       <width>75</width>
       <height>23</height>
      </rect>
@@ -531,7 +474,7 @@ border-style: solid;</string>
     <property name="geometry">
      <rect>
       <x>330</x>
-      <y>90</y>
+      <y>80</y>
       <width>75</width>
       <height>23</height>
      </rect>
@@ -551,7 +494,7 @@ border-style: solid;</string>
     <property name="geometry">
      <rect>
       <x>330</x>
-      <y>120</y>
+      <y>110</y>
       <width>75</width>
       <height>23</height>
      </rect>
@@ -565,6 +508,45 @@ border-style: solid;</string>
     </property>
     <property name="text">
      <string>Ajouter</string>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="txt_metteurEnScene">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>50</y>
+      <width>221</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="readOnly">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="txt_realisateur">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>80</y>
+      <width>221</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="readOnly">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="txt_producteur">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>110</y>
+      <width>221</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="readOnly">
+     <bool>true</bool>
     </property>
    </widget>
   </widget>

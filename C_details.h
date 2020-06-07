@@ -54,6 +54,14 @@ private slots:
     void on_cbb_stockage_currentIndexChanged(const QString &arg1);
     void on_chk_adult_stateChanged(int arg1);
 
+    void on_btn_acteur_clicked();
+
+    void on_btn_metteurEnScene_clicked();
+
+    void on_btn_realisateur_clicked();
+
+    void on_btn_producteur_clicked();
+
 private:
     C_MySQLManager *sql;     /*!< objet gérant la partie Mysql */
     Ui::C_details *ui;

@@ -30,8 +30,8 @@ using namespace std;
 const QString key ="76532a92d48d6e7e7fb5d72eaf2029b3"; /**< clé de l'API themoviedb */
 const QString defaultUrl = " https://api.themoviedb.org/3/"; /**< adresse de l'API themoviedb */
 const QString urlBaseAffiche="https://image.tmdb.org/t/p/w500"; /**< adresse pour la récupération des image */
-const QString directoryBase= "d:/tempo68"; /**< chemin du dossier de stockage */
-const QString directoryHard ="d:/tempo69";
+const QString directoryBase= "x:/tempo68"; /**< chemin du dossier de stockage */
+const QString directoryHard ="x:/tempo69";
 
 
 const QString database = "dvdflix";/**< nom de la base de donnée */

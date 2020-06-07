@@ -10,7 +10,7 @@ using namespace std;
 const QString key ="76532a92d48d6e7e7fb5d72eaf2029b3"; /**< TODO: describe */
 const QString defaultUrl = " https://api.themoviedb.org/3/"; /**< TODO: describe */
 const QString urlBaseAffiche="https://image.tmdb.org/t/p/w500"; /**< TODO: describe */
-const QString directoryBase= "d:/tempo68"; /**< TODO: describe */
+const QString directoryBase= "x:/tempo68"; /**< TODO: describe */
 /**
  * @brief constructuer
  */

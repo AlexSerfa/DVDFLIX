@@ -1,0 +1,27 @@
+#ifndef C_DETAIL_AJOUT_H
+#define C_DETAIL_AJOUT_H
+
+#include <QDialog>
+#include <QTextEdit>
+
+namespace Ui {
+class C_detail_ajout;
+}
+
+class C_detail_ajout : public QDialog
+{
+    Q_OBJECT
+
+public:
+    explicit C_detail_ajout(QWidget *parent = nullptr,QString titre="",QTextEdit *q=new QTextEdit());
+    ~C_detail_ajout();
+
+private slots:
+    void on_btn_enregistrer_detail_clicked();
+
+private:
+    Ui::C_detail_ajout *ui;
+    QTextEdit *q;
+};
+
+#endif // C_DETAIL_AJOUT_H
