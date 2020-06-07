@@ -408,23 +408,27 @@ void C_details::on_chk_adult_stateChanged(int arg1)
 void C_details::on_btn_acteur_clicked()
 {
     C_detail_ajout *acteur = new C_detail_ajout(this,"Ajouter acteur",this->ui->txt_acteur);
+    acteur->setWindowTitle("Acteur");
     acteur->show();
 }
 
 void C_details::on_btn_metteurEnScene_clicked()
 {
     C_detail_ajout *metteur = new C_detail_ajout(this,"Ajouter metteur en scène",this->ui->txt_metteurEnScene);
+    metteur->setWindowTitle("Metteur en scène");
     metteur->show();
 }
 
 void C_details::on_btn_realisateur_clicked()
 {
     C_detail_ajout *realisateur = new C_detail_ajout(this,"Ajouter réalisateur",this->ui->txt_realisateur);
+    realisateur->setWindowTitle("Réalisateur");
     realisateur->show();
 }
 
 void C_details::on_btn_producteur_clicked()
 {
     C_detail_ajout *producteur = new C_detail_ajout(this,"Ajouter producteur",this->ui->txt_producteur);
+    producteur->setWindowTitle("Producteur");
     producteur->show();
 }
