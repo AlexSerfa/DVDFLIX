@@ -31,7 +31,7 @@ C_MySQLManager::C_MySQLManager(QObject *parent)
  * @param user
  * @param password
  */
-void C_MySQLManager::connection(QString db, QString adress, int port, QString user, QString password)
+bool C_MySQLManager::connection(QString db, QString adress, int port, QString user, QString password)
 {
     m_dvdDB =QSqlDatabase::addDatabase("QMYSQL");
     m_dvdDB.setHostName(adress);
@@ -44,12 +44,17 @@ void C_MySQLManager::connection(QString db, QString adress, int port, QString us
         emit connected();
         // Exécution d'une requête
         QSqlQuery requete;
+        return true;
     }
     else {
         emit disconnected();
         qDebug() << "Echec d'ouverture de la base de donnée";
         qDebug() << m_dvdDB.lastError();
+        return false;
     }
+}
+bool C_MySQLManager::close(){
+    m_dvdDB.close();
 }
 /**
  * @fn getGenre(int number)
@@ -461,4 +466,42 @@ QDate C_MySQLManager::QstringToQDate(QString date){
 
     QDate Date = QDate::fromString(date,"yyyy-MM-dd");
     return Date;
+}
+/**
+ * @fn getHardPath(int number)
+ * @author: Mercier Laurent
+ * @date 06/06/2020
+ * @brief retourne les chemin fixe
+ *
+ */
+QString C_MySQLManager::getHardPath(){
+    QSqlQuery requete;
+     QString hard ="";
+    if(requete.exec("SELECT * FROM param WHERE ID=1"))
+    {
+       if( requete.next()){
+            hard =  QVariant(requete.value(1)).toString();
+            return hard;
+       }
+    }
+    return hard;
+}
+/**
+ * @fn getHardPath(int number)
+ * @author: Mercier Laurent
+ * @date 06/06/2020
+ * @brief retourne les chemin fixe
+ *
+ */
+QString C_MySQLManager::getTempoPath(){
+    QSqlQuery requete;
+    QString tempo="";
+    if(requete.exec("SELECT * FROM param WHERE ID=1"))
+    {
+       if( requete.next()){
+       QString tempo =  QVariant(requete.value(2)).toString();
+       return tempo;
+       }
+    }
+    return tempo;
 }

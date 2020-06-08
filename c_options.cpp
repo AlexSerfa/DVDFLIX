@@ -44,11 +44,13 @@ const QString passSecu = "admin";
  *
  */
 
-C_options::C_options(QWidget *parent , QString _dvdAd, QString _dvdPass,QString _dvdUser,int _dvdport, QString code) :
-    QDialog(parent),
+C_options::C_options(QWidget *parent , QString _dvdAd, QString _dvdPass,QString _dvdUser,int _dvdport, QString code,C_MySQLManager *_sql)
+    : QDialog(parent),
     ui(new Ui::C_options)
+  ,sql()
   ,secu()
 {
+        sql = _sql;
     setDvdAdr(_dvdAd);
     setDvdPass(_dvdPass);
     setDvdUser(_dvdUser);
@@ -57,19 +59,7 @@ C_options::C_options(QWidget *parent , QString _dvdAd, QString _dvdPass,QString 
     LectureInfoDB();
     m_codeParentalLu = code;
 
-
-
-    /*
-     ifstream a;
-     a.open("dvdflix.ini");
-     if(a.fail()){
-         qDebug()<<"existe";
-     }else{
-         qDebug()<<"n'existe pas";
-     }
-*/
-
-    /**
+ /**
 * @fn c_option
 * @author: Jovanovic Milan
 * @date 11/05/2020
@@ -101,29 +91,19 @@ C_options::~C_options()
 /**
 * @fn LectureInfoDB()
 * @author: Mercier Laurent
-* @date 03/06/2020
-* @brief lecture des inofrmation de la table param de la DB dvdflix
+* @date 06/06/2020
+* @brief lecture des inofrmations de la table param de la DB dvdflix
 */
 void C_options::LectureInfoDB(){
-    C_MySQLManager *sql = new C_MySQLManager();
-    sql->connection("dvdflix",getDvdAdr(),getDvdport(),getDvdUser(),getDvdPass());
 
-    QSqlQuery requete;
-    if(requete.exec("SELECT * FROM param WHERE ID=1"))
-    {
-       if( requete.next()){
-        QString tempoPath =  QVariant(requete.value(1)).toString();
-        QString hardPath =  QVariant(requete.value(2)).toString();
-        QString codeParental =  QVariant(requete.value(3)).toString();
-        setHardPath(hardPath);
-        setTempoPath(tempoPath);
-        setCodeParental(codeParental);
-        qDebug()<<tempoPath;
-        ui->txt_fixe->setText(getHardPath());
-        ui->txt_tempo->setText(getTempoPath());
 
-       }
-    }
+    qWarning()<<"LECTURE DB";
+    setHardPath(sql->getHardPath());
+     qWarning()<<getHardPath();
+    setTempoPath(sql->getTempoPath());
+    setCodeParental(sql->getCodeParental());
+    ui->txt_fixe->setText(getHardPath());
+    ui->txt_tempo->setText(getTempoPath());
 }
 /**
  * @fn c_option
@@ -145,12 +125,6 @@ void C_options::on_pushButton_clicked()
     QString codeP = ui->txt_code->text();
     QString nouveauCodeP = ui->txt_nCode->text();
 
-    //QINTVALIDATOR
-    /*
-    QLineEdit test;
-    test.setValidator(new QRegExpValidator(QRegExp("[0-9]*"), &test));
-    */
-
 
 
     /**
@@ -163,7 +137,6 @@ void C_options::on_pushButton_clicked()
             port.length()<1 ||
             tempo.length()<1 ||
             fixe.length()<1
-            //codeP.length()<1
             )
     {
         ui->error_list->setText("Veuillez remplir tous les champs");
@@ -172,7 +145,7 @@ void C_options::on_pushButton_clicked()
     {
 
 
-        this->update(nom_utilisateur, mdp, adresse, port.toInt());
+  /*      this->update(nom_utilisateur, mdp, adresse, port.toInt());
 
         this->upd_param = QSqlDatabase::addDatabase("QMYSQL","aaa");
         upd_param.setHostName(adresse);
@@ -181,7 +154,7 @@ void C_options::on_pushButton_clicked()
         upd_param.setPassword(mdp);
         upd_param.setPort(port.toInt());
         bool ok = upd_param.open();
-
+*/
         //sql names
         QString tempoPath = ui->txt_tempo->text();
         QString hardPath = ui->txt_fixe->text();
@@ -204,15 +177,9 @@ void C_options::on_pushButton_clicked()
             }
 
         }
-
-        if(ok)
-        {
-            QSqlQuery q(upd_param);
+            QSqlQuery q;
             q.exec("UPDATE `param` SET `tempoPath` = '"+tempoPath+"' WHERE `ID` = 1;");
             q.exec("UPDATE `param` SET `hardPath` = '"+hardPath+"' WHERE `ID` = 1;");
-
-
-        }
 
     }
 
@@ -236,6 +203,11 @@ void C_options::infoDeconnection()
   //  ui->error_list->setText("Connexion non réussie");
   //  disconnect(sql,SIGNAL(connected()),this,SLOT(infoConnection()));
   //  disconnect(sql,SIGNAL(disconnected()),this,SLOT(infoDeconnection()));
+}
+
+void C_options::setSql(C_MySQLManager *value)
+{
+    sql = value;
 }
 
 QString C_options::getCodeParental() const

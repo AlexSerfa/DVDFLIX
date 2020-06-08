@@ -32,7 +32,7 @@ public:
      * @param user
      * @param password
      */
-    void connection(QString db,QString adress,int port,QString user,QString password);
+    bool connection(QString db,QString adress,int port,QString user,QString password);
     /**
      * @brief gere la deconnection de la db
      *
@@ -40,6 +40,7 @@ public:
     void deconnection();
     QStringList getStockageList();
     QString getStockage(int id_film);
+    bool close();
    void searchTitre(QString titre);
     /**
      * @brief
@@ -90,6 +91,9 @@ public:
     void videMinifilm();
     bool saveFilm(C_miniFilm  &film);
     bool updateFilm(C_miniFilm  &film);
+    QString getHardPath();
+    QString getTempoPath();
+
 
 public slots:
     void modification();

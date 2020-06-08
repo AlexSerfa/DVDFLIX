@@ -36,6 +36,9 @@ public:
     ~MainWindow();
     QGridLayout *grdt[21];
 
+    C_MySQLManager *getSql() const;
+    void setSql(C_MySQLManager *value);
+
 public slots:
     void readJson();
     void status_dbConnectee();
@@ -104,7 +107,7 @@ private slots:
 private:
     C_options param;
     C_bddSecu Secu;
-    C_MySQLManager sql;     /*!< objet gérant la partie Mysql */
+    C_MySQLManager *sql;     /*!< objet gérant la partie Mysql */
     C_downloadmanager  m_dlmanager; /*!< objet gérant le tééléchargement des fichier sur la toile et l'enregistrement sur le hdd */
     C_miniFilm *min2[150];   /*!< collection de minifiche après une recherche d'un film en ligne*/
     C_Censure *minC[300];

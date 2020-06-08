@@ -16,7 +16,8 @@ class C_options : public QDialog
     Q_OBJECT
 
 public:
-    explicit C_options(QWidget *parent = nullptr, QString _dvdAdr="", QString _dvdPass="",QString _dvdUser="",int _dvdport=0, QString code="");
+    explicit C_options(QWidget *parent = nullptr, QString _dvdAdr="", QString _dvdPass="",
+                       QString _dvdUser="",int _dvdport=0, QString code="",C_MySQLManager *_sql=nullptr);
     ~C_options();
 
 
@@ -42,6 +43,8 @@ public:
     void setCodeParental(const QString codeParental);
 
 
+
+    void setSql(C_MySQLManager *value);
 
 private slots:
     void on_pushButton_clicked();

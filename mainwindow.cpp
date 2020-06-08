@@ -30,8 +30,8 @@ using namespace std;
 const QString key ="76532a92d48d6e7e7fb5d72eaf2029b3"; /**< clé de l'API themoviedb */
 const QString defaultUrl = " https://api.themoviedb.org/3/"; /**< adresse de l'API themoviedb */
 const QString urlBaseAffiche="https://image.tmdb.org/t/p/w500"; /**< adresse pour la récupération des image */
-const QString directoryBase= "x:/tempo68"; /**< chemin du dossier de stockage */
-const QString directoryHard ="x:/tempo69";
+const QString directoryBase= "d:/tempo68"; /**< chemin du dossier de stockage */
+const QString directoryHard ="d:/tempo69";
 
 
 const QString database = "dvdflix";/**< nom de la base de donnée */
@@ -48,7 +48,7 @@ const QString password = "admin";/**< mot de passe du serveur mysql */
  */
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , Secu()
+
     , m_dlmanager(this)    
     , min2()
     , minC()
@@ -64,31 +64,32 @@ MainWindow::MainWindow(QWidget *parent)
     , m_pageNumber(0)
     , ui(new Ui::MainWindow)
 {
-
-    ui->setupUi(this);
-    imageChemin();
-
-
     C_DbConfig *Config = new C_DbConfig(this);
     Config->MainDbConfig();
     Config->~C_DbConfig();
-
-
+   // C_bddSecu Secu(this->getSql());
+    sql= new C_MySQLManager(this);
    // C_bddSecu Secu = C_bddSecu();
     Secu.LireIni();
-    Secu.connection();
-    Secu.close();
-
+    sql->connection("security",Secu.getBDdvdAdr(),Secu.getBDdvdPort(),Secu.getBDdvdUser(),Secu.getBDdvdPass());
+    Secu.connection(sql);
+  //  Secu.close();
+    ui->setupUi(this);
+    imageChemin();
     //on connect les signaux de connection a la db
-    connect(&sql,SIGNAL(connected()),this,SLOT(status_dbConnectee()));
-    connect(&sql,SIGNAL(disconnected()),this,SLOT(status_dbDeconnectee()));
+    connect(sql,SIGNAL(connected()),this,SLOT(status_dbConnectee()));
+   connect(sql,SIGNAL(disconnected()),this,SLOT(status_dbDeconnectee()));
     //on se connect a la db
 
-    sql.connection(database,Secu.getDvdFlixAdr(),Secu.getDvdFlixPort(),Secu.getDvdFlixUser(),Secu.getDvdFlixPass());
-    connect(&sql,SIGNAL(modifier()),this, SLOT(miseAJourAffichage()));
-    codeParentLu  = sql.getCodeParental();
+    sql->connection(database,Secu.getDvdFlixAdr(),Secu.getDvdFlixPort(),Secu.getDvdFlixUser(),Secu.getDvdFlixPass());
+    connect(sql,SIGNAL(modifier()),this, SLOT(miseAJourAffichage()));
+    codeParentLu  = sql->getCodeParental();
     //DEBUG
     qWarning()<< "code parent lu dans mainwindows"<<codeParentLu;
+
+
+
+
 }
 
 /**
@@ -149,12 +150,12 @@ void MainWindow::rechercheFilm()
     qWarning()<<"rechercher film";
     //on vérifie que la db est bien connectée
     if(m_DBState){
-        m_minifilmCountLocal= sql.filmCount(ui->lbl_titre->text());
+        m_minifilmCountLocal= sql->filmCount(ui->lbl_titre->text());
 
 
 
-        sql.searchTitre(ui->lbl_titre->text());
-        m_minifilmCountLocal = sql.getFilmCount();
+        sql->searchTitre(ui->lbl_titre->text());
+        m_minifilmCountLocal = sql->getFilmCount();
         //DEBUG
         //qWarning()<<" m_minifilmCountLocal :"<<m_minifilmCountLocal;
         //     min2[h]->setIcone(directoryBase+"/home.png");
@@ -228,7 +229,7 @@ void MainWindow::restoreValue()
     bool result = QFile::remove(directoryBase+"/saveMovies.json");
     //DEBUG
     //qWarning()<<"Suppression du fichier: "<<result;
-    sql.videMinifilm();
+    sql->videMinifilm();
     //on vide le tableau de minifilm de resultat en ligne
     for(int i =0;i<150;i++){
         if(min2[i]){
@@ -248,7 +249,7 @@ void MainWindow::restoreValue()
         }
     }
     //on reset le compteur de resultat de la derniere recherche en local
-    sql.resetResultCounter();
+    sql->resetResultCounter();
 }
 /**
  * @fn formatSearch()
@@ -528,7 +529,7 @@ void MainWindow::readJson()
             }
 
             int genreCode =genreArray[0].toInt();
-            QString  genrePrincipal = sql.getGenre(genreCode);
+            QString  genrePrincipal = sql->getGenre(genreCode);
             min2[counter]->setGenre(genrePrincipal);
             //telechargement de affiche des films
             if(child[j].toObject()["poster_path"].toString()!="")
@@ -626,9 +627,9 @@ if(ui->rdb_rechDist->isChecked()|| m_minifilmCountLocal > 10)
                     //on verfie si le code paental a été entré
                     if(!codeParentValid){
                         //on verifie que le film n'est pas classé adult et on l'affiche
-                        if(!sql.min1[filmCounter]->getAdult()){
-                            sql.min1[filmCounter]->addAffiche();
-                            grdt[i]->addWidget(sql.min1[filmCounter],j,k);
+                        if(!sql->min1[filmCounter]->getAdult()){
+                            sql->min1[filmCounter]->addAffiche();
+                            grdt[i]->addWidget(sql->min1[filmCounter],j,k);
                         }
                         //sinon on affiche un minifilm de censure
                         else
@@ -639,8 +640,8 @@ if(ui->rdb_rechDist->isChecked()|| m_minifilmCountLocal > 10)
                             grdt[i]->addWidget(miniCensure,j,k);
                         }
                     }else{
-                        sql.min1[filmCounter]->addAffiche();
-                        grdt[i]->addWidget(sql.min1[filmCounter],j,k);
+                        sql->min1[filmCounter]->addAffiche();
+                        grdt[i]->addWidget(sql->min1[filmCounter],j,k);
                     }
                     filmCounter++;
                     lastPage =i+1;
@@ -711,9 +712,9 @@ else{
                 //on verfie si le code paental a été entré
                 if(!codeParentValid){
                     //on verifie que le film n'est pas classé adult et on l'affiche
-                    if(!sql.min1[filmCounter]->getAdult()){
-                        sql.min1[filmCounter]->addAffiche();
-                        grdt[i]->addWidget(sql.min1[filmCounter],j,k);
+                    if(!sql->min1[filmCounter]->getAdult()){
+                        sql->min1[filmCounter]->addAffiche();
+                        grdt[i]->addWidget(sql->min1[filmCounter],j,k);
                     }
                     //sinon on affiche un minifilm de censure
                     else
@@ -891,9 +892,10 @@ void MainWindow::miseAJourAffichage()
 void MainWindow::on_pushButton_clicked()
 {
     Secu.LireIni();
-    Secu.connection();
-    C_options *options = new  C_options(this,Secu.getDvdFlixAdr(),Secu.getDvdFlixPass(),Secu.getDvdFlixUser(),Secu.getDvdFlixPort(),codeParentLu);
-    options->show();
+    Secu.connection(sql);
+   C_options *options = new  C_options(this,Secu.getDvdFlixAdr(),Secu.getDvdFlixPass(),Secu.getDvdFlixUser(),Secu.getDvdFlixPort(),codeParentLu,sql);
+   //options->setSql(&sql);
+  options->show();
 }
 
 void MainWindow::on_btn_option_clicked()
@@ -942,3 +944,14 @@ void MainWindow::on_btn_valideCodeparent_clicked()
         miseAJourAffichage();
     }
 }
+
+C_MySQLManager *MainWindow::getSql() const
+{
+    return sql;
+}
+
+void MainWindow::setSql(C_MySQLManager *value)
+{
+    sql = value;
+}
+
