@@ -17,6 +17,7 @@ const QString passSecu = "admin";
  *
  */
 
+/**/
 
 C_bddSecu::C_bddSecu(C_MySQLManager *_db)
 {

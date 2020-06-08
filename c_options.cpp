@@ -32,7 +32,7 @@ const QString passSecu = "admin";
 
 
 
-
+/**/
 /**
  * @fn c_option
  * @author: Jovanovic Milan

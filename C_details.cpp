@@ -11,7 +11,7 @@ const QString adress = "127.0.0.1";/**< adresse du serveur mysql */
 const int port = 3308;/**< port du serveur mysql */
 const QString user ="root";/**< nom utilisateur sur le server mysql */
 const QString password = "admin";/**< mot de passe du serveur mysql */
-
+/**/
 /**
  * @fn C_details(QWidget *parent) :
     QWidget(parent),

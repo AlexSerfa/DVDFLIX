@@ -1,7 +1,7 @@
 #include "c_detail_ajout.h"
 #include "ui_c_detail_ajout.h"
 #include <QDebug>
-
+/**/
 C_detail_ajout::C_detail_ajout(QWidget *parent, QString titre, QTextEdit *q) :
     QDialog(parent),
     ui(new Ui::C_detail_ajout)
