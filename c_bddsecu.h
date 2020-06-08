@@ -19,15 +19,12 @@ const QString passSecu = "admin";
 class C_bddSecu
 {
 public:
-    C_bddSecu();
-    C_bddSecu(QString databaseSecu,QString  userSecu,QString passSecu);
+
+    C_bddSecu(C_MySQLManager *db=nullptr);
     void LireIni();
-    void connection();
+    void connection(C_MySQLManager *_sql);
 
     bool verifCodeParent(QString codeLu, QString codeSaisi);
-    //QString rnt_username();
-    QSqlDatabase getDb() const;
-    void setDb(const QSqlDatabase &value);
 
     QString getBDdvdUser() const;
     void setBDdvdUser(const QString &value);
@@ -52,7 +49,7 @@ public:
     void close();
 
 private:
-    QSqlDatabase db;
+    C_MySQLManager *db;
     QString BDdvdUser;
     QString BDdvdPass;
     int BDdvdPort;

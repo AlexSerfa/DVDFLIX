@@ -16,24 +16,11 @@ const QString passSecu = "admin";
  *
  *
  */
-C_bddSecu::C_bddSecu()
-{
 
-}
-C_bddSecu::C_bddSecu(QString databaseSecu,QString  userSecu,QString passSecu)
-{
-    this->db = QSqlDatabase::addDatabase("QMYSQL");
-    db.setHostName("127.0.0.1");
-    db.setDatabaseName(databaseSecu);
-    db.setUserName(userSecu);
-    db.setPassword(passSecu);
-    bool ok = db.open();
 
-    if(ok){
-        qDebug()<<"ok";
-    }else{
-        qDebug()<<"échec";
-    }
+C_bddSecu::C_bddSecu(C_MySQLManager *_db)
+{
+   db= _db;
 }
 void C_bddSecu::LireIni()
 {
@@ -49,23 +36,15 @@ void C_bddSecu::LireIni()
     QString adresse =QString::fromStdString(adr);
     setBDdvdAdr(adresse);
     cout<<adr<<endl;
-
     f>>prt;
     setBDdvdPort(prt);
-
     f.close();
-}
-void C_bddSecu::connection()
-{
-    this->db = QSqlDatabase::addDatabase("QMYSQL");
-    db.setHostName(getBDdvdAdr());
-    db.setDatabaseName(databaseSecu);
-    db.setUserName(userSecu);
-    db.setPassword(passSecu);
-    db.setPort(getBDdvdPort());
-    bool ok = db.open();
 
-    if(ok){
+    setBDdvdPass(passSecu);
+    setBDdvdUser(userSecu);
+}
+void C_bddSecu::connection(C_MySQLManager *_sql)
+{
         QSqlQuery requete;
         requete.prepare("SELECT * FROM `bddsecu` WHERE `ID` = 1");
         requete.exec();
@@ -74,16 +53,8 @@ void C_bddSecu::connection()
             m_dvdFlixPass = requete.value(2).toString();
             m_dvdFlixAdr = requete.value(3).toString();
             m_dvdFlixPort =  requete.value(4).toInt();
-            //DEBUG 4l
-            qWarning()<<m_dvdFlixAdr;
-            qWarning()<<m_dvdFlixPort;
-            qWarning()<<m_dvdFlixPass;
-            qWarning()<<m_dvdFlixUser;
-        }
-        qDebug()<<"Connection SECU ok";
-    }else{
-        qDebug()<<"Connection SECU échec";
-    }
+      }
+
 }
 
 bool C_bddSecu::verifCodeParent(QString codeLu, QString codeSaisi)
@@ -94,16 +65,7 @@ bool C_bddSecu::verifCodeParent(QString codeLu, QString codeSaisi)
     return false;
 }
 void C_bddSecu::close(){
-    db.close();
-}
-QSqlDatabase C_bddSecu::getDb() const
-{
-    return db;
-}
-
-void C_bddSecu::setDb(const QSqlDatabase &value)
-{
-    db = value;
+    db->close();
 }
 
 QString C_bddSecu::getBDdvdUser() const
@@ -166,13 +128,3 @@ int C_bddSecu::getDvdFlixPort() const
     return m_dvdFlixPort;
 }
 
-
-
-/*QString C_bddSecu::rnt_username(){
-    QSqlQuery query;
-    query.exec("SELECT * FROM bddsecu");
-    query.next();
-    QString res = query.value(0).toString();
-    qDebug()<<res;
-    return res;
-}*/
