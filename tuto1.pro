@@ -22,7 +22,9 @@ SOURCES += \
     C_minifilm.cpp \
     C_mysqlmanager.cpp \
     c_bddsecu.cpp \
+    c_biblio.cpp \
     c_dbconfig.cpp \
+    c_detail_ajout.cpp \
     c_filesaver.cpp \
     c_options.cpp \
     main.cpp \
@@ -36,7 +38,9 @@ HEADERS += \
     C_minifilm.h \
     C_mysqlmanager.h \
     c_bddsecu.h \
+    c_biblio.h \
     c_dbconfig.h \
+    c_detail_ajout.h \
     c_filesaver.h \
     c_options.h \
     mainwindow.h \
@@ -46,6 +50,7 @@ FORMS += \
     C_censure.ui \
     C_details.ui \
     C_minifilm.ui \
+    c_detail_ajout.ui \
     c_options.ui \
     mainwindow.ui
 

@@ -62,7 +62,7 @@ void C_miniFilm::on_btn_details_clicked()
  detail->listStockage();
  int i=0;
  QSqlQuery requete;
- C_MySQLManager  *sql =new C_MySQLManager();
+ C_MySQLManager  *sql =new C_MySQLManager(this);
 
  while(m_genres[i]!=0){
      QString genre =sql->getGenre(m_genres[i]);

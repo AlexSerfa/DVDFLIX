@@ -11,6 +11,7 @@
 const QString directoryBase= "d:/tempo68"; /**< chemin du dossier de stockage */
 const QString directoryHard ="d:/tempo69";
 
+
 /**
  * @brief constructeur
  *
@@ -436,6 +437,8 @@ QString C_MySQLManager::getCodeParental()
       return result;
 
 }
+
+
 /**
  * @brief stock le password de la db
  *
