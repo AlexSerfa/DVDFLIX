@@ -24,6 +24,7 @@
 #include <QFileDialog>
 #include <c_dbconfig.h>
 #include <C_censure.h>
+#include <c_biblio.h>
 
 using namespace std;
 
@@ -48,10 +49,8 @@ const QString password = "admin";/**< mot de passe du serveur mysql */
  */
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-
+    , dvdtheque()
     , m_dlmanager(this)    
-    , min2()
-    , minC()
     , codeParentLu("")
     , codeParentSaisi("")
     , codeParentValid(false)
@@ -64,11 +63,13 @@ MainWindow::MainWindow(QWidget *parent)
     , m_pageNumber(0)
     , ui(new Ui::MainWindow)
 {
+    qWarning()<<this;
     C_DbConfig *Config = new C_DbConfig(this);
     Config->MainDbConfig();
     Config->~C_DbConfig();
    // C_bddSecu Secu(this->getSql());
-    sql= new C_MySQLManager(this);
+    dvdtheque =new C_biblio();
+    sql= new C_MySQLManager(this,dvdtheque);
    // C_bddSecu Secu = C_bddSecu();
     Secu.LireIni();
     sql->connection("security",Secu.getBDdvdAdr(),Secu.getBDdvdPort(),Secu.getBDdvdUser(),Secu.getBDdvdPass());
@@ -84,8 +85,7 @@ MainWindow::MainWindow(QWidget *parent)
     sql->connection(database,Secu.getDvdFlixAdr(),Secu.getDvdFlixPort(),Secu.getDvdFlixUser(),Secu.getDvdFlixPass());
     connect(sql,SIGNAL(modifier()),this, SLOT(miseAJourAffichage()));
     codeParentLu  = sql->getCodeParental();
-    //DEBUG
-    qWarning()<< "code parent lu dans mainwindows"<<codeParentLu;
+
 
 
 
@@ -146,31 +146,27 @@ void MainWindow::imageChemin()
 
 void MainWindow::rechercheFilm()
 {
-    //DEBUG
-    qWarning()<<"rechercher film";
+
     //on vérifie que la db est bien connectée
     if(m_DBState){
-        m_minifilmCountLocal= sql->filmCount(ui->lbl_titre->text());
+        qWarning()<<ui->ln_titre->text();
+        m_minifilmCountLocal= sql->filmCount(ui->ln_titre->text());
 
 
 
-        sql->searchTitre(ui->lbl_titre->text());
+        sql->searchTitre(ui->ln_titre->text());
         m_minifilmCountLocal = sql->getFilmCount();
-        //DEBUG
-        //qWarning()<<" m_minifilmCountLocal :"<<m_minifilmCountLocal;
-        //     min2[h]->setIcone(directoryBase+"/home.png");
+
     }else
     {
         QMessageBox::warning(this,"Echec de connection","Echec de la connection à la base de données recherche locale impossible",QMessageBox::Ok);
     }
 
 if(ui->rdb_rechDist->isChecked()){
-    //DEBUG
-    //qWarning()<<"ajout movie0.json a DL_MANAGER ok";
+
     //on recupere la premiere page du film correspondant apres mise en forme du titre (remplacemant des espaces par de tirets)
     m_dlmanager.append(QUrl::fromUserInput((m_dlmanager.formatUrl(formatSearch()))),"movie0.json");
-    //DEBUG
-    // qWarning()<<"connect au slot getpagenumber() ok";
+
     connect(&m_dlmanager,SIGNAL(emptyQueue()),SLOT(getPageNumberJson()));
 }
 else {
@@ -207,6 +203,9 @@ void MainWindow::movieDlFinished()
 */
 void MainWindow::restoreValue()
 {
+  //  dvdtheque->~C_biblio();
+   // C_biblio *dvdtheque = new C_biblio();
+
     //on réinitialise les valeurs servant a la gestion de la bibliothèque
     ui->dvdtek->setCurrentIndex(0);
     getsion_prevNext_Btn(); //les bouton previous et next
@@ -226,28 +225,7 @@ void MainWindow::restoreValue()
     m_censureCount=0;
     m_JsonSearch.clear();
     //suppression du fichier saveMovies.json
-    bool result = QFile::remove(directoryBase+"/saveMovies.json");
-    //DEBUG
-    //qWarning()<<"Suppression du fichier: "<<result;
-    sql->videMinifilm();
-    //on vide le tableau de minifilm de resultat en ligne
-    for(int i =0;i<150;i++){
-        if(min2[i]){
-            //DEBUG
-            //qWarning()<<"vidage de min2 : "<<i;
-            min2[i]->~C_miniFilm();
-
-        }
-    }
-    //on vide le tableau des censures
-    for(int i =0;i<300;i++){
-        if(minC[i]){
-            //DEBUG
-            //qWarning()<<"vidage de min2 : "<<i;
-            minC[i]->~C_Censure();
-
-        }
-    }
+    QFile::remove(directoryBase+"/saveMovies.json");
     //on reset le compteur de resultat de la derniere recherche en local
     sql->resetResultCounter();
 }
@@ -338,15 +316,13 @@ void MainWindow::getPageNumberJson(){
     //recuperation de l'objet présent dans le document
     QJsonObject JsonObj= doc.object();
 
-    //DEBUG
-    //qWarning() << JsonObj.value(QString("total_pages"));
+
     //on recupere le nombre de page pour le film recherché
     m_totalPage = JsonObj.value(QString("total_pages")).toInt();
     //on recupere le nombre de film total
     m_minifilmCountOnline=JsonObj.value(QString("total_results")).toInt();
     //on telecharge les page suivante si il y en a
-    //DEBUG
-    //qWarning()<<"nombre total de film correspondant a la recherche:  "<< m_minifilmCount;
+
 
     //qstring pour stocker le nom du fichier
     QString filename;
@@ -366,8 +342,6 @@ void MainWindow::getPageNumberJson(){
             }
         }
     }
-    //DEBUG
-    //qWarning()<<"getPageNumberjson->";
 
 
 }
@@ -388,8 +362,6 @@ void MainWindow::getPageNumberJson(){
  */
 bool MainWindow::concatJSON(){
 
-    //DEBUG
-    //qWarning()<<"concatJson";
 
     for(int i=0;i<= m_pageNumber; i++){
         QFile filej;
@@ -426,8 +398,7 @@ bool MainWindow::concatJSON(){
  * @todo récupérer les informations devant etre mise dans la minifiche
  */
 bool MainWindow::JsonMerge(){
-    //DEBUG
-    //qWarning()<<"->jsonmerge";
+
     QJsonArray result;
     for(int i =0; i< m_JsonSearch.count();i++){
         result.append(m_JsonSearch[i].value(QString("results")).toArray());
@@ -491,46 +462,40 @@ void MainWindow::readJson()
     for(int i =0 ; i<arry.count() && i<7;i++)
     {
         QJsonArray child =arry[i].toArray();
-        //DEBUG
-        //qWarning()<<"arry"<<i<<" child: " <<child.count();
+
         for(int j =0 ; j<child.count();j++){
 
-            //DEBUG
-            //qWarning()<<"readJson->boucle: "<<i<<"-"<<j;
             filmAjouter++;
             qWarning()<<"nb film ajouter: "<<filmAjouter;
             //creation d'une fiche de miniature
             C_miniFilm *min3 =new C_miniFilm(this);
             //ajout de la fiche a la colletion
-            min2[counter] =min3;
+            dvdtheque->addFilmOnline(counter,min3);
             //ajout des donnés d'un film
-            //qWarning()<<"Ajout des données du film";
-            min2[counter]->setTitre(child[j].toObject()["title"].toString());
-            min2[counter]->setAnnee((child[j].toObject()["release_date"].toString()));
-            min2[counter]->setNote(QString::number(child[j].toObject()["vote_average"].toDouble()));
-            min2[counter]->setPop(child[j].toObject()["popularity"].toString());
-            min2[counter]->setAdult(child[j].toObject()["adult"].toBool());
-            min2[counter]->setId_online( child[j].toObject()["id"].toInt());
-            min2[counter]->setVote(child[j].toObject()["vote_count"].toString());
-            min2[counter]->setResum(child[j].toObject()["overview"].toString());
-            min2[counter]->setLanguage(child[j].toObject()["original_language"].toString());
-            min2[counter]->setTitreOri(child[j].toObject()["original_title"].toString());
-            min2[counter]->setBackdrop(child[j].toObject()["backdrop_path"].toString());
-            min2[counter]->setIcone(directoryBase+"/online.png");
-            min2[counter]->setLocal(false);
-            const bool connected = connect(min2[counter],SIGNAL(modifier()),this,SLOT(miseAJourAffichage()));
-            //DEBUG
-            //qDebug() << "Connection established?" << connected;
-            // min2[counter]->setMain(this);
+            dvdtheque->getFilmOnline(counter)->setTitre(child[j].toObject()["title"].toString());
+            dvdtheque->getFilmOnline(counter)->setAnnee((child[j].toObject()["release_date"].toString()));
+            dvdtheque->getFilmOnline(counter)->setNote(QString::number(child[j].toObject()["vote_average"].toDouble()));
+            dvdtheque->getFilmOnline(counter)->setPop(child[j].toObject()["popularity"].toString());
+            dvdtheque->getFilmOnline(counter)->setAdult(child[j].toObject()["adult"].toBool());
+            dvdtheque->getFilmOnline(counter)->setId_online( child[j].toObject()["id"].toInt());
+            dvdtheque->getFilmOnline(counter)->setVote(child[j].toObject()["vote_count"].toString());
+            dvdtheque->getFilmOnline(counter)->setResum(child[j].toObject()["overview"].toString());
+            dvdtheque->getFilmOnline(counter)->setLanguage(child[j].toObject()["original_language"].toString());
+            dvdtheque->getFilmOnline(counter)->setTitreOri(child[j].toObject()["original_title"].toString());
+            dvdtheque->getFilmOnline(counter)->setBackdrop(child[j].toObject()["backdrop_path"].toString());
+            dvdtheque->getFilmOnline(counter)->setIcone(directoryBase+"/online.png");
+            dvdtheque->getFilmOnline(counter)->setLocal(false);
+            connect(dvdtheque->getFilmOnline(counter),SIGNAL(modifier()),this,SLOT(miseAJourAffichage()));
+
             QJsonArray genreArray = child[j].toObject()["genre_ids"].toArray();
             for(int i =0; i<genreArray.count();i++)
             {
-                min2[counter]->setGenres(i,genreArray[i].toInt());
+                dvdtheque->getFilmOnline(counter)->setGenres(i,genreArray[i].toInt());
             }
 
             int genreCode =genreArray[0].toInt();
             QString  genrePrincipal = sql->getGenre(genreCode);
-            min2[counter]->setGenre(genrePrincipal);
+            dvdtheque->getFilmOnline(counter)->setGenre(genrePrincipal);
             //telechargement de affiche des films
             if(child[j].toObject()["poster_path"].toString()!="")
             {
@@ -548,18 +513,17 @@ void MainWindow::readJson()
                     qWarning()<<"Le fichier "<< child[j].toObject()["poster_path"].toString() <<" existe deja dans le dossier";
                 }
                 //ajout de l'affiche au minifilm
-                min2[counter]->setAffiche(directoryBase+child[j].toObject()["poster_path"].toString());
-                //DEBUG
-                //qWarning()<<"<setAffiche: "<<directoryBase+child[j].toObject()["poster_path"].toString();
+                dvdtheque->getFilmOnline(counter)->setAffiche(directoryBase+child[j].toObject()["poster_path"].toString());
+
             }
             else{
-                min2[counter]->setAffiche(directoryBase+"/noPicture.png");
+                dvdtheque->getFilmOnline(counter)->setAffiche(directoryBase+"/noPicture.png");
             }
             counter++;
         }
     }
     connect(&m_dlmanager,SIGNAL(startCreateMini()),this ,SLOT(createMinifilm()));
-    createMinifilm();
+ createMinifilm();
 }
 /**
  * @fn initLayout()
@@ -627,21 +591,19 @@ if(ui->rdb_rechDist->isChecked()|| m_minifilmCountLocal > 10)
                     //on verfie si le code paental a été entré
                     if(!codeParentValid){
                         //on verifie que le film n'est pas classé adult et on l'affiche
-                        if(!sql->min1[filmCounter]->getAdult()){
-                            sql->min1[filmCounter]->addAffiche();
-                            grdt[i]->addWidget(sql->min1[filmCounter],j,k);
+                        if(!dvdtheque->getFilmLocal(filmCounter)->getAdult()){
+                            dvdtheque->getFilmLocal(filmCounter)->addAffiche();
+                            grdt[i]->addWidget(dvdtheque->getFilmLocal(filmCounter),j,k);
                         }
                         //sinon on affiche un minifilm de censure
                         else
                         {
                             C_Censure *miniCensure = new C_Censure();
-                            minC[ m_censureCount]=miniCensure;
-                            m_censureCount++;
                             grdt[i]->addWidget(miniCensure,j,k);
                         }
                     }else{
-                        sql->min1[filmCounter]->addAffiche();
-                        grdt[i]->addWidget(sql->min1[filmCounter],j,k);
+                        dvdtheque->getFilmLocal(filmCounter)->addAffiche();
+                        grdt[i]->addWidget(dvdtheque->getFilmLocal(filmCounter),j,k);
                     }
                     filmCounter++;
                     lastPage =i+1;
@@ -651,21 +613,19 @@ if(ui->rdb_rechDist->isChecked()|| m_minifilmCountLocal > 10)
                     //on verfie si le code paental a été entré
                     if(!codeParentValid){
                         //on verifie que le film n'est pas classé adult et on l'affiche
-                        if(!min2[filmCounter-(m_minifilmCountLocal)]->getAdult()){
-                            min2[filmCounter-(m_minifilmCountLocal)]->addAffiche();
-                            grdt[i]->addWidget(min2[filmCounter-(m_minifilmCountLocal)],j,k);
+                        if(!dvdtheque->getFilmOnline(filmCounter-(m_minifilmCountLocal))->getAdult()){
+                            dvdtheque->getFilmOnline(filmCounter-(m_minifilmCountLocal))->addAffiche();
+                            grdt[i]->addWidget(dvdtheque->getFilmOnline(filmCounter-(m_minifilmCountLocal)),j,k);
                         }
                         //sinon on affiche un minifilm de censure
                         else
                         {
                             C_Censure *miniCensure = new C_Censure();
-                            minC[ m_censureCount]=miniCensure;
-                            m_censureCount++;
                             grdt[i]->addWidget(miniCensure,j,k);
                         }
                     }else{
-                        min2[filmCounter-(m_minifilmCountLocal)]->addAffiche();
-                        grdt[i]->addWidget(min2[filmCounter-(m_minifilmCountLocal)],j,k);
+                        dvdtheque->getFilmOnline(filmCounter-(m_minifilmCountLocal))->addAffiche();
+                        grdt[i]->addWidget(dvdtheque->getFilmOnline(filmCounter-(m_minifilmCountLocal)),j,k);
 
                     }
                     filmCounter++;
@@ -674,10 +634,7 @@ if(ui->rdb_rechDist->isChecked()|| m_minifilmCountLocal > 10)
             }
         }
     }
-    //DEBUG
-    qWarning()<<"-------------------------------------";
-    qWarning()<<"FIN DES PAGES COMPLETES";
-    qWarning()<<"------------------------------------------";
+
 
     for(int j =0; j<2;j++){ //pour les lignes
         for(int k =0; k<5; k++){ //pour les colones
@@ -685,16 +642,14 @@ if(ui->rdb_rechDist->isChecked()|| m_minifilmCountLocal > 10)
                 //on verfie si le code paental a été entré
                 if(!codeParentValid){
                     //on verifie que le film n'est pas classé adult et on l'affiche
-                    if(!min2[filmCounter-(m_minifilmCountLocal)]->getAdult()){
-                        min2[filmCounter-(m_minifilmCountLocal)]->addAffiche();
-                        grdt[lastPage]->addWidget(min2[filmCounter-(m_minifilmCountLocal)],j,k);
+                    if(!dvdtheque->getFilmOnline(filmCounter-(m_minifilmCountLocal))->getAdult()){
+                        dvdtheque->getFilmOnline(filmCounter-(m_minifilmCountLocal))->addAffiche();
+                        grdt[lastPage]->addWidget(dvdtheque->getFilmOnline(filmCounter-(m_minifilmCountLocal)),j,k);
                     }
                     //sinon on affiche un minifilm de censure
                     else
                     {
                         C_Censure *miniCensure = new C_Censure();
-                        minC[ m_censureCount]=miniCensure;
-                        m_censureCount++;
                         grdt[lastPage]->addWidget(miniCensure,j,k);
                     }
                 }
@@ -712,16 +667,14 @@ else{
                 //on verfie si le code paental a été entré
                 if(!codeParentValid){
                     //on verifie que le film n'est pas classé adult et on l'affiche
-                    if(!sql->min1[filmCounter]->getAdult()){
-                        sql->min1[filmCounter]->addAffiche();
-                        grdt[i]->addWidget(sql->min1[filmCounter],j,k);
+                    if(!dvdtheque->getFilmLocal(filmCounter)->getAdult()){
+                        dvdtheque->getFilmLocal(filmCounter)->addAffiche();
+                        grdt[i]->addWidget(dvdtheque->getFilmLocal(filmCounter),j,k);
                     }
                     //sinon on affiche un minifilm de censure
                     else
                     {
                         C_Censure *miniCensure = new C_Censure();
-                        minC[ m_censureCount]=miniCensure;
-                        m_censureCount++;
                         grdt[lastPage]->addWidget(miniCensure,j,k);
                     }
                 }
@@ -734,8 +687,6 @@ else{
 }
 
     getsion_prevNext_Btn();
-    //DEBUG
-    // min2[0]->addAffiche();
     return true;
 }
 /**
@@ -855,14 +806,6 @@ void MainWindow::on_rdb_rechLoc_toggled(bool checked)
  */
 void MainWindow::on_rdb_rechDist_toggled(bool checked)
 {
-    /*
-    if(checked==false)
-        sql.connection(database,Secu.getDvdFlixAdr(),Secu.getDvdFlixPort(),Secu.getDvdFlixUser(),Secu.getDvdFlixPass());
-    qWarning()<<"adr: "<<Secu.getDvdFlixAdr();
-    qWarning()<<"port: "<<Secu.getDvdFlixPort();
-      qWarning()<<"user: "<<Secu.getDvdFlixUser();
-       qWarning()<<"Pass: "<<Secu.getDvdFlixPass();
-       */
 
 }
 
@@ -945,13 +888,9 @@ void MainWindow::on_btn_valideCodeparent_clicked()
     }
 }
 
-C_MySQLManager *MainWindow::getSql() const
+C_biblio *MainWindow::getDvdtheque() const
 {
-    return sql;
+    return dvdtheque;
 }
 
-void MainWindow::setSql(C_MySQLManager *value)
-{
-    sql = value;
-}
 

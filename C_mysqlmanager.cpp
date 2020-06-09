@@ -6,6 +6,7 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QPluginLoader>
+#include <c_biblio.h>
 
 const QString directoryBase= "d:/tempo68"; /**< chemin du dossier de stockage */
 const QString directoryHard ="d:/tempo69";
@@ -15,11 +16,11 @@ const QString directoryHard ="d:/tempo69";
  *
  * @param parent
  */
-C_MySQLManager::C_MySQLManager(QObject *parent)
+C_MySQLManager::C_MySQLManager(QObject *parent, C_biblio *_biblio)
     : QObject(parent)
-    , min1()
-{
 
+{
+    dvdtheque = _biblio;
 }
 
 /**
@@ -55,6 +56,7 @@ bool C_MySQLManager::connection(QString db, QString adress, int port, QString us
 }
 bool C_MySQLManager::close(){
     m_dvdDB.close();
+    return true;
 }
 /**
  * @fn getGenre(int number)
@@ -91,8 +93,6 @@ bool C_MySQLManager::updateFilm(C_miniFilm  &film){
 
 void C_MySQLManager::modification()
 {
- //DEBUG
-    qWarning()<<"emission du signal depuis sqlManager";
     emit modifier();
 }
 
@@ -178,22 +178,7 @@ void  C_MySQLManager::resetResultCounter()
     m_resultCounter=0;
 }
 
-/**
- * @fn videMinifilm()
- * @author: Mercier Laurent
- * @date 05/05/2020
- * @brief vide le tableau des minifilm locaux
- *
- */
-void C_MySQLManager::videMinifilm()
-{
-    //on vide le tableau de minifilm de resultat en local
-    for(int i =0;i<150;i++){
-        if(min1[i]){
-            min1[i]->~C_miniFilm();
-        }
-    }
-}
+
 /**
  * @brief retourne le nombre de resultat trouvés lors d'une recherche dans la base de donnéees
  *
@@ -217,61 +202,68 @@ void C_MySQLManager::searchTitre(QString titre)
     C_miniFilm *film = new C_miniFilm();
     int i=0;
     QSqlQuery requete;
-    if(requete.exec("SELECT * FROM film WHERE titre="+titre )){
+    if(requete.exec("SELECT * FROM film WHERE titre  LIKE '%"+titre+"%'" )){
         while(requete.next()){
             m_resultCounter++;
             film->setTitre(requete.value("titre").toString());
             C_miniFilm *min3 =new C_miniFilm();
             //ajout de la fiche a la colletion
-            min1[i] =min3;
-            min1[i]->setIdLocal(requete.value(0).toInt());
-            min1[i]->setTitre(requete.value(1).toString());
-            min1[i]->setAdult(requete.value(2).toBool());
-            min1[i]->setResum(requete.value(3).toString());
-            min1[i]->setAffiche(requete.value(4).toString());
-            min1[i]->setBackdrop(requete.value(5).toString());
-            min1[i]->setTitreOri(requete.value(6).toString());
-            min1[i]->setLanguage(requete.value(7).toString());
-            min1[i]->setAnnee(requete.value(8).toString());
-            min1[i]->setVideo(requete.value(9).toString());
-            min1[i]->setNote(requete.value(10).toString());
-            min1[i]->setVote(requete.value(11).toString());
-            min1[i]->setPop(requete.value(12).toString());
-            min1[i]->setId_online(requete.value(13).toInt());
-            min1[i]->setDateEnr(requete.value(14).toString());
-            min1[i]->setIcone(directoryBase+"/home.png");
-            min1[i]->addIcone();
-            min1[i]->setGenre(getGenre(requete.value(16).toInt()));
-            min1[i]->setLocal(true);
-            connect(min1[i],SIGNAL(modifier()),this,SLOT(modification()));
-           // connect(this,SIGNAL(modifier()),))
+            dvdtheque->addFilmLocal(i, min3);
+            dvdtheque->getFilmLocal(i) ->setIdLocal(requete.value(0).toInt());
+            dvdtheque->getFilmLocal(i) ->setTitre(requete.value(1).toString());
+            dvdtheque->getFilmLocal(i) ->setAdult(requete.value(2).toBool());
+            dvdtheque->getFilmLocal(i) ->setResum(requete.value(3).toString());
+            dvdtheque->getFilmLocal(i) ->setAffiche(requete.value(4).toString());
+            dvdtheque->getFilmLocal(i) ->setBackdrop(requete.value(5).toString());
+            dvdtheque->getFilmLocal(i) ->setTitreOri(requete.value(6).toString());
+            dvdtheque->getFilmLocal(i) ->setLanguage(requete.value(7).toString());
+            dvdtheque->getFilmLocal(i) ->setAnnee(requete.value(8).toString());
+            dvdtheque->getFilmLocal(i) ->setVideo(requete.value(9).toString());
+            dvdtheque->getFilmLocal(i) ->setNote(requete.value(10).toString());
+            dvdtheque->getFilmLocal(i) ->setVote(requete.value(11).toString());
+            dvdtheque->getFilmLocal(i) ->setPop(requete.value(12).toString());
+            dvdtheque->getFilmLocal(i) ->setId_online(requete.value(13).toInt());
+            dvdtheque->getFilmLocal(i) ->setDateEnr(requete.value(14).toString());
+            dvdtheque->getFilmLocal(i) ->setIcone(directoryBase+"/home.png");
+            dvdtheque->getFilmLocal(i) ->addIcone();
+            dvdtheque->getFilmLocal(i) ->setGenre(getGenre(requete.value(16).toInt()));
+            dvdtheque->getFilmLocal(i) ->setLocal(true);
+            connect(dvdtheque->getFilmLocal(i) ,SIGNAL(modifier()),this,SLOT(modification()));
+
 
             i++;
         }
     }
     i=0;
-    //recupération des genre dans la table genresfilm et assignation au minifilm
-    while(min1[i]){
-        int j=0;
-        requete.prepare(("SELECT * FROM genresfilm WHERE id_film = "+ QString::number(min1[i]->getIdLocal())));
-        requete.exec();
-        while(requete.next()){
-            min1[i]->setGenres(j,requete.value(2).toInt());
-            j++;
-        }
-        i++;
-    }
-    i=0;
-    //recupération du lieu de stockage du film dans la table stockagefilm et assignation au minifilm
-    while(min1[i]){
 
-        requete.prepare(("SELECT * FROM stockagefilm WHERE id_film = "+ QString::number(min1[i]->getIdLocal())));
-        requete.exec();
-        while(requete.next()){
-            min1[i]->setStockage(requete.value(2).toString());
+    while(dvdtheque->getFilmLocal(i) ){
+        if(i<m_resultCounter){
+            int j=0;
+            //recupération des genre dans la table genresfilm et assignation au minifilm
+            requete.prepare(("SELECT * FROM genresfilm WHERE id_film = "+ QString::number(dvdtheque->getFilmLocal(i)->getIdLocal())));
+            requete.exec();
+            while(requete.next()){
+                dvdtheque->getFilmLocal(i) ->setGenres(j,requete.value(2).toInt());
+                j++;
+            }
+            //recupération du lieu de stockage du film dans la table stockagefilm et assignation au minifilm
+            requete.prepare(("SELECT * FROM stockagefilm WHERE id_film = "+ QString::number(dvdtheque->getFilmLocal(i)->getIdLocal())));
+            requete.exec();
+            while(requete.next()){
+                dvdtheque->getFilmLocal(i) ->setStockage(requete.value(2).toString());
+            }
         }
-        i++;
+            i++;
+
     }
+
+ /*   i=0;
+
+    while(dvdtheque->getFilmLocal(i) ){
+
+
+        i++;
+    }*/
 }
 /**
  * @fn saveFilm(C_miniFilm &film)
@@ -287,10 +279,6 @@ bool C_MySQLManager::saveFilm(C_miniFilm &film)
     bool result  =false;
     QDate dateR;
     dateR= QstringToQDate( film.getRelease());
-    //DEBUG 3l
-    //qWarning()<<"date: "<< film.getRelease();
-    //qWarning()<<"date: "<< QDate::fromString(film.getRelease());
-    //qWarning()<<"date: "<< dateR.toString();
     QSqlQuery requete;
     try{
         requete.prepare("INSERT INTO `film` (`ID`, `titre`, `adulte`, `resume`, `poster_path`, `backdrop`, `titre_origin`, `langue`, `date_real`, `video`, `note`, `vote_count`, `popularity`, `id_film`, `date_enr`, `stockage`, `genre`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
@@ -299,10 +287,7 @@ bool C_MySQLManager::saveFilm(C_miniFilm &film)
         requete.addBindValue(film.getAdult());//adulte
         requete.addBindValue(film.getResum());//resume
         QString basename = QFileInfo(film.getAffiche()).fileName();
-        bool resultCopy = QFile::copy(film.getAffiche(), directoryHard+"/"+QFileInfo(film.getAffiche()).fileName());
-        //DEBUG
-        //qWarning()<<"Fichier image copiée"<<resultCopy;
-        //basename =basename;
+        QFile::copy(film.getAffiche(), directoryHard+"/"+QFileInfo(film.getAffiche()).fileName());
         requete.addBindValue(directoryHard+"/"+ basename);//poster_path
         requete.addBindValue(film.getBackdrop());//backdrop
         requete.addBindValue(film.getTitreOri());//titreOri
@@ -447,8 +432,6 @@ QString C_MySQLManager::getCodeParental()
       requete.exec();
       if(requete.next()){
           result = requete.value(3).toString();
-          //DEBUG
-          qWarning()<<" code parental lu dans la DB"<< result;
       }
       return result;
 

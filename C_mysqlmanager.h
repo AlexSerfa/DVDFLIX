@@ -4,6 +4,7 @@
 #include <QSql>
 #include <QSqlDatabase>
 #include <C_minifilm.h>
+#include <c_biblio.h>
 
 #include <QMainWindow>
 /**
@@ -15,13 +16,12 @@ class C_MySQLManager: public QObject
     Q_OBJECT
 public:
      QString getCodeParental();
-     C_miniFilm *min1[150];   /*!< collection de minifiche après une recherche d'un film en local*/
     /**
      * @brief
      *
      * @param parent
      */
-    explicit C_MySQLManager(QObject *parent = nullptr);
+    explicit C_MySQLManager(QObject *parent = nullptr, C_biblio *_biblio=nullptr);
 
     /**
      * @brief gere la connection a la db
@@ -88,7 +88,6 @@ public:
     int filmCount(QString titre);
     int getFilmCount();
     void resetResultCounter();
-    void videMinifilm();
     bool saveFilm(C_miniFilm  &film);
     bool updateFilm(C_miniFilm  &film);
     QString getHardPath();
@@ -114,7 +113,7 @@ signals:
 //void setFilm(C_miniFilm  &film);
 private:
 
-
+    C_biblio *dvdtheque;
     QSqlDatabase m_dvdDB; /**< database objet */
     QString m_db; /**< nom de la db */
     QString m_adress; /**< adresse de la db */
