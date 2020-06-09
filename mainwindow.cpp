@@ -28,18 +28,12 @@
 
 using namespace std;
 
-const QString key ="76532a92d48d6e7e7fb5d72eaf2029b3"; /**< clé de l'API themoviedb */
-const QString defaultUrl = " https://api.themoviedb.org/3/"; /**< adresse de l'API themoviedb */
+
+
 const QString urlBaseAffiche="https://image.tmdb.org/t/p/w500"; /**< adresse pour la récupération des image */
-const QString directoryBase= "d:/tempo68"; /**< chemin du dossier de stockage */
-const QString directoryHard ="d:/tempo69";
-
-
 const QString database = "dvdflix";/**< nom de la base de donnée */
-const QString adress = "127.0.0.1";/**< adresse du serveur mysql */
-const int port = 3308;/**< port du serveur mysql */
-const QString user ="root";/**< nom utilisateur sur le server mysql */
-const QString password = "admin";/**< mot de passe du serveur mysql */
+
+
 
 
 /**
@@ -50,7 +44,7 @@ const QString password = "admin";/**< mot de passe du serveur mysql */
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , dvdtheque()
-    , m_dlmanager(this)    
+    , m_dlmanager(this)
     , codeParentLu("")
     , codeParentSaisi("")
     , codeParentValid(false)
@@ -82,7 +76,11 @@ MainWindow::MainWindow(QWidget *parent)
     sql->connection(database,Secu.getDvdFlixAdr(),Secu.getDvdFlixPort(),Secu.getDvdFlixUser(),Secu.getDvdFlixPass());
     connect(sql,SIGNAL(modifier()),this, SLOT(miseAJourAffichage()));
     codeParentLu  = sql->getCodeParental();
-
+    m_hardPath =sql->getHardPath();
+    m_tempoPath = sql->getTempoPath();
+    m_dlmanager.setPath(m_tempoPath);
+qWarning()<<"m_tempo"<<m_tempoPath;
+qWarning()<<"m_hardPaht: "<<m_hardPath;
 
 
 
@@ -197,7 +195,7 @@ void MainWindow::restoreValue()
     getsion_prevNext_Btn(); //les bouton previous et next
     //suppression des affiches dont les film n'ont pas été enregistrés
     for(int i=0 ; i<affiches.count(); i++){
-        QFile::remove(directoryBase+affiches[i]);
+        QFile::remove(m_tempoPath+affiches[i]);
     }
     //on vide la qvector des affiches
     affiches.clear();
@@ -211,7 +209,7 @@ void MainWindow::restoreValue()
     m_censureCount=0;
     m_JsonSearch.clear();
     //suppression du fichier saveMovies.json
-    QFile::remove(directoryBase+"/saveMovies.json");
+    QFile::remove(m_tempoPath+"/saveMovies.json");
     //on reset le compteur de resultat de la derniere recherche en local
     sql->resetResultCounter();
 }
@@ -283,7 +281,7 @@ void MainWindow::getPageNumberJson(){
     QByteArray val;
 
     QFile filej;
-    filej.setFileName(directoryBase+"/movie0.json");
+    filej.setFileName(m_tempoPath+"/movie0.json");
     //on lit le fichier movie0.json si il existe
     if(filej.exists()){
         filej.open(QIODevice::ReadOnly | QIODevice::Text);
@@ -353,7 +351,7 @@ bool MainWindow::concatJSON(){
 
     for(int i=0;i<= m_pageNumber; i++){
         QFile filej;
-        filej.setFileName(directoryBase+"/movie"+QString::number(i)+".json");
+        filej.setFileName(m_tempoPath+"/movie"+QString::number(i)+".json");
         filej.open(QIODevice::ReadOnly | QIODevice::Text);
         QByteArray val = filej.readAll();
         filej.close();
@@ -395,7 +393,7 @@ bool MainWindow::JsonMerge(){
         {"results",result}};
     QJsonDocument concat ;
     concat.setObject(resultat);
-    QFile saveFile(directoryBase+"/saveMovies.json");
+    QFile saveFile(m_tempoPath+"/saveMovies.json");
     saveFile.open(QIODevice::WriteOnly);
     qint64 byteWrite= saveFile.write(concat.toJson());
     saveFile.close();
@@ -431,7 +429,7 @@ void MainWindow::readJson()
     //qWarning()<<"->readJson";
 
     QFile filej;
-    filej.setFileName(directoryBase+"/saveMovies.json");
+    filej.setFileName(m_tempoPath+"/saveMovies.json");
     filej.open(QIODevice::ReadOnly | QIODevice::Text);
     QByteArray val = filej.readAll();
     filej.close();
@@ -471,7 +469,7 @@ void MainWindow::readJson()
             dvdtheque->getFilmOnline(counter)->setLanguage(child[j].toObject()["original_language"].toString());
             dvdtheque->getFilmOnline(counter)->setTitreOri(child[j].toObject()["original_title"].toString());
             dvdtheque->getFilmOnline(counter)->setBackdrop(child[j].toObject()["backdrop_path"].toString());
-            dvdtheque->getFilmOnline(counter)->setIcone(directoryBase+"/online.png");
+            dvdtheque->getFilmOnline(counter)->setIcone(m_tempoPath+"/online.png");
             dvdtheque->getFilmOnline(counter)->setLocal(false);
             connect(dvdtheque->getFilmOnline(counter),SIGNAL(modifier()),this,SLOT(miseAJourAffichage()));
 
@@ -491,7 +489,7 @@ void MainWindow::readJson()
                 affiches.push_back((child[j].toObject()["poster_path"].toString()));
 
                 //on verifie si le fichier existe deja dans le dossier temporaire des telechargement
-                QString basename = directoryBase +child[j].toObject()["poster_path"].toString();
+                QString basename = m_tempoPath +child[j].toObject()["poster_path"].toString();
                 if (!QFile::exists(basename)) {
                     //on telecharge le fichier
                     m_dlmanager.append(urlBaseAffiche+ child[j].toObject()["poster_path"].toString(),child[j].toObject()["poster_path"].toString());
@@ -501,11 +499,11 @@ void MainWindow::readJson()
                     qWarning()<<"Le fichier "<< child[j].toObject()["poster_path"].toString() <<" existe deja dans le dossier";
                 }
                 //ajout de l'affiche au minifilm
-                dvdtheque->getFilmOnline(counter)->setAffiche(directoryBase+child[j].toObject()["poster_path"].toString());
+                dvdtheque->getFilmOnline(counter)->setAffiche(m_tempoPath+child[j].toObject()["poster_path"].toString());
 
             }
             else{
-                dvdtheque->getFilmOnline(counter)->setAffiche(directoryBase+"/noPicture.png");
+                dvdtheque->getFilmOnline(counter)->setAffiche(m_tempoPath+"/noPicture.png");
             }
             counter++;
         }

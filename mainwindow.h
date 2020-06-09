@@ -113,6 +113,8 @@ private:
     QString codeParentLu;
     QString codeParentSaisi;
     bool codeParentValid;
+    QString m_hardPath;
+    QString m_tempoPath;
     bool m_DBState;         /*!< flag de connection a la database Mysql */
     int m_minifilmMini;     /*!< numero minimum de la minifiche affichée   */
     int m_minifilmMax;      /*!< numero maximum de la minifiche affichée   */

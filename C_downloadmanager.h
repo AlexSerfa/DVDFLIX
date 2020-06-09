@@ -18,6 +18,7 @@ public:
      * @param parent
      */
     explicit C_downloadmanager(QObject *parent = nullptr);
+    void setPath(QString path);
     /**
      * @brief
      *
@@ -92,6 +93,7 @@ private:
      */
     void reportRedirect();
     int m_numeroPage; /**< TODO: describe */
+    QString m_tempoPath;
     QString m_filename; /**< TODO: describe */
     QNetworkAccessManager manager; /**< TODO: describe */
     QQueue<QUrl> downloadQueue; /**< TODO: describe */

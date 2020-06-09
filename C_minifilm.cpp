@@ -7,8 +7,8 @@
 #include <C_details.h>
 
 
-const QString directoryBase= "d:/tempo68"; /**< chemin du dossier de stockage */
-const QString directoryHard ="d:/tempo69";
+
+
 /**
  * @brief constructeur
  *

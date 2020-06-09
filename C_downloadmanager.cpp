@@ -9,8 +9,7 @@ using namespace std;
 
 const QString key ="76532a92d48d6e7e7fb5d72eaf2029b3"; /**< TODO: describe */
 const QString defaultUrl = " https://api.themoviedb.org/3/"; /**< TODO: describe */
-const QString urlBaseAffiche="https://image.tmdb.org/t/p/w500"; /**< TODO: describe */
-const QString directoryBase= "d:/tempo68"; /**< TODO: describe */
+
 /**
  * @brief constructuer
  */
@@ -32,6 +31,11 @@ C_downloadmanager::C_downloadmanager(QObject *parent)
  * @return      completUrl          QString         url formatées avec la clé de l'API TMBD
  *
 */
+void C_downloadmanager::setPath(QString path)
+{
+    m_tempoPath = path;
+}
+
 QString C_downloadmanager::formatUrl(QString film){
     QString completUrl;
        completUrl =defaultUrl+"search/movie?api_key="+key+"&language=fr&query="+film;
@@ -142,14 +146,11 @@ void C_downloadmanager::startNextDownload()
     QUrl url = downloadQueue.dequeue();
     totalCount--;
     QString m_filename= fileNameQueue.dequeue();
-    //QString filename = saveFileName(url);
-    QString downloadDirectory = QDir::cleanPath(directoryBase);
+    QString downloadDirectory = QDir::cleanPath(m_tempoPath);
     bool useDirectory = !downloadDirectory.isEmpty() && QFileInfo(downloadDirectory).isDir();
     if (useDirectory)
        m_filename.prepend(downloadDirectory + '/');
     output.setFileName(m_filename);
-    //DEBUG
-    //qWarning()<<m_filename;
     if (!output.open(QIODevice::WriteOnly)) {
         qWarning()<< "problème d'ouverture du fichier '%s' pour le téléchargement '%s': %s\n",
                 qPrintable(m_filename), url.toEncoded().constData(),

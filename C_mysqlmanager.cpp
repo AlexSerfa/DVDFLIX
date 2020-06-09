@@ -8,8 +8,6 @@
 #include <QPluginLoader>
 #include <c_biblio.h>
 
-const QString directoryBase= "d:/tempo68"; /**< chemin du dossier de stockage */
-const QString directoryHard ="d:/tempo69";
 
 
 /**
@@ -225,7 +223,7 @@ void C_MySQLManager::searchTitre(QString titre)
             dvdtheque->getFilmLocal(i) ->setPop(requete.value(12).toString());
             dvdtheque->getFilmLocal(i) ->setId_online(requete.value(13).toInt());
             dvdtheque->getFilmLocal(i) ->setDateEnr(requete.value(14).toString());
-            dvdtheque->getFilmLocal(i) ->setIcone(directoryBase+"/home.png");
+            dvdtheque->getFilmLocal(i) ->setIcone(getTempoPath()+"/home.png");
             dvdtheque->getFilmLocal(i) ->addIcone();
             dvdtheque->getFilmLocal(i) ->setGenre(getGenre(requete.value(16).toInt()));
             dvdtheque->getFilmLocal(i) ->setLocal(true);
@@ -288,8 +286,8 @@ bool C_MySQLManager::saveFilm(C_miniFilm &film)
         requete.addBindValue(film.getAdult());//adulte
         requete.addBindValue(film.getResum());//resume
         QString basename = QFileInfo(film.getAffiche()).fileName();
-        QFile::copy(film.getAffiche(), directoryHard+"/"+QFileInfo(film.getAffiche()).fileName());
-        requete.addBindValue(directoryHard+"/"+ basename);//poster_path
+        QFile::copy(film.getAffiche(),getHardPath()+"/"+QFileInfo(film.getAffiche()).fileName());
+        requete.addBindValue(getHardPath()+"/"+ basename);//poster_path
         requete.addBindValue(film.getBackdrop());//backdrop
         requete.addBindValue(film.getTitreOri());//titreOri
         requete.addBindValue(film.getLanguage());//language
@@ -466,7 +464,7 @@ QString C_MySQLManager::getHardPath(){
     if(requete.exec("SELECT * FROM param WHERE ID=1"))
     {
        if( requete.next()){
-            hard =  QVariant(requete.value(1)).toString();
+            hard =  QVariant(requete.value(2)).toString();
             return hard;
        }
     }
@@ -485,7 +483,7 @@ QString C_MySQLManager::getTempoPath(){
     if(requete.exec("SELECT * FROM param WHERE ID=1"))
     {
        if( requete.next()){
-       QString tempo =  QVariant(requete.value(2)).toString();
+       QString tempo =  QVariant(requete.value(1)).toString();
        return tempo;
        }
     }
