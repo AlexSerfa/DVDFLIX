@@ -41,6 +41,10 @@ private:
     bool creation_tbl_stockage();
     bool creation_tbl_stockage_film();
     bool creation_tbl_bddsecu();
+    bool creation_tbl_acteur();
+    bool creation_tbl_scene();
+    bool creation_tbl_realis();
+    bool creation_tbl_prod();
     bool creation_bdd_secu();
     bool creation_tbl_bddSecu();
 

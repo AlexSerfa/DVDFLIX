@@ -45,11 +45,24 @@
      <x>80</x>
      <y>40</y>
      <width>181</width>
-     <height>51</height>
+     <height>21</height>
     </rect>
    </property>
    <property name="text">
     <string>Titre:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="id_local">
+   <property name="geometry">
+    <rect>
+     <x>80</x>
+     <y>70</y>
+     <width>181</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>ID Local:</string>
    </property>
   </widget>
  </widget>

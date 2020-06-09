@@ -155,11 +155,36 @@ void C_DbConfig::MainDbConfig()
     msgBox.setText("Table Stockage Film non créée");
     msgBox.setStandardButtons(QMessageBox::Ok);}
 
+    creation_tbl_acteur();
+    if(!creation_tbl_acteur()){
+    QMessageBox msgBox;
+    msgBox.setText("Table Acteur non créée");
+    msgBox.setStandardButtons(QMessageBox::Ok);}
+
+    creation_tbl_scene();
+    if(!creation_tbl_scene()){
+    QMessageBox msgBox;
+    msgBox.setText("Table scene non créée");
+    msgBox.setStandardButtons(QMessageBox::Ok);}
+
+    creation_tbl_realis();
+    if(!creation_tbl_realis()){
+    QMessageBox msgBox;
+    msgBox.setText("Table realis non créée");
+    msgBox.setStandardButtons(QMessageBox::Ok);}
+
+    creation_tbl_prod();
+    if(!creation_tbl_prod()){
+    QMessageBox msgBox;
+    msgBox.setText("Table realis non créée");
+    msgBox.setStandardButtons(QMessageBox::Ok);}
+
     creation_tbl_bddSecu();
     if(!creation_tbl_bddSecu()){
     QMessageBox msgBox;
     msgBox.setText("Base de donnée DvdFlix non créée");
     msgBox.setStandardButtons(QMessageBox::Ok);}
+
 }
 
 /**
@@ -458,5 +483,81 @@ bool C_DbConfig::creation_tbl_bddSecu()
     }
     return result;
 
+}
+
+bool C_DbConfig::creation_tbl_acteur()
+{
+    bool result = false;
+    QSqlQuery query;
+    try{
+
+        query.exec("CREATE TABLE IF NOT EXISTS `dvdflix`.`acteur` (ID INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,"
+               "id_film INT(11) NOT NULL,"
+               "acteur VARCHAR(30) NOT NULL)");
+        result = true;
+    }
+        catch (QException)
+    {
+        qWarning()<<"Erreur lors de la création table acteur: "<<query.lastError();
+        result=false;
+    }
+    return result;
+}
+
+bool C_DbConfig::creation_tbl_scene()
+{
+    bool result = false;
+    QSqlQuery query;
+    try{
+
+        query.exec("CREATE TABLE IF NOT EXISTS `dvdflix`.`scene` (ID INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,"
+               "id_film INT(11) NOT NULL,"
+               "scene VARCHAR(30) NOT NULL)");
+        result = true;
+    }
+        catch (QException)
+    {
+        qWarning()<<"Erreur lors de la création table scene: "<<query.lastError();
+        result=false;
+    }
+    return result;
+}
+
+bool C_DbConfig::creation_tbl_realis()
+{
+    bool result = false;
+    QSqlQuery query;
+    try{
+
+        query.exec("CREATE TABLE IF NOT EXISTS `dvdflix`.`realis` (ID INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,"
+               "id_film INT(11) NOT NULL,"
+               "realis VARCHAR(30) NOT NULL)");
+        result = true;
+    }
+        catch (QException)
+    {
+        qWarning()<<"Erreur lors de la création table realis: "<<query.lastError();
+        result=false;
+    }
+    return result;
+}
+
+bool C_DbConfig::creation_tbl_prod()
+{
+    bool result = false;
+    QSqlQuery query;
+    try{
+
+        query.exec("CREATE TABLE IF NOT EXISTS `dvdflix`.`prod` (ID INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,"
+               "id_film INT(11) NOT NULL,"
+               "prod VARCHAR(30) NOT NULL)");
+        result = true;
+    }
+        catch (QException)
+    {
+        qWarning()<<"Erreur lors de la création table prod: "<<query.lastError();
+        result=false;
+    }
+    return result;
 }
 
