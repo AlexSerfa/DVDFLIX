@@ -67,14 +67,11 @@ MainWindow::MainWindow(QWidget *parent)
     C_DbConfig *Config = new C_DbConfig(this);
     Config->MainDbConfig();
     Config->~C_DbConfig();
-   // C_bddSecu Secu(this->getSql());
     dvdtheque =new C_biblio();
     sql= new C_MySQLManager(this,dvdtheque);
-   // C_bddSecu Secu = C_bddSecu();
     Secu.LireIni();
     sql->connection("security",Secu.getBDdvdAdr(),Secu.getBDdvdPort(),Secu.getBDdvdUser(),Secu.getBDdvdPass());
     Secu.connection(sql);
-  //  Secu.close();
     ui->setupUi(this);
     imageChemin();
     //on connect les signaux de connection a la db
@@ -149,11 +146,7 @@ void MainWindow::rechercheFilm()
 
     //on vérifie que la db est bien connectée
     if(m_DBState){
-        qWarning()<<ui->ln_titre->text();
         m_minifilmCountLocal= sql->filmCount(ui->ln_titre->text());
-
-
-
         sql->searchTitre(ui->ln_titre->text());
         m_minifilmCountLocal = sql->getFilmCount();
 
@@ -185,12 +178,8 @@ else {
 */
 void MainWindow::movieDlFinished()
 {
-    //DEBUG 2l
-    //qWarning()<<"movieDlFinished()";
-    //qWarning()<<"lecture du fichier json de la recherche ok";
     getPageNumberJson();
     readJson();
-
 }
 /**
  * @fn restoreValue()
@@ -198,13 +187,10 @@ void MainWindow::movieDlFinished()
  * @date 01/05/2020
  *
  * @brief restoration des membres à leur valeur initiales
- * @todo verifier bug vidage de min1
  *
 */
 void MainWindow::restoreValue()
 {
-  //  dvdtheque->~C_biblio();
-   // C_biblio *dvdtheque = new C_biblio();
 
     //on réinitialise les valeurs servant a la gestion de la bibliothèque
     ui->dvdtek->setCurrentIndex(0);
@@ -263,8 +249,10 @@ QString MainWindow::formatSearch()
 
 void MainWindow::on_btn_rechercher_clicked()
 {
-    restoreValue();
-    rechercheFilm();
+    if(ui->ln_titre->text()!=""){
+        restoreValue();
+        rechercheFilm();
+    }
 
 }
 
