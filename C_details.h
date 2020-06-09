@@ -39,6 +39,7 @@ public:
     void setLocal(bool value);
     void setFilm(C_miniFilm &film);
     void listStockage();
+    void idLocalDetail();
 
     C_miniFilm & getFilm();
     QMainWindow *getMain() const;
@@ -72,6 +73,7 @@ private:
     bool m_local;
     bool m_modif=false;
     C_miniFilm *m_film;
+    QString idLocal;
 
 };
 

@@ -3,6 +3,7 @@
 #include <C_mysqlmanager.h>
 #include <C_minifilm.h>
 #include "c_detail_ajout.h"
+#include <QSqlQuery>
 
 
 
@@ -37,6 +38,90 @@ C_details::~C_details()
 {
     delete ui;
 }
+
+/**
+ * @fn idLocalDetail()
+ * @author: Jovanovic Milan
+ * @date 09/06/2020
+ * @brief récupère les valeurs (acteur, réalisateur, metteur en scène, producteur) depuis la base local
+ *        et les affiches dans l'appli "Film local" (dans les champs: acteur, réalisateur etc..)
+ *
+ */
+
+void C_details::idLocalDetail()
+{
+    qDebug()<<"appel fn";
+        this->idLocal= ui->txt_id_local->text();
+        qDebug()<<"id= "+ui->txt_id_local->text();
+        qDebug()<<ui->lbl_vote->text();
+        qDebug()<<ui->txt_resum->toPlainText();
+
+        /*QSqlDatabase base = QSqlDatabase::addDatabase("QMYSQL","rrr");
+        base.setHostName(adress);
+        base.setDatabaseName(database);
+        base.setPort(port);
+        base.setUserName(user);
+        base.setPassword(password);
+        base.open();*/
+
+        QSqlQuery query;
+        query.exec("SELECT * FROM `acteur` WHERE `id_film`="+this->idLocal);
+
+        int i=0;
+        while (query.next())
+        {
+            if(i==0)
+            {
+                ui->txt_acteur->setText(query.value(2).toString());
+            }else
+            {
+                ui->txt_acteur->setText(ui->txt_acteur->toPlainText()+", "+query.value(2).toString());
+            }
+            i++;
+        }
+        query.exec("SELECT * FROM `scene` WHERE `id_film`="+this->idLocal);
+        i=0;
+        while (query.next())
+        {
+            if(i==0)
+            {
+                ui->txt_metteurEnScene->setText(query.value(2).toString());
+            }else
+            {
+                ui->txt_metteurEnScene->setText(ui->txt_metteurEnScene->toPlainText()+", "+query.value(2).toString());
+            }
+            i++;
+        }
+
+
+        query.exec("SELECT * FROM `realis` WHERE `id_film`="+this->idLocal);
+        i=0;
+        while (query.next())
+        {
+            if(i==0)
+            {
+                ui->txt_realisateur->setText(query.value(2).toString());
+            }else
+            {
+                ui->txt_realisateur->setText(ui->txt_realisateur->toPlainText()+", "+query.value(2).toString());
+            }
+            i++;
+        }
+        query.exec("SELECT * FROM `prod` WHERE `id_film`="+this->idLocal);
+        i=0;
+        while (query.next())
+        {
+            if(i==0)
+            {
+                ui->txt_producteur->setText(query.value(2).toString());
+            }else
+            {
+                ui->txt_producteur->setText(ui->txt_producteur->toPlainText()+", "+query.value(2).toString());
+            }
+            i++;
+        }
+}
+
 /**
  * @brief
  *
@@ -61,6 +146,8 @@ void C_details::listStockage()
     liste = sql->getStockageList();
     ui->cbb_stockage->addItems(liste);
     ui->txt_stock->setText(sql->getStockage(m_film->getIdLocal()));
+
+    idLocalDetail();// <---------------------- appel de la fonction ?????
 
 }
 
