@@ -57,6 +57,7 @@ MainWindow::MainWindow(QWidget *parent)
     , m_pageNumber(0)
     , ui(new Ui::MainWindow)
 {
+
     qWarning()<<this;
     C_DbConfig *Config = new C_DbConfig(this);
     Config->MainDbConfig();
@@ -79,8 +80,10 @@ MainWindow::MainWindow(QWidget *parent)
     m_hardPath =sql->getHardPath();
     m_tempoPath = sql->getTempoPath();
     m_dlmanager.setPath(m_tempoPath);
-qWarning()<<"m_tempo"<<m_tempoPath;
-qWarning()<<"m_hardPaht: "<<m_hardPath;
+
+ui->logoSearch->setPixmap(m_tempoPath+"/dvdFlixSearch.png");
+//ui->logoSearch->setPixmap(qApp->applicationDirPath()+"/lib_img/dvdFlixSearch.png");
+ui->logoSearch->setHidden(true);
 
 
 
@@ -248,6 +251,7 @@ QString MainWindow::formatSearch()
 void MainWindow::on_btn_rechercher_clicked()
 {
     if(ui->ln_titre->text()!=""){
+        ui->logoSearch->setHidden(false);
         restoreValue();
         rechercheFilm();
     }
@@ -510,6 +514,7 @@ void MainWindow::readJson()
     }
     connect(&m_dlmanager,SIGNAL(startCreateMini()),this ,SLOT(createMinifilm()));
  createMinifilm();
+
 }
 /**
  * @fn initLayout()
@@ -673,6 +678,7 @@ else{
 }
 
     getsion_prevNext_Btn();
+    ui->logoSearch->setHidden(true);
     return true;
 }
 /**

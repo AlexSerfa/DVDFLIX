@@ -254,17 +254,6 @@ border-style: solid;</string>
      <string>&gt;&gt;</string>
     </property>
    </widget>
-   <widget class="QWidget" name="gridLayoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>690</x>
-      <y>0</y>
-      <width>791</width>
-      <height>571</height>
-     </rect>
-    </property>
-    <layout class="QGridLayout" name="hl_minifilm" rowminimumheight="0" columnminimumwidth="0"/>
-   </widget>
    <widget class="QStackedWidget" name="dvdtek">
     <property name="geometry">
      <rect>
@@ -299,6 +288,9 @@ background-color: rgb(0, 85, 255);</string>
         <number>10</number>
        </property>
        <property name="rightMargin">
+        <number>10</number>
+       </property>
+       <property name="bottomMargin">
         <number>10</number>
        </property>
        <property name="spacing">
@@ -997,6 +989,25 @@ border-style: solid;</string>
       <string>Valider</string>
      </property>
     </widget>
+   </widget>
+   <widget class="QLabel" name="logoSearch">
+    <property name="geometry">
+     <rect>
+      <x>59</x>
+      <y>9</y>
+      <width>1250</width>
+      <height>641</height>
+     </rect>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>1250</width>
+      <height>650</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
