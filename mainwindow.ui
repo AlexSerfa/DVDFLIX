@@ -704,7 +704,7 @@ border-style: solid;</string>
     <property name="geometry">
      <rect>
       <x>1220</x>
-      <y>660</y>
+      <y>650</y>
       <width>75</width>
       <height>23</height>
      </rect>
@@ -942,6 +942,46 @@ border-style: solid;</string>
       <set>Qt::AlignCenter</set>
      </property>
     </widget>
+   </widget>
+   <widget class="QPushButton" name="btn_credit">
+    <property name="geometry">
+     <rect>
+      <x>1220</x>
+      <y>680</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: qlineargradient(spread:pad, x1:0.482412, y1:0.983, x2:0.493025, y2:0.239, stop:0 rgba(85, 170, 255, 255), stop:1 rgba(255, 255, 255, 255));
+border-color: rgb(0, 85, 255);
+border-radius: 10px;
+border-width: 1px;
+border-style: solid;</string>
+    </property>
+    <property name="text">
+     <string>Crédits</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_aPropos">
+    <property name="geometry">
+     <rect>
+      <x>1220</x>
+      <y>710</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: qlineargradient(spread:pad, x1:0.482412, y1:0.983, x2:0.493025, y2:0.239, stop:0 rgba(85, 170, 255, 255), stop:1 rgba(255, 255, 255, 255));
+border-color: rgb(0, 85, 255);
+border-radius: 10px;
+border-width: 1px;
+border-style: solid;</string>
+    </property>
+    <property name="text">
+     <string>A propos</string>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
