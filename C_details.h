@@ -63,6 +63,8 @@ private slots:
 
     void on_btn_producteur_clicked();
 
+    void on_btn_suppression_clicked();
+
 private:
     C_MySQLManager *sql;     /*!< objet gérant la partie Mysql */
     Ui::C_details *ui;
