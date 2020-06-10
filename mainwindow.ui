@@ -29,10 +29,10 @@
    <widget class="QPushButton" name="btn_rechercher">
     <property name="geometry">
      <rect>
-      <x>380</x>
+      <x>320</x>
       <y>650</y>
       <width>151</width>
-      <height>61</height>
+      <height>81</height>
      </rect>
     </property>
     <property name="font">
@@ -51,25 +51,6 @@ border-style: solid;</string>
     </property>
     <property name="text">
      <string>Rechercher</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="ln_titre">
-    <property name="geometry">
-     <rect>
-      <x>160</x>
-      <y>650</y>
-      <width>211</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">border-color: rgb(0, 85, 255);
-border-radius:15px;
-border-width: 1px;
-border-style: solid;</string>
-    </property>
-    <property name="text">
-     <string>rambo</string>
     </property>
    </widget>
    <widget class="QPushButton" name="btn_previous">
@@ -793,7 +774,7 @@ border-style: solid;</string>
    <widget class="QGroupBox" name="groupBox">
     <property name="geometry">
      <rect>
-      <x>850</x>
+      <x>830</x>
       <y>650</y>
       <width>120</width>
       <height>80</height>
@@ -867,56 +848,100 @@ border-style: solid;</string>
      <string/>
     </property>
    </widget>
-   <widget class="QComboBox" name="cb_typeSearch">
-    <property name="enabled">
-     <bool>false</bool>
-    </property>
+   <widget class="QGroupBox" name="groupBox_2">
     <property name="geometry">
      <rect>
       <x>50</x>
       <y>650</y>
-      <width>111</width>
-      <height>22</height>
+      <width>251</width>
+      <height>80</height>
      </rect>
     </property>
-    <item>
-     <property name="text">
-      <string>Titre</string>
+    <property name="styleSheet">
+     <string notr="true">border-color: rgb(0, 85, 255);
+border-radius:15px;
+border-width: 1px;
+border-style: solid;</string>
+    </property>
+    <property name="title">
+     <string>Rechercher par</string>
+    </property>
+    <widget class="QLineEdit" name="ln_titre">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>50</y>
+       <width>231</width>
+       <height>20</height>
+      </rect>
      </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>Acteur</string>
+     <property name="styleSheet">
+      <string notr="true">border-color: rgb(0, 85, 255);
+border-radius:15px;
+border-width: 1px;
+border-style: solid;</string>
      </property>
-    </item>
-    <item>
      <property name="text">
-      <string>Réalisateur</string>
+      <string>rambo</string>
      </property>
-    </item>
-   </widget>
-   <widget class="QLabel" name="lbl_titre">
-    <property name="geometry">
-     <rect>
-      <x>50</x>
-      <y>650</y>
-      <width>101</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="text">
-     <string>Titre :</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
+    </widget>
+    <widget class="QComboBox" name="cb_typeSearch">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>20</y>
+       <width>111</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-color: rgb(0, 85, 255);
+border-radius:15px;
+border-width: 1px;
+border-style: solid;</string>
+     </property>
+     <item>
+      <property name="text">
+       <string>Titre</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Acteur</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Réalisateur</string>
+      </property>
+     </item>
+    </widget>
+    <widget class="QLabel" name="lbl_titre">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>20</y>
+       <width>101</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Titre :</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">

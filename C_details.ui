@@ -39,6 +39,9 @@ border-style: solid;</string>
    <property name="text">
     <string/>
    </property>
+   <property name="scaledContents">
+    <bool>true</bool>
+   </property>
   </widget>
   <widget class="QLabel" name="lbl_back">
    <property name="geometry">

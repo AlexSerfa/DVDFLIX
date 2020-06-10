@@ -42,9 +42,7 @@ public slots:
     void readJson();
     void status_dbConnectee();
     void status_dbDeconnectee();
-    void rechercheFilm();
-    void miseAJourAffichage();
-
+    void rechercheFilm(int value);
     void imageChemin();
 
 private slots:

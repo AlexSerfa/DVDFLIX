@@ -75,7 +75,7 @@ MainWindow::MainWindow(QWidget *parent)
     //on se connect a la db
 
     sql->connection(database,Secu.getDvdFlixAdr(),Secu.getDvdFlixPort(),Secu.getDvdFlixUser(),Secu.getDvdFlixPass());
-    connect(sql,SIGNAL(modifier()),this, SLOT(miseAJourAffichage()));
+    connect(sql,SIGNAL(modifier()),this, SLOT(on_btn_rechercher_clicked()));
     codeParentLu  = sql->getCodeParental();
     m_hardPath =sql->getHardPath();
     m_tempoPath = sql->getTempoPath();
@@ -145,7 +145,7 @@ void MainWindow::imageChemin()
 
 
 
-void MainWindow::rechercheFilm()
+void MainWindow::rechercheFilm(int value)
 {
 
     //on vérifie que la db est bien connectée
@@ -253,11 +253,15 @@ QString MainWindow::formatSearch()
 
 void MainWindow::on_btn_rechercher_clicked()
 {
+    int value;
+    if(ui->rdb_rechDist->isChecked())value=0;
+    if(ui->rdb_rechLoc->isChecked())value=ui->cb_typeSearch->currentIndex();
     if(ui->ln_titre->text()!=""){
         ui->logoSearch->setHidden(false);
         restoreValue();
-        rechercheFilm();
+        rechercheFilm(value);
     }
+
 
 }
 
@@ -478,7 +482,7 @@ void MainWindow::readJson()
             dvdtheque->getFilmOnline(counter)->setBackdrop(child[j].toObject()["backdrop_path"].toString());
             dvdtheque->getFilmOnline(counter)->setIcone(m_tempoPath+"/online.png");
             dvdtheque->getFilmOnline(counter)->setLocal(false);
-            connect(dvdtheque->getFilmOnline(counter),SIGNAL(modifier()),this,SLOT(miseAJourAffichage()));
+            connect(dvdtheque->getFilmOnline(counter),SIGNAL(modifier()),this,SLOT( on_btn_rechercher_clicked()));
 
             QJsonArray genreArray = child[j].toObject()["genre_ids"].toArray();
             for(int i =0; i<genreArray.count();i++)
@@ -804,22 +808,6 @@ void MainWindow::on_rdb_rechDist_toggled(bool checked)
 
 }
 
-
-/**
- * @fn miseAJourAffichage()
- * @author: Mercier Laurent
- * @date 12/05/2020
- * @brief   -appel de la fonction de restoration des valeurs par defaut
- *          -appel de la fonction de recherche de films
- */
-void MainWindow::miseAJourAffichage()
-{
-    if(ui->ln_titre->text()!=""){
-    ui->logoSearch->setHidden(false);
-    restoreValue();
-    rechercheFilm();
-}
-}
 /**
  * @fn on_pushButton_clicked()
  * @author: Jovanovic Milan / Mercier Laurent
@@ -836,14 +824,9 @@ void MainWindow::on_pushButton_clicked()
    C_options *options = new  C_options(this,Secu.getDvdFlixAdr(),Secu.getDvdFlixPass(),Secu.getDvdFlixUser(),Secu.getDvdFlixPort(),codeParentLu,sql);
   options->show();
 }
-
 void MainWindow::on_btn_option_clicked()
 {
 }
-
-
-
-
 /**
  * @fn on_txt_codeParent_textChanged(const QString &arg1)
  * @author: Mercier Laurent
@@ -880,24 +863,19 @@ void MainWindow::on_btn_valideCodeparent_clicked()
         ui->txt_codeParent->setText("");
         ui->txt_codeParent->setEnabled(true);
         ui->btn_valideCodeparent->setEnabled(false);
-        miseAJourAffichage();
+        on_btn_rechercher_clicked();
     }
 }
-
 C_biblio *MainWindow::getDvdtheque() const
 {
     return dvdtheque;
 }
-
-
-
 void MainWindow::on_rdb_rechLoc_clicked()
 {
     ui->cb_typeSearch->show();
     ui->cb_typeSearch->setDisabled(false);
     ui->lbl_titre->setHidden(true);
 }
-
 void MainWindow::on_rdb_rechDist_clicked()
 {
     ui->cb_typeSearch->setHidden(true);

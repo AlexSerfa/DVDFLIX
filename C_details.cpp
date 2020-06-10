@@ -50,19 +50,10 @@ C_details::~C_details()
 
 void C_details::idLocalDetail()
 {
-    qDebug()<<"appel fn";
-        this->idLocal= ui->txt_id_local->text();
-        qDebug()<<"id= "+ui->txt_id_local->text();
-        qDebug()<<ui->lbl_vote->text();
-        qDebug()<<ui->txt_resum->toPlainText();
 
-        /*QSqlDatabase base = QSqlDatabase::addDatabase("QMYSQL","rrr");
-        base.setHostName(adress);
-        base.setDatabaseName(database);
-        base.setPort(port);
-        base.setUserName(user);
-        base.setPassword(password);
-        base.open();*/
+        this->idLocal= ui->txt_id_local->text();
+
+
 
         QSqlQuery query;
         query.exec("SELECT * FROM `acteur` WHERE `id_film`="+this->idLocal);
@@ -147,7 +138,7 @@ void C_details::listStockage()
     ui->cbb_stockage->addItems(liste);
     ui->txt_stock->setText(sql->getStockage(m_film->getIdLocal()));
 
-    idLocalDetail();// <---------------------- appel de la fonction ?????
+
 
 }
 
