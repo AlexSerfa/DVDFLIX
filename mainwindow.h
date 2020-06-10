@@ -94,14 +94,13 @@ private slots:
     bool createMinifilm();
     void on_rdb_rechLoc_toggled(bool checked);
     void on_rdb_rechDist_toggled(bool checked);
-
     void on_btn_option_clicked();
-
-
-
     void on_txt_codeParent_textChanged(const QString &arg1);
-
     void on_btn_valideCodeparent_clicked();
+
+    void on_rdb_rechLoc_clicked();
+
+    void on_rdb_rechDist_clicked();
 
 private:
     C_biblio *dvdtheque;
