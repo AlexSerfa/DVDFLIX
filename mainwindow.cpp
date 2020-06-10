@@ -85,6 +85,9 @@ ui->logoSearch->setPixmap(m_tempoPath+"/dvdFlixSearch.png");
 //ui->logoSearch->setPixmap(qApp->applicationDirPath()+"/lib_img/dvdFlixSearch.png");
 ui->logoSearch->setHidden(true);
 
+ui->cb_typeSearch->setHidden(true);
+ui->cb_typeSearch->setDisabled(true);
+ui->lbl_titre->setHidden(false);
 
 
 
@@ -887,3 +890,17 @@ C_biblio *MainWindow::getDvdtheque() const
 }
 
 
+
+void MainWindow::on_rdb_rechLoc_clicked()
+{
+    ui->cb_typeSearch->show();
+    ui->cb_typeSearch->setDisabled(false);
+    ui->lbl_titre->setHidden(true);
+}
+
+void MainWindow::on_rdb_rechDist_clicked()
+{
+    ui->cb_typeSearch->setHidden(true);
+    ui->cb_typeSearch->setDisabled(true);
+    ui->lbl_titre->setHidden(false);
+}
