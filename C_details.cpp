@@ -4,8 +4,8 @@
 #include <C_minifilm.h>
 #include "c_detail_ajout.h"
 #include <QSqlQuery>
-
-
+#include <QDateTime>
+#include <QDate>
 
 /**
  * @fn C_details(QWidget *parent) :
@@ -24,6 +24,9 @@ C_details::C_details(QWidget *parent) :
     ui->setupUi(this);
     m_affiche="inconnu";
     m_backdrop="inconnu";
+
+    const QDate date = QDate::currentDate();
+    ui->dateEdit->setDate(date);
 
 }
 
@@ -288,7 +291,9 @@ void C_details::addGenre(QString genre)
 
 void C_details::addDateReal(QString date)
 {
+
     ui->txt_real->setText(date);
+    ui->dateEdit->setDate(QDate::fromString(date,"dd/MM/yyyy"));
 }
 
 /**
