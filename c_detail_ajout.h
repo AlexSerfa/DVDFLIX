@@ -13,7 +13,7 @@ class C_detail_ajout : public QDialog
     Q_OBJECT
 
 public:
-    explicit C_detail_ajout(QWidget *parent = nullptr, QString titre="",QString ID_loc = "", QTextEdit *nom=nullptr);
+    explicit C_detail_ajout(QWidget *parent = nullptr, QString titre="",QString ID_loc = "", QString titreFilm_1="", QTextEdit *nom=nullptr);
     ~C_detail_ajout();
 
 private slots:

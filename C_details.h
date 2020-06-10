@@ -75,7 +75,7 @@ private:
     bool m_local;
     bool m_modif=false;
     C_miniFilm *m_film;
-    QString idLocal;
+    QString idMondial;
 
 };
 

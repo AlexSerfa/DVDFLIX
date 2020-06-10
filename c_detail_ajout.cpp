@@ -5,17 +5,17 @@
 #include <QSqlQuery>
 
 /**/
-C_detail_ajout::C_detail_ajout(QWidget *parent, QString titre, QString m_ID, QTextEdit *nom) :
+C_detail_ajout::C_detail_ajout(QWidget *parent, QString titre, QString m_ID,QString titreFilm_1, QTextEdit *nom) :
     QDialog(parent),
     ui(new Ui::C_detail_ajout)
 {
     ui->setupUi(this);
     ui->l_titre->setText(titre);
-    ui->id_local->setText(m_ID);
+    ui->id_mondial->setText(m_ID);
+    ui->txt_film->setText(titreFilm_1);
     this->m_nom=nom;
 
 }
-
 C_detail_ajout::~C_detail_ajout()
 {
     delete ui;
@@ -25,11 +25,10 @@ void C_detail_ajout::on_btn_enregistrer_detail_clicked()
 {
 
 
-
     QString texte = this->m_nom->toPlainText();
 
     QString ajout = ui->l_titre->text();
-    QString ID_Local = ui->id_local->text();
+    QString ID_Mondial = ui->id_mondial->text();
     QString ajoutCnt = ui->txt_ajouter_detail->text();
 
     if(texte.length()==0){
@@ -43,24 +42,24 @@ void C_detail_ajout::on_btn_enregistrer_detail_clicked()
     QSqlQuery query;
     if(ajout=="Ajouter acteur")
     {
-    query.exec("INSERT INTO `dvdflix`.`acteur`(ID, ID_film, acteur) VALUES ('','"+ID_Local+"','"+ajoutCnt+"')");
+    query.exec("INSERT INTO `dvdflix`.`acteur`(ID, ID_film, acteur) VALUES ('','"+ID_Mondial+"','"+ajoutCnt+"')");
     }
     else if(ajout=="Ajouter metteur en scène")
     {
-    query.exec("INSERT INTO `dvdflix`.`scene`(ID, ID_film, scene ) VALUES ('','"+ID_Local+"','"+ajoutCnt+"')");
+    query.exec("INSERT INTO `dvdflix`.`scene`(ID, ID_film, scene ) VALUES ('','"+ID_Mondial+"','"+ajoutCnt+"')");
     }
     else if(ajout=="Ajouter réalisateur")
     {
-    query.exec("INSERT INTO `dvdflix`.`realis`(ID, ID_film, realis) VALUES ('','"+ID_Local+"','"+ajoutCnt+"')");
+    query.exec("INSERT INTO `dvdflix`.`realis`(ID, ID_film, realis) VALUES ('','"+ID_Mondial+"','"+ajoutCnt+"')");
     }
     else if(ajout=="Ajouter producteur")
     {
-    query.exec("INSERT INTO `dvdflix`.`prod`(ID, ID_film, prod) VALUES ('','"+ID_Local+"','"+ajoutCnt+"')");
+    query.exec("INSERT INTO `dvdflix`.`prod`(ID, ID_film, prod) VALUES ('','"+ID_Mondial+"','"+ajoutCnt+"')");
     }
 
 
     qWarning()<<"Acteur : "<<ajout;
-    qWarning()<<"ID Local:"<<ID_Local;
+    qWarning()<<"ID Local:"<<ID_Mondial;
 
 
     this->close();
