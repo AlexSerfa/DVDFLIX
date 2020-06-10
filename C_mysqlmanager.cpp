@@ -58,6 +58,28 @@ bool C_MySQLManager::close(){
     return true;
 }
 /**
+ * @fn suppressionFilm(int idFilm)
+ * @author: Mercier Laurent
+ * @date 10/06/2020
+ * @brief suppression d'un film dans les base de données
+ *
+ * @param int   idFilm  id du film à supprimer
+ * @return QString
+ */
+bool C_MySQLManager::suppressionFilm(QString idFilm)
+{
+    bool result = false;
+
+    QSqlQuery requete;
+    requete.prepare("DELETE FROM `film` WHERE `id`="+idFilm);
+    result = requete.exec();
+    requete.prepare("DELETE FROM `genresfilm` WHERE `id`="+idFilm);
+    result = requete.exec();
+    requete.prepare("DELETE FROM `stockage` WHERE `id`="+idFilm);
+    result = requete.exec();
+    return result;
+}
+/**
  * @fn getGenre(int number)
  * @author: Mercier Laurent
  * @date 09/05/2020

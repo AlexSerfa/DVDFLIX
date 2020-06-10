@@ -811,9 +811,11 @@ void MainWindow::on_rdb_rechDist_toggled(bool checked)
  */
 void MainWindow::miseAJourAffichage()
 {
+    if(ui->ln_titre->text()!=""){
+    ui->logoSearch->setHidden(false);
     restoreValue();
     rechercheFilm();
-
+}
 }
 /**
  * @fn on_pushButton_clicked()
@@ -829,7 +831,6 @@ void MainWindow::on_pushButton_clicked()
     Secu.LireIni();
     Secu.connection(sql);
    C_options *options = new  C_options(this,Secu.getDvdFlixAdr(),Secu.getDvdFlixPass(),Secu.getDvdFlixUser(),Secu.getDvdFlixPort(),codeParentLu,sql);
-   //options->setSql(&sql);
   options->show();
 }
 

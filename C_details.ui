@@ -289,7 +289,7 @@ border-style: solid;</string>
     <string>Date d'enregistrement : </string>
    </property>
   </widget>
-  <widget class="QPushButton" name="btn_trailer">
+  <widget class="QPushButton" name="btn_suppression">
    <property name="geometry">
     <rect>
      <x>700</x>
@@ -310,7 +310,7 @@ border-style: solid;
 </string>
    </property>
    <property name="text">
-    <string>Bande-annonce</string>
+    <string>SUPPRIMER</string>
    </property>
   </widget>
   <widget class="QLabel" name="lbl_language">

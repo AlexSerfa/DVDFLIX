@@ -50,8 +50,20 @@ C_details::~C_details()
 
 void C_details::idLocalDetail()
 {
-
+    qDebug()<<"appel fn";
         this->idLocal= ui->txt_id_local->text();
+        qDebug()<<"id= "+ui->txt_id_local->text();
+        qDebug()<<ui->lbl_vote->text();
+        qDebug()<<ui->txt_resum->toPlainText();
+
+        /*QSqlDatabase base = QSqlDatabase::addDatabase("QMYSQL","rrr");
+        base.setHostName(adress);
+        base.setDatabaseName(database);
+        base.setPort(port);
+        base.setUserName(user);
+        base.setPassword(password);
+        base.open();*/
+
         QSqlQuery query;
         query.exec("SELECT * FROM `acteur` WHERE `id_film`="+this->idLocal);
 
@@ -80,6 +92,8 @@ void C_details::idLocalDetail()
             }
             i++;
         }
+
+
         query.exec("SELECT * FROM `realis` WHERE `id_film`="+this->idLocal);
         i=0;
         while (query.next())
@@ -133,7 +147,7 @@ void C_details::listStockage()
     ui->cbb_stockage->addItems(liste);
     ui->txt_stock->setText(sql->getStockage(m_film->getIdLocal()));
 
-
+    idLocalDetail();// <---------------------- appel de la fonction ?????
 
 }
 
@@ -502,4 +516,11 @@ void C_details::on_btn_producteur_clicked()
     C_detail_ajout *producteur = new C_detail_ajout(this,"Ajouter producteur",ID,this->ui->txt_producteur);
     producteur->setWindowTitle("Producteur");
     producteur->show();
+}
+
+void C_details::on_btn_suppression_clicked()
+{
+    sql->suppressionFilm(ui->txt_id_local->text());
+    emit modifier();
+    this->~C_details();
 }

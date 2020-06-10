@@ -41,6 +41,7 @@ public:
     QStringList getStockageList();
     QString getStockage(int id_film);
     bool close();
+    bool suppressionFilm(QString idFilm);
    void searchTitre(QString titre);
     /**
      * @brief
