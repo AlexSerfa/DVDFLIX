@@ -86,11 +86,12 @@ public:
      * @param QString
      * @return int
      */
-    int filmCount(QString titre);
+    int filmCount(QString titre, int value);
     int getFilmCount();
     void resetResultCounter();
     bool saveFilm(C_miniFilm  &film);
     bool updateFilm(C_miniFilm  &film);
+    void searchPersonne(QString nom, QString table);
     QString getHardPath();
     QString getTempoPath();
 

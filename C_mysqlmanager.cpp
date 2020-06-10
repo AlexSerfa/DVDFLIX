@@ -174,7 +174,7 @@ QStringList  C_MySQLManager::getStockageList()
  *
  * @return int
  */
-int C_MySQLManager::filmCount(QString titre)
+int C_MySQLManager::filmCount(QString titre, int value)
 {
     int result=0;
     QSqlQuery requete;
@@ -209,6 +209,73 @@ int C_MySQLManager::getFilmCount()
 {
     return m_resultCounter;
 }
+void C_MySQLManager::searchPersonne (QString nom, QString table){
+
+    m_resultCounter=0;
+    C_miniFilm *film = new C_miniFilm();
+    int i=0;
+    QSqlQuery requeteActor;
+    QSqlQuery requeteFilm;
+    if(requeteActor.exec("SELECT * FROM "+table+" WHERE "+table+"."+table+"  LIKE '%"+nom+"%'" )){
+        while(requeteActor.next()){
+            qWarning()<<"id mondial trouvé: "<<requeteActor.value(1);
+            if(requeteFilm.exec("SELECT * FROM film WHERE id_film ="+ requeteActor.value(1).toString())){
+                while(requeteFilm.next()){
+                    qWarning()<<"filmtrouvé: "<<requeteFilm.value(1);
+                    m_resultCounter++;
+                    film->setTitre(requeteFilm.value("titre").toString());
+                    C_miniFilm *min3 =new C_miniFilm();
+                    //ajout de la fiche a la colletion
+                    dvdtheque->addFilmLocal(i, min3);
+                    dvdtheque->getFilmLocal(i) ->setIdLocal(requeteFilm.value(0).toInt());
+                    dvdtheque->getFilmLocal(i) ->setTitre(requeteFilm.value(1).toString());
+                    dvdtheque->getFilmLocal(i) ->setAdult(requeteFilm.value(2).toBool());
+                    dvdtheque->getFilmLocal(i) ->setResum(requeteFilm.value(3).toString());
+                    dvdtheque->getFilmLocal(i) ->setAffiche(requeteFilm.value(4).toString());
+                    dvdtheque->getFilmLocal(i) ->setBackdrop(requeteFilm.value(5).toString());
+                    dvdtheque->getFilmLocal(i) ->setTitreOri(requeteFilm.value(6).toString());
+                    dvdtheque->getFilmLocal(i) ->setLanguage(requeteFilm.value(7).toString());
+                    dvdtheque->getFilmLocal(i) ->setAnnee(requeteFilm.value(8).toString());
+                    dvdtheque->getFilmLocal(i) ->setVideo(requeteFilm.value(9).toString());
+                    dvdtheque->getFilmLocal(i) ->setNote(requeteFilm.value(10).toString());
+                    dvdtheque->getFilmLocal(i) ->setVote(requeteFilm.value(11).toString());
+                    dvdtheque->getFilmLocal(i) ->setPop(requeteFilm.value(12).toString());
+                    dvdtheque->getFilmLocal(i) ->setId_online(requeteFilm.value(13).toInt());
+                    dvdtheque->getFilmLocal(i) ->setDateEnr(requeteFilm.value(14).toString());
+                    dvdtheque->getFilmLocal(i) ->setIcone(getTempoPath()+"/home.png");
+                    dvdtheque->getFilmLocal(i) ->addIcone();
+                    dvdtheque->getFilmLocal(i) ->setGenre(getGenre(requeteFilm.value(16).toInt()));
+                    dvdtheque->getFilmLocal(i) ->setLocal(true);
+                    connect(dvdtheque->getFilmLocal(i) ,SIGNAL(modifier()),this,SLOT(modification()));
+
+
+                    i++;
+                }
+            }
+            while(dvdtheque->getFilmLocal(i) ){
+                if(i<m_resultCounter){
+                    int j=0;
+                    //recupération des genre dans la table genresfilm et assignation au minifilm
+                    requeteFilm.prepare(("SELECT * FROM genresfilm WHERE id_film = "+ QString::number(dvdtheque->getFilmLocal(i)->getIdLocal())));
+                    requeteFilm.exec();
+                    while(requeteFilm.next()){
+                        dvdtheque->getFilmLocal(i) ->setGenres(j,requeteFilm.value(2).toInt());
+                        j++;
+                    }
+                    //recupération du lieu de stockage du film dans la table stockagefilm et assignation au minifilm
+                    requeteFilm.prepare(("SELECT * FROM stockagefilm WHERE id_film = "+ QString::number(dvdtheque->getFilmLocal(i)->getIdLocal())));
+                    requeteFilm.exec();
+                    while(requeteFilm.next()){
+                        dvdtheque->getFilmLocal(i) ->setStockage(requeteFilm.value(2).toString());
+                    }
+                }
+                    i++;
+
+            }
+        }
+    }
+}
+
 /**
  * @fn searchTitre(QString titre)
  * @author: Mercier Laurent

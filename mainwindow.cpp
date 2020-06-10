@@ -149,14 +149,24 @@ void MainWindow::rechercheFilm(int value)
 {
 
     //on vérifie que la db est bien connectée
-    if(m_DBState){
-        m_minifilmCountLocal= sql->filmCount(ui->ln_titre->text());
+    if(!m_DBState){
+        QMessageBox::warning(this,"Echec de connection","Echec de la connection à la base de données recherche locale impossible",QMessageBox::Ok);
+    }
+    // si c'est un tire a recherché
+    if( value ==0){
+       // m_minifilmCountLocal= sql->filmCount(ui->ln_titre->text(),value);
         sql->searchTitre(ui->ln_titre->text());
         m_minifilmCountLocal = sql->getFilmCount();
 
-    }else
+    }
+    //si c'est un acteur
+    else if (value ==1)
     {
-        QMessageBox::warning(this,"Echec de connection","Echec de la connection à la base de données recherche locale impossible",QMessageBox::Ok);
+       sql->searchPersonne(ui->ln_titre->text(), "acteur");
+    }
+    else if (value ==2)
+    {
+       sql->searchPersonne(ui->ln_titre->text(), "realis");
     }
 
 if(ui->rdb_rechDist->isChecked()){
