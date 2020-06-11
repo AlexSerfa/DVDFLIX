@@ -44,9 +44,6 @@ border-color: rgb(0, 85, 255);</string>
       <property name="text">
        <string/>
       </property>
-      <property name="pixmap">
-       <pixmap>D:/tempo68/censored.png</pixmap>
-      </property>
       <property name="scaledContents">
        <bool>true</bool>
       </property>
