@@ -154,7 +154,7 @@ void MainWindow::rechercheFilm(int value)
     }
     // si c'est un tire a recherché
     if( value ==0){
-       // m_minifilmCountLocal= sql->filmCount(ui->ln_titre->text(),value);
+        //m_minifilmCountLocal= sql->filmCount(ui->ln_titre->text(),value);
         sql->searchTitre(ui->ln_titre->text());
         m_minifilmCountLocal = sql->getFilmCount();
 
@@ -163,10 +163,12 @@ void MainWindow::rechercheFilm(int value)
     else if (value ==1)
     {
        sql->searchPersonne(ui->ln_titre->text(), "acteur");
+       m_minifilmCountLocal = sql->getFilmCount();
     }
     else if (value ==2)
     {
        sql->searchPersonne(ui->ln_titre->text(), "realis");
+       m_minifilmCountLocal = sql->getFilmCount();
     }
 
 if(ui->rdb_rechDist->isChecked()){
