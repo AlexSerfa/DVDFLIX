@@ -13,6 +13,18 @@
     <height>807</height>
    </rect>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>1368</width>
+    <height>807</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>1368</width>
+    <height>807</height>
+   </size>
+  </property>
   <property name="windowTitle">
    <string>DVDFLIX</string>
   </property>
