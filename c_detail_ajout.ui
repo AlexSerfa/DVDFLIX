@@ -16,6 +16,9 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(255, 255, 255);</string>
+  </property>
   <widget class="QPushButton" name="btn_enregistrer_detail">
    <property name="geometry">
     <rect>
@@ -24,6 +27,13 @@
      <width>75</width>
      <height>23</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: qlineargradient(spread:pad, x1:0.482412, y1:0.983, x2:0.493025, y2:0.239, stop:0 rgba(85, 170, 255, 255), stop:1 rgba(255, 255, 255, 255));
+border-color: rgb(0, 85, 255);
+border-radius: 10px;
+border-width: 1px;
+border-style: solid;</string>
    </property>
    <property name="text">
     <string>Enregistrer</string>
@@ -37,6 +47,12 @@
      <width>201</width>
      <height>20</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">border-color: rgb(0, 85, 255);
+border-radius:15px;
+border-width: 1px;
+border-style: solid;</string>
    </property>
   </widget>
   <widget class="QLabel" name="l_titre">
@@ -88,7 +104,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>ID World:</string>
+    <string>ID mondial:</string>
    </property>
   </widget>
  </widget>

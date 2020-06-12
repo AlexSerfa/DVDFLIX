@@ -209,9 +209,7 @@ void C_details::addLanguage(QString language)
  */
 void C_details::addBackdropPicture(QPixmap picture)
 {
-   // int w = ui->lbl_front->width();
-    //int h = ui->lbl_front->height();
-    //ui->lbl_back->setPixmap(picture.scaled(w,h,Qt::KeepAspectRatio));
+
 }
 
 /**
@@ -487,7 +485,7 @@ void C_details::on_btn_acteur_clicked()
 {
     QString ID = ui->txt_titre->text();
     QString ID_dist = ui->txt_id_distant->text();
-    C_detail_ajout *acteur = new C_detail_ajout(this,"Ajouter acteur",ID_dist,ID,this->ui->txt_acteur);
+    C_detail_ajout *acteur = new C_detail_ajout(this,"Ajouter un acteur",ID_dist,ID,this->ui->txt_acteur);
     acteur->setWindowTitle("Acteur");
     acteur->show();
 }
@@ -496,7 +494,7 @@ void C_details::on_btn_metteurEnScene_clicked()
 {
     QString ID = ui->txt_titre->text();
     QString ID_dist = ui->txt_id_distant->text();
-    C_detail_ajout *metteur = new C_detail_ajout(this,"Ajouter metteur en scène",ID_dist,ID,this->ui->txt_metteurEnScene);
+    C_detail_ajout *metteur = new C_detail_ajout(this,"Ajouter un metteur en scène",ID_dist,ID,this->ui->txt_metteurEnScene);
     metteur->setWindowTitle("Metteur en scène");
     metteur->show();
 }
@@ -505,7 +503,7 @@ void C_details::on_btn_realisateur_clicked()
 {
     QString ID = ui->txt_titre->text();
     QString ID_dist = ui->txt_id_distant->text();
-    C_detail_ajout *realisateur = new C_detail_ajout(this,"Ajouter réalisateur",ID_dist,ID,this->ui->txt_realisateur);
+    C_detail_ajout *realisateur = new C_detail_ajout(this,"Ajouter un réalisateur",ID_dist,ID,this->ui->txt_realisateur);
     realisateur->setWindowTitle("Réalisateur");
     realisateur->show();
 }
@@ -514,7 +512,7 @@ void C_details::on_btn_producteur_clicked()
 {
     QString ID = ui->txt_titre->text();
     QString ID_dist = ui->txt_id_distant->text();
-    C_detail_ajout *producteur = new C_detail_ajout(this,"Ajouter producteur",ID,ID_dist,this->ui->txt_producteur);
+    C_detail_ajout *producteur = new C_detail_ajout(this,"Ajouter un producteur",ID,ID_dist,this->ui->txt_producteur);
     producteur->setWindowTitle("Producteur");
     producteur->show();
 }

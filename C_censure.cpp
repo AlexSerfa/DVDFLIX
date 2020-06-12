@@ -7,6 +7,7 @@ C_Censure::C_Censure(QWidget *parent) :
 {
     ui->setupUi(this);
     this->show();
+    ui->lbl_censure->setPixmap(qApp->applicationDirPath()+"/lib_img/censored.png");
 }
 
 C_Censure::~C_Censure()
