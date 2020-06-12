@@ -242,6 +242,9 @@ border-radius:15px;
 border-width: 1px;
 border-style: solid;</string>
    </property>
+   <property name="readOnly">
+    <bool>true</bool>
+   </property>
   </widget>
   <widget class="QLabel" name="lbl_dateEnregistrement">
    <property name="geometry">

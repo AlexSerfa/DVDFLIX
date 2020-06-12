@@ -180,7 +180,7 @@ public:
 
     void resetResultCounter();
 
-    bool saveFilm(C_miniFilm  &film);
+    bool saveFilm(C_miniFilm &film, QString _date_enr);
 
     bool updateFilm(C_miniFilm  &film);
 

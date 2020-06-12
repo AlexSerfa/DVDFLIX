@@ -726,7 +726,7 @@ void C_MySQLManager::searchTitre(QString titre)
 
  */
 
-bool C_MySQLManager::saveFilm(C_miniFilm &film)
+bool C_MySQLManager::saveFilm(C_miniFilm &film, QString _date_enr)
 
 {
 
@@ -774,7 +774,7 @@ bool C_MySQLManager::saveFilm(C_miniFilm &film)
 
         requete.addBindValue(film.getId_online());//id_film
 
-        requete.addBindValue(NULL);
+        requete.addBindValue(_date_enr);
 
         requete.addBindValue(NULL);
 
