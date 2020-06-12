@@ -41,7 +41,6 @@ public:
     void listStockage();
     void idLocalDetail();
 
-
     C_miniFilm & getFilm();
     QMainWindow *getMain() const;
     void setMain(QMainWindow *main);

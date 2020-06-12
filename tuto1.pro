@@ -14,7 +14,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # In order to do so, uncomment the following line.
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
-RC_ICONS = dvd.ico
+
 SOURCES += \
     C_censure.cpp \
     C_details.cpp \
@@ -63,24 +63,9 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 DISTFILES += \
-    ../../tuto1/lib_img/censored.png \
-    ../../tuto1/lib_img/dvdflixSearch.png \
-    ../../tuto1/lib_img/home.png \
-    ../../tuto1/lib_img/logo.png \
-    ../../tuto1/lib_img/logodvdflix.png \
-    ../../tuto1/lib_img/noPicture.png \
-    ../../tuto1/lib_img/online.png \
     ../build-tuto1-Desktop_Qt_5_14_2_MinGW_32_bit-Debug/debug/dvdflix.ini \
-    dvd.ico \
     dvdflix.ini \
     img_tempo/dummy.txt \
-    lib_img/censored.png \
     lib_img/dummy.txt \
-    lib_img/dvdflixSearch.png \
-    lib_img/home.png \
-    lib_img/logo.png \
-    lib_img/logodvdflix.png \
-    lib_img/noPicture.png \
-    lib_img/online.png \
     model-wsBCTe.qmodel \
     movie0.json

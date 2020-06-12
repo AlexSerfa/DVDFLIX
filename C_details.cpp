@@ -209,7 +209,9 @@ void C_details::addLanguage(QString language)
  */
 void C_details::addBackdropPicture(QPixmap picture)
 {
-
+   // int w = ui->lbl_front->width();
+    //int h = ui->lbl_front->height();
+    //ui->lbl_back->setPixmap(picture.scaled(w,h,Qt::KeepAspectRatio));
 }
 
 /**

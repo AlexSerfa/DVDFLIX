@@ -61,7 +61,6 @@ void C_miniFilm::on_btn_details_clicked()
  detail->setFilm(*this);
  detail->listStockage();
  detail->idLocalDetail();
-
  int i=0;
  QSqlQuery requete;
  C_MySQLManager  *sql =new C_MySQLManager(this);

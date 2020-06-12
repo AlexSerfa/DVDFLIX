@@ -27,7 +27,7 @@
 #include <c_biblio.h>
 
 using namespace std;
-//test
+
 
 
 const QString urlBaseAffiche="https://image.tmdb.org/t/p/w500"; /**< adresse pour la récupération des image */
@@ -81,14 +81,15 @@ MainWindow::MainWindow(QWidget *parent)
     m_tempoPath = sql->getTempoPath();
     m_dlmanager.setPath(m_tempoPath);
 
-ui->logoSearch->setPixmap(qApp->applicationDirPath()+"/lib_img/dvdFlixSearch.png");
+ui->logoSearch->setPixmap(m_tempoPath+"/dvdFlixSearch.png");
+//ui->logoSearch->setPixmap(qApp->applicationDirPath()+"/lib_img/dvdFlixSearch.png");
 ui->logoSearch->setHidden(true);
 
 ui->cb_typeSearch->setHidden(true);
 ui->cb_typeSearch->setDisabled(true);
 ui->lbl_titre->setHidden(false);
 
-ui->lbl_logo->setPixmap(qApp->applicationDirPath()+"/lib_img/logo.png");
+
 
 }
 
@@ -491,7 +492,7 @@ void MainWindow::readJson()
             dvdtheque->getFilmOnline(counter)->setLanguage(child[j].toObject()["original_language"].toString());
             dvdtheque->getFilmOnline(counter)->setTitreOri(child[j].toObject()["original_title"].toString());
             dvdtheque->getFilmOnline(counter)->setBackdrop(child[j].toObject()["backdrop_path"].toString());
-            dvdtheque->getFilmOnline(counter)->setIcone(qApp->applicationDirPath()+"/lib_img/online.png");
+            dvdtheque->getFilmOnline(counter)->setIcone(m_tempoPath+"/online.png");
             dvdtheque->getFilmOnline(counter)->setLocal(false);
             connect(dvdtheque->getFilmOnline(counter),SIGNAL(modifier()),this,SLOT( on_btn_rechercher_clicked()));
 
@@ -525,7 +526,7 @@ void MainWindow::readJson()
 
             }
             else{
-                dvdtheque->getFilmOnline(counter)->setAffiche(qApp->applicationDirPath()+"/lib_img/noPicture.png");
+                dvdtheque->getFilmOnline(counter)->setAffiche(m_tempoPath+"/noPicture.png");
             }
             counter++;
         }
