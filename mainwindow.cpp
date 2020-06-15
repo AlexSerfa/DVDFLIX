@@ -738,38 +738,7 @@ void MainWindow::status_dbDeconnectee(){
     m_DBState = false;
     ui->lbl_db_status->setText("Database NON connectée");
 }
-/**
- * @fn getsion_prevNext_Btn()
- * @author: Mercier Laurent
- * @date 13/04/2020
- * @brief vide les layout, conteneurs des minifilms
- *
- * @param layout Layout à vider
- */
-void MainWindow::videLayout(QGridLayout *layout)
-{
-    QLayoutItem *item;
-    //qWarning()<<"layout count : "<<layout->count();
-   /* for(int i = layout->count();i>=0;i--){
-   // layout->reremoveWidget(layout->widget());
-        if(item){
-    item = layout->takeAt(i);
 
-
-    layout->removeItem(item);
-        }
-    }*/
-layout->~QGridLayout();
-  /*  while ((item = layout->takeAt(0)))
-    {
-        if (item->layout())
-        {
-            videLayout(item);
-        }
-        layout -> removeItem(item);
-        delete item;
-    }*/
-}
 /**
  * @fn getsion_prevNext_Btn()
  * @author: Mercier Laurent
