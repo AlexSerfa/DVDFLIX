@@ -264,6 +264,7 @@ QString MainWindow::formatSearch()
 
 void MainWindow::on_btn_rechercher_clicked()
 {
+        initLayout();
     int value;
     if(ui->rdb_rechDist->isChecked())value=0;
     if(ui->rdb_rechLoc->isChecked())value=ui->cb_typeSearch->currentIndex();
@@ -543,6 +544,23 @@ void MainWindow::readJson()
  *
  */
 void MainWindow::initLayout(){
+
+    int baseCount =m_minifilmCountLocal;
+    if(m_minifilmCountLocal>0){
+
+        for(int i = 0;i<baseCount;i++){
+            dvdtheque->getFilmLocal(i)->~C_miniFilm();
+            m_minifilmCountLocal=m_minifilmCountLocal-1;
+        }
+    }
+    baseCount =m_minifilmCountOnline;
+    if(m_minifilmCountOnline>0){
+        for(int i = 0;i<baseCount;i++){
+            dvdtheque->getFilmOnline(i)->~C_miniFilm();
+            m_minifilmCountOnline=m_minifilmCountOnline-1;
+        }
+    }
+
     grdt[0]= ui->grd1;
     grdt[1]= ui->grd2;
     grdt[2]= ui->grd3;
@@ -565,9 +583,8 @@ void MainWindow::initLayout(){
     grdt[19]= ui->grd20;
     grdt[20]= ui->grd21;
 
-    for(int i = 0 ; i<21; i++){
-        videLayout(grdt[i]);
-    }
+
+
 
 }
 
@@ -583,7 +600,7 @@ void MainWindow::initLayout(){
  */
 bool MainWindow::createMinifilm(){
 
-    initLayout();
+
     int filmCounter=0;
     int lastPage = 0;
 if(ui->rdb_rechDist->isChecked()|| m_minifilmCountLocal > 10)
@@ -603,6 +620,7 @@ if(ui->rdb_rechDist->isChecked()|| m_minifilmCountLocal > 10)
                         if(!dvdtheque->getFilmLocal(filmCounter)->getAdult()){
                             dvdtheque->getFilmLocal(filmCounter)->addAffiche();
                             grdt[i]->addWidget(dvdtheque->getFilmLocal(filmCounter),j,k);
+
                         }
                         //sinon on affiche un minifilm de censure
                         else
@@ -728,18 +746,29 @@ void MainWindow::status_dbDeconnectee(){
  *
  * @param layout Layout à vider
  */
-void MainWindow::videLayout(QLayout *layout)
+void MainWindow::videLayout(QGridLayout *layout)
 {
     QLayoutItem *item;
-    while ((item = layout->takeAt(0)))
+    //qWarning()<<"layout count : "<<layout->count();
+   /* for(int i = layout->count();i>=0;i--){
+   // layout->reremoveWidget(layout->widget());
+        if(item){
+    item = layout->takeAt(i);
+
+
+    layout->removeItem(item);
+        }
+    }*/
+layout->~QGridLayout();
+  /*  while ((item = layout->takeAt(0)))
     {
         if (item->layout())
         {
-            videLayout(item->layout());
+            videLayout(item);
         }
         layout -> removeItem(item);
         delete item;
-    }
+    }*/
 }
 /**
  * @fn getsion_prevNext_Btn()
