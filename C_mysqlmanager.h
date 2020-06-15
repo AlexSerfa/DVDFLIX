@@ -107,7 +107,7 @@ public:
      * @param _date_enr date d'enregistrement du film
      * @return bool indication que l'opération s'est dérouler correctement
      */
-    bool saveFilm(C_miniFilm  &film, QString _date_enr);
+    bool saveFilm(C_miniFilm  &film, QString _date_enr, QString _stock);
     /**
     * @brief   enregistrement des modification apportées à un film enregistré
     *

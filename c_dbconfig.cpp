@@ -401,8 +401,8 @@ bool C_DbConfig::creation_tbl_stockage()
     bool result = false;
     QSqlQuery query;
     try {
-        query.exec("CREATE TABLE IF NOT EXISTS `dvdflix`.`stockage` (id INT(11) PRIMARY KEY NOT NULL,"
-               "sotckage_lieu TINYTEXT NOT NULL)");
+        query.exec("CREATE TABLE IF NOT EXISTS `dvdflix`.`stockage` (ID INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,"
+               "stockage_lieu TINYTEXT NOT NULL)");
         result = true;
 
     } catch (QException) {

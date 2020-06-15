@@ -434,9 +434,10 @@ void C_details::on_btn_enregistrer_clicked()
     sql =new C_MySQLManager();
     m_film->setStockage(ui->txt_stock->text());
     QString date_enr = ui->dateEdit->text();
+    QString stock = ui->txt_stock->text();
     if(m_modif==false)
     {
-    sql->saveFilm(getFilm(), date_enr);
+    sql->saveFilm(getFilm(), date_enr, stock);
     }
    else{
         m_film->setTitre(ui->txt_titre->text());

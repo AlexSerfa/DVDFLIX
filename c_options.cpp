@@ -124,7 +124,11 @@ void C_options::on_pushButton_clicked()
     QString fixe = ui->txt_fixe->text();
     QString codeP = ui->txt_code->text();
     QString nouveauCodeP = ui->txt_nCode->text();
+    QString lieuStock = ui->txt_lieuStockage->text();
 
+
+    QSqlQuery query;
+    query.exec("INSERT INTO `dvdflix`.`stockage`(ID, stockage_lieu) VALUES ('','"+lieuStock+"')");
 
 
     /**
@@ -180,9 +184,7 @@ void C_options::on_pushButton_clicked()
             QSqlQuery q;
             q.exec("UPDATE `param` SET `tempoPath` = '"+tempoPath+"' WHERE `ID` = 1;");
             q.exec("UPDATE `param` SET `hardPath` = '"+hardPath+"' WHERE `ID` = 1;");
-
     }
-
 
 
 }

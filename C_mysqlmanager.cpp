@@ -358,12 +358,13 @@ void C_MySQLManager::searchTitre(QString titre)
  * @param film  film devant etre enregistré
  * @return bool resultat de l'opération, retourne true si enregistrement ok, false sinon.
  */
-bool C_MySQLManager::saveFilm(C_miniFilm &film, QString _date_enr)
+bool C_MySQLManager::saveFilm(C_miniFilm &film, QString _date_enr, QString _stock)
 {
     bool result  =false;
     QDate dateR;
     dateR= QstringToQDate( film.getRelease());
     QSqlQuery requete;
+
     try{
         requete.prepare("INSERT INTO `film` (`ID`, `titre`, `adulte`, `resume`, `poster_path`, `backdrop`, `titre_origin`, `langue`, `date_real`, `video`, `note`, `vote_count`, `popularity`, `id_film`, `date_enr`, `stockage`, `genre`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
         requete.addBindValue(NULL); //ID
@@ -383,7 +384,7 @@ bool C_MySQLManager::saveFilm(C_miniFilm &film, QString _date_enr)
         requete.addBindValue(film.getPop());//popularity
         requete.addBindValue(film.getId_online());//id_film
         requete.addBindValue(_date_enr);
-        requete.addBindValue(NULL);
+        requete.addBindValue(_stock);
         requete.addBindValue(film.getGenre(0));
         requete.exec();
         result =true;
