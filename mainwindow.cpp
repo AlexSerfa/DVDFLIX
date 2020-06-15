@@ -27,13 +27,10 @@
 #include <c_biblio.h>
 
 using namespace std;
-//test
 
 
 const QString urlBaseAffiche="https://image.tmdb.org/t/p/w500"; /**< adresse pour la récupération des image */
 const QString database = "dvdflix";/**< nom de la base de donnée */
-
-
 
 
 /**
@@ -71,7 +68,7 @@ MainWindow::MainWindow(QWidget *parent)
     imageChemin();
     //on connect les signaux de connection a la db
     connect(sql,SIGNAL(connected()),this,SLOT(status_dbConnectee()));
-   connect(sql,SIGNAL(disconnected()),this,SLOT(status_dbDeconnectee()));
+    connect(sql,SIGNAL(disconnected()),this,SLOT(status_dbDeconnectee()));
     //on se connect a la db
 
     sql->connection(database,Secu.getDvdFlixAdr(),Secu.getDvdFlixPort(),Secu.getDvdFlixUser(),Secu.getDvdFlixPass());
@@ -81,21 +78,19 @@ MainWindow::MainWindow(QWidget *parent)
     m_tempoPath = sql->getTempoPath();
     m_dlmanager.setPath(m_tempoPath);
 
-ui->logoSearch->setPixmap(qApp->applicationDirPath()+"/lib_img/dvdFlixSearch.png");
-ui->logoSearch->setHidden(true);
+    ui->logoSearch->setPixmap(qApp->applicationDirPath()+"/lib_img/dvdFlixSearch.png");
+    ui->logoSearch->setHidden(true);
 
-ui->cb_typeSearch->setHidden(true);
-ui->cb_typeSearch->setDisabled(true);
-ui->lbl_titre->setHidden(false);
+    ui->cb_typeSearch->setHidden(true);
+    ui->cb_typeSearch->setDisabled(true);
+    ui->lbl_titre->setHidden(false);
 
-ui->lbl_logo->setPixmap(qApp->applicationDirPath()+"/lib_img/logo.png");
+    ui->lbl_logo->setPixmap(qApp->applicationDirPath()+"/lib_img/logo.png");
 
 }
-
 /**
  * @brief destructeur
  *
- * @todo supprimer les image qui ont été télécharger lors de la dernière recherche
  *
  */
 MainWindow::~MainWindow()
@@ -103,14 +98,11 @@ MainWindow::~MainWindow()
     restoreValue();
     delete ui;
 }
-
-
 /**
  * @brief MainWindow::imageChemin
  * @author: Jovanovic Milan
  * @date 03/06/2020
- * @brief
- *     vérification et création des dossier img_tempo et lib_img
+ * @brief   vérification et création des dossier img_tempo et lib_img
  */
 void MainWindow::imageChemin()
 {
@@ -138,12 +130,15 @@ void MainWindow::imageChemin()
         QDir().mkdir(qApp->applicationDirPath()+"/lib_img");
         qWarning()<<"FIXE: n'existe pas "<<qApp->applicationDirPath();
     }
-
 }
-
-
-
-
+/**
+ * @fn rechercheFilm()
+ * @author: Mercier Laurent
+ * @date 13/05/2020
+ * @brief selectionne les fonctions a éffectuer en fonction du type de recherche demandé
+ *
+ * @param value     index du combo-box de selection du genre de recherche
+ */
 void MainWindow::rechercheFilm(int value)
 {
 
@@ -161,28 +156,26 @@ void MainWindow::rechercheFilm(int value)
     //si c'est un acteur
     else if (value ==1)
     {
-       sql->searchPersonne(ui->ln_titre->text(), "acteur");
-       m_minifilmCountLocal = sql->getFilmCount();
+        sql->searchPersonne(ui->ln_titre->text(), "acteur");
+        m_minifilmCountLocal = sql->getFilmCount();
     }
     else if (value ==2)
     {
-       sql->searchPersonne(ui->ln_titre->text(), "realis");
-       m_minifilmCountLocal = sql->getFilmCount();
+        sql->searchPersonne(ui->ln_titre->text(), "realis");
+        m_minifilmCountLocal = sql->getFilmCount();
     }
 
-if(ui->rdb_rechDist->isChecked()){
+    if(ui->rdb_rechDist->isChecked()){
 
-    //on recupere la premiere page du film correspondant apres mise en forme du titre (remplacemant des espaces par de tirets)
-    m_dlmanager.append(QUrl::fromUserInput((m_dlmanager.formatUrl(formatSearch()))),"movie0.json");
+        //on recupere la premiere page du film correspondant apres mise en forme du titre (remplacemant des espaces par de tirets)
+        m_dlmanager.append(QUrl::fromUserInput((m_dlmanager.formatUrl(formatSearch()))),"movie0.json");
 
-    connect(&m_dlmanager,SIGNAL(emptyQueue()),SLOT(getPageNumberJson()));
+        connect(&m_dlmanager,SIGNAL(emptyQueue()),SLOT(getPageNumberJson()));
+    }
+    else {
+        createMinifilm();
+    }
 }
-else {
-    createMinifilm();
-}
-}
-
-
 /**
  * @fn movieDlFinished()
  * @author: Mercier Laurent
@@ -206,7 +199,6 @@ void MainWindow::movieDlFinished()
 */
 void MainWindow::restoreValue()
 {
-
     //on réinitialise les valeurs servant a la gestion de la bibliothèque
     ui->dvdtek->setCurrentIndex(0);
     getsion_prevNext_Btn(); //les bouton previous et next
@@ -237,7 +229,7 @@ void MainWindow::restoreValue()
  *
  * @brief replacement des espaces par des tirets dans le texte du control ln_titre
  *
- * @return QString
+ * @return QString chaine de carectère formatée pour le recherche en ligne
 */
 QString MainWindow::formatSearch()
 {
@@ -246,8 +238,6 @@ QString MainWindow::formatSearch()
     do{
         i =recherche.indexOf(" ",0);
         recherche.replace(i,1,"-");
-        //DEBUG
-        //qWarning()<<recherche;
     } while (i!=-1);
     return recherche;
 }
@@ -256,15 +246,13 @@ QString MainWindow::formatSearch()
  * @author: Mercier Laurent
  * @date 07/04/2020
  *
- * @brief Lancement de la recherche en ligne a partir du titre du film
+ * @brief Lancement de la recherche a partir ddes informations saisies par l'utilisateur du film
  *
- * @todo supprimer les image telechargées durant la dernière recherche
  *
 */
-
 void MainWindow::on_btn_rechercher_clicked()
 {
-        initLayout();
+    initLayout();
     int value;
     if(ui->rdb_rechDist->isChecked())value=0;
     if(ui->rdb_rechLoc->isChecked())value=ui->cb_typeSearch->currentIndex();
@@ -273,11 +261,7 @@ void MainWindow::on_btn_rechercher_clicked()
         restoreValue();
         rechercheFilm(value);
     }
-
-
 }
-
-
 /**
  * @fn getPageNumberJson()
  * @author: Mercier Laurent
@@ -402,11 +386,9 @@ bool MainWindow::concatJSON(){
  * -ajout d'une clé "results"
  * -écriture dans le fichier saveMovies.json
  *
- * @return      bool   inutilisé dans cette version
  *
- * @todo récupérer les informations devant etre mise dans la minifiche
  */
-bool MainWindow::JsonMerge(){
+void MainWindow::JsonMerge(){
 
     QJsonArray result;
     for(int i =0; i< m_JsonSearch.count();i++){
@@ -418,14 +400,9 @@ bool MainWindow::JsonMerge(){
     concat.setObject(resultat);
     QFile saveFile(m_tempoPath+"/saveMovies.json");
     saveFile.open(QIODevice::WriteOnly);
-    qint64 byteWrite= saveFile.write(concat.toJson());
+    saveFile.write(concat.toJson());
     saveFile.close();
-    //DEBUG
-    qWarning()<<byteWrite;
-    //qWarning()<<"jsonmerge->readjson";
     readJson();
-    // emit concatEnd();
-    return true;
 
 }
 /**
@@ -440,25 +417,17 @@ bool MainWindow::JsonMerge(){
  * -ajout a la queue du downbloadManager
  * -creation de la minifilm
  * -insertion des valeur recupérées
- * -insertion dans min2[] de la fiche de chaque film
+ * -insertion dans dvdtheque->min2[] de la fiche de chaque film
  *
- *
- * @todo récupérer les informations devant etre mise dans la minifiche
- * @todo redécouper cette fonction car elle fait trop de chose à elle seule
  */
 void MainWindow::readJson()
 {
-    //DEBUG
-    //qWarning()<<"->readJson";
 
     QFile filej;
     filej.setFileName(m_tempoPath+"/saveMovies.json");
     filej.open(QIODevice::ReadOnly | QIODevice::Text);
     QByteArray val = filej.readAll();
     filej.close();
-    //DEBUG
-    //qWarning()<<"readJson->lecture fichier";
-
     QJsonDocument doc = QJsonDocument::fromJson(val);
     QJsonObject JsonObj= doc.object();
     QJsonArray arry= JsonObj.value(QString("results")).toArray();
@@ -517,9 +486,6 @@ void MainWindow::readJson()
                     //on telecharge le fichier
                     m_dlmanager.append(urlBaseAffiche+ child[j].toObject()["poster_path"].toString(),child[j].toObject()["poster_path"].toString());
 
-                }else{
-                    //DEBUG
-                    qWarning()<<"Le fichier "<< child[j].toObject()["poster_path"].toString() <<" existe deja dans le dossier";
                 }
                 //ajout de l'affiche au minifilm
                 dvdtheque->getFilmOnline(counter)->setAffiche(m_tempoPath+child[j].toObject()["poster_path"].toString());
@@ -532,7 +498,7 @@ void MainWindow::readJson()
         }
     }
     connect(&m_dlmanager,SIGNAL(startCreateMini()),this ,SLOT(createMinifilm()));
- createMinifilm();
+    createMinifilm();
 
 }
 /**
@@ -582,12 +548,7 @@ void MainWindow::initLayout(){
     grdt[18]= ui->grd19;
     grdt[19]= ui->grd20;
     grdt[20]= ui->grd21;
-
-
-
-
 }
-
 /**
  * @fn createMinifilm()
  * @author: Mercier Laurent
@@ -603,122 +564,123 @@ bool MainWindow::createMinifilm(){
 
     int filmCounter=0;
     int lastPage = 0;
-if(ui->rdb_rechDist->isChecked()|| m_minifilmCountLocal > 10)
-{    int totalResult= m_minifilmCountLocal+m_minifilmCountOnline;
-    if(totalResult>99) {
-        totalResult = 100;
-        m_minifilmCountOnline = 100;
-    }
-    //remplissage des page completes (10 minifilms)
-    for(int i = filmCounter;i<totalResult/10 && i<150;i++){
-        for(int j =0; j<2;j++){ //pour les lignes
-            for(int k =0; k<5; k++){ //pour les colones
-                if (filmCounter<m_minifilmCountLocal){
-                    //on verfie si le code paental a été entré
-                    if(!codeParentValid){
-                        //on verifie que le film n'est pas classé adult et on l'affiche
-                        if(!dvdtheque->getFilmLocal(filmCounter)->getAdult()){
+    if(ui->rdb_rechDist->isChecked()|| m_minifilmCountLocal > 10)
+    {    int totalResult= m_minifilmCountLocal+m_minifilmCountOnline;
+        if(totalResult>99) {
+            totalResult = 100;
+            m_minifilmCountOnline = 100;
+        }
+        //remplissage des page completes (10 minifilms)
+        for(int i = filmCounter;i<totalResult/10 && i<150;i++){
+            for(int j =0; j<2;j++){ //pour les lignes
+                for(int k =0; k<5; k++){ //pour les colones
+                    if (filmCounter<m_minifilmCountLocal){
+                        //on verfie si le code paental a été entré
+                        if(!codeParentValid){
+                            //on verifie que le film n'est pas classé adult et on l'affiche
+                            if(!dvdtheque->getFilmLocal(filmCounter)->getAdult()){
+                                dvdtheque->getFilmLocal(filmCounter)->addAffiche();
+                                grdt[i]->addWidget(dvdtheque->getFilmLocal(filmCounter),j,k);
+
+                            }
+                            //sinon on affiche un minifilm de censure
+                            else
+                            {
+                                C_Censure *miniCensure = new C_Censure();
+                                grdt[i]->addWidget(miniCensure,j,k);
+                            }
+                        }else{
                             dvdtheque->getFilmLocal(filmCounter)->addAffiche();
                             grdt[i]->addWidget(dvdtheque->getFilmLocal(filmCounter),j,k);
+                        }
+                        filmCounter++;
+                        lastPage =i+1;
+                    }
+                    else
+                    {
+                        //on verfie si le code paental a été entré
+                        if(!codeParentValid){
+                            //on verifie que le film n'est pas classé adult et on l'affiche
+                            if(!dvdtheque->getFilmOnline(filmCounter-(m_minifilmCountLocal))->getAdult()){
+                                dvdtheque->getFilmOnline(filmCounter-(m_minifilmCountLocal))->addAffiche();
+                                grdt[i]->addWidget(dvdtheque->getFilmOnline(filmCounter-(m_minifilmCountLocal)),j,k);
+                            }
+                            //sinon on affiche un minifilm de censure
+                            else
+                            {
+                                C_Censure *miniCensure = new C_Censure();
+                                grdt[i]->addWidget(miniCensure,j,k);
+                            }
+                        }else{
+                            dvdtheque->getFilmOnline(filmCounter-(m_minifilmCountLocal))->addAffiche();
+                            grdt[i]->addWidget(dvdtheque->getFilmOnline(filmCounter-(m_minifilmCountLocal)),j,k);
 
                         }
-                        //sinon on affiche un minifilm de censure
-                        else
-                        {
-                            C_Censure *miniCensure = new C_Censure();
-                            grdt[i]->addWidget(miniCensure,j,k);
-                        }
-                    }else{
-                        dvdtheque->getFilmLocal(filmCounter)->addAffiche();
-                        grdt[i]->addWidget(dvdtheque->getFilmLocal(filmCounter),j,k);
+                        filmCounter++;
+                        lastPage =i+1;
                     }
-                    filmCounter++;
-                    lastPage =i+1;
                 }
-                else
-                {
+            }
+        }
+        for(int j =0; j<2;j++){ //pour les lignes
+            for(int k =0; k<5; k++){ //pour les colones
+                if(filmCounter <m_minifilmCountOnline){
                     //on verfie si le code paental a été entré
                     if(!codeParentValid){
                         //on verifie que le film n'est pas classé adult et on l'affiche
                         if(!dvdtheque->getFilmOnline(filmCounter-(m_minifilmCountLocal))->getAdult()){
                             dvdtheque->getFilmOnline(filmCounter-(m_minifilmCountLocal))->addAffiche();
-                            grdt[i]->addWidget(dvdtheque->getFilmOnline(filmCounter-(m_minifilmCountLocal)),j,k);
+                            grdt[lastPage]->addWidget(dvdtheque->getFilmOnline(filmCounter-(m_minifilmCountLocal)),j,k);
                         }
                         //sinon on affiche un minifilm de censure
                         else
                         {
                             C_Censure *miniCensure = new C_Censure();
-                            grdt[i]->addWidget(miniCensure,j,k);
+                            grdt[lastPage]->addWidget(miniCensure,j,k);
                         }
-                    }else{
-                        dvdtheque->getFilmOnline(filmCounter-(m_minifilmCountLocal))->addAffiche();
-                        grdt[i]->addWidget(dvdtheque->getFilmOnline(filmCounter-(m_minifilmCountLocal)),j,k);
-
                     }
                     filmCounter++;
-                    lastPage =i+1;
                 }
             }
         }
     }
-
-
-    for(int j =0; j<2;j++){ //pour les lignes
-        for(int k =0; k<5; k++){ //pour les colones
-            if(filmCounter <m_minifilmCountOnline){
-                //on verfie si le code paental a été entré
-                if(!codeParentValid){
-                    //on verifie que le film n'est pas classé adult et on l'affiche
-                    if(!dvdtheque->getFilmOnline(filmCounter-(m_minifilmCountLocal))->getAdult()){
-                        dvdtheque->getFilmOnline(filmCounter-(m_minifilmCountLocal))->addAffiche();
-                        grdt[lastPage]->addWidget(dvdtheque->getFilmOnline(filmCounter-(m_minifilmCountLocal)),j,k);
-                    }
-                    //sinon on affiche un minifilm de censure
-                    else
-                    {
-                        C_Censure *miniCensure = new C_Censure();
-                        grdt[lastPage]->addWidget(miniCensure,j,k);
-                    }
-                }
-                filmCounter++;
-            }
-        }
-    }
-
-}
-else{
-    for(int i = 0;i<m_minifilmCountLocal && i<10;i++){
-    for(int j =0; j<2;j++){ //pour les lignes
-        for(int k =0; k<5; k++){ //pour les colones
-            if(filmCounter <m_minifilmCountLocal){
-                //on verfie si le code paental a été entré
-                if(!codeParentValid){
-                    //on verifie que le film n'est pas classé adult et on l'affiche
-                    if(!dvdtheque->getFilmLocal(filmCounter)->getAdult()){
-                        dvdtheque->getFilmLocal(filmCounter)->addAffiche();
-                        grdt[i]->addWidget(dvdtheque->getFilmLocal(filmCounter),j,k);
-                    }
-                    //sinon on affiche un minifilm de censure
-                    else
-                    {
-                        C_Censure *miniCensure = new C_Censure();
-                        grdt[lastPage]->addWidget(miniCensure,j,k);
+    else{
+        for(int i = 0;i<m_minifilmCountLocal && i<10;i++){
+            for(int j =0; j<2;j++){ //pour les lignes
+                for(int k =0; k<5; k++){ //pour les colones
+                    if(filmCounter <m_minifilmCountLocal){
+                        //on verfie si le code paental a été entré
+                        if(!codeParentValid){
+                            //on verifie que le film n'est pas classé adult et on l'affiche
+                            if(!dvdtheque->getFilmLocal(filmCounter)->getAdult()){
+                                dvdtheque->getFilmLocal(filmCounter)->addAffiche();
+                                grdt[i]->addWidget(dvdtheque->getFilmLocal(filmCounter),j,k);
+                            }
+                            //sinon on affiche un minifilm de censure
+                            else
+                            {
+                                C_Censure *miniCensure = new C_Censure();
+                                grdt[lastPage]->addWidget(miniCensure,j,k);
+                            }
+                        }
+                        filmCounter++;
                     }
                 }
-                filmCounter++;
             }
+
         }
     }
-
-}
-}
 
     getsion_prevNext_Btn();
     ui->logoSearch->setHidden(true);
     return true;
 }
 /**
- * @brief
+ * @fn status_dbConnectee()
+ * @author: Mercier Laurent
+ * @date 17/04/2020
+ * @brief   -affichage d'une messageBox avertissant que la connexion a la base de données dvdflix est opérationelle
+ *          -modification du text dans le QLabel du grp_statut en relation avec l'information de connexion a la DB
  *
  */
 void MainWindow::status_dbConnectee(){
@@ -730,7 +692,7 @@ void MainWindow::status_dbConnectee(){
  * @author: Mercier Laurent
  * @date 17/04/2020
  * @brief   -affichage d'une messageBox avertissant d'un probleme de connection a la base de données dvdflix
- *          -modification du text dans le QLabel du grp_statut en relation avec l'informaation de connexion a la DB
+ *          -modification du text dans le QLabel du grp_statut en relation avec l'information de connexion a la DB
  *
  */
 void MainWindow::status_dbDeconnectee(){
@@ -787,37 +749,6 @@ void MainWindow::on_btn_previous_clicked()
 }
 
 /**
- * @fn on_rdb_rechLoc_toggled(bool checked)
- * @author: Mercier Laurent
- * @date 13/04/2020
- * @brief definit une recherche de type locale
- *        deconnecte la base de donnée
- *
- * @param checked   état du bouton radion rdb_searchLoc
- */
-void MainWindow::on_rdb_rechLoc_toggled(bool checked)
-{
-   /* if(checked==true){
-        sql.deconnection();
-
-    }*/
-}
-
-/**
- * @fn on_rdb_rechDist_toggled(bool checked)
- * @author: Mercier Laurent
- * @date 11/04/2020
- * @brief definit une recherche de type locale et web
- *        connecte la base de donnée
- *
- * @param checked   état du bouton radion rdb_searchDist
- */
-void MainWindow::on_rdb_rechDist_toggled(bool checked)
-{
-
-}
-
-/**
  * @fn on_pushButton_clicked()
  * @author: Jovanovic Milan / Mercier Laurent
  * @date 02/06/2020
@@ -830,11 +761,8 @@ void MainWindow::on_pushButton_clicked()
 {
     Secu.LireIni();
     Secu.connection(sql);
-   C_options *options = new  C_options(this,Secu.getDvdFlixAdr(),Secu.getDvdFlixPass(),Secu.getDvdFlixUser(),Secu.getDvdFlixPort(),codeParentLu,sql);
-  options->show();
-}
-void MainWindow::on_btn_option_clicked()
-{
+    C_options *options = new  C_options(this,Secu.getDvdFlixAdr(),Secu.getDvdFlixPass(),Secu.getDvdFlixUser(),Secu.getDvdFlixPort(),codeParentLu,sql);
+    options->show();
 }
 /**
  * @fn on_txt_codeParent_textChanged(const QString &arg1)
@@ -875,16 +803,27 @@ void MainWindow::on_btn_valideCodeparent_clicked()
         on_btn_rechercher_clicked();
     }
 }
-C_biblio *MainWindow::getDvdtheque() const
-{
-    return dvdtheque;
-}
+
+/**
+ * @fn on_rdb_rechLoc_clicked()
+ * @author: Mercier Laurent
+ * @date 03/06/2020
+ * @brief   gestion de l'activation du radio bouton de recherche locale uniquement
+ *
+ */
 void MainWindow::on_rdb_rechLoc_clicked()
 {
     ui->cb_typeSearch->show();
     ui->cb_typeSearch->setDisabled(false);
     ui->lbl_titre->setHidden(true);
 }
+/**
+ * @fn on_rdb_rechDist_clicked()
+ * @author: Mercier Laurent
+ * @date 03/06/2020
+ * @brief   gestion de l'activation du radio bouton de recherche distante et locale
+ *
+ */
 void MainWindow::on_rdb_rechDist_clicked()
 {
     ui->cb_typeSearch->setHidden(true);
