@@ -25,11 +25,9 @@ SOURCES += \
     c_biblio.cpp \
     c_dbconfig.cpp \
     c_detail_ajout.cpp \
-    c_filesaver.cpp \
     c_options.cpp \
     main.cpp \
-    mainwindow.cpp \
-    testclasse.cpp
+    mainwindow.cpp
 
 HEADERS += \
     C_censure.h \
@@ -41,10 +39,8 @@ HEADERS += \
     c_biblio.h \
     c_dbconfig.h \
     c_detail_ajout.h \
-    c_filesaver.h \
     c_options.h \
-    mainwindow.h \
-    testclasse.h
+    mainwindow.h
 
 FORMS += \
     C_censure.ui \
