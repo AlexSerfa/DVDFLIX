@@ -4,7 +4,7 @@
 #include <QString>
 #include <QSqlQuery>
 
-/**/
+
 C_detail_ajout::C_detail_ajout(QWidget *parent, QString titre, QString m_ID,QString titreFilm_1, QTextEdit *nom) :
     QDialog(parent),
     ui(new Ui::C_detail_ajout)
@@ -57,9 +57,6 @@ void C_detail_ajout::on_btn_enregistrer_detail_clicked()
     query.exec("INSERT INTO `dvdflix`.`prod`(ID, ID_film, prod) VALUES ('','"+ID_Mondial+"','"+ajoutCnt+"')");
     }
 
-
-    qWarning()<<"Acteur : "<<ajout;
-    qWarning()<<"ID Local:"<<ID_Mondial;
 
 
     this->close();

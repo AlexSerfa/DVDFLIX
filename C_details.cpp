@@ -457,8 +457,6 @@ void C_details::on_btn_enregistrer_clicked()
         ui->cbb_stockage->setEnabled(false);
     }
     ui->btn_enregistrer->setEnabled(false);
-    //DEBUG
-    qWarning()<<"emission du signal de details enregister";
     emit modifier();
 
 }

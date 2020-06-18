@@ -166,8 +166,7 @@ void C_downloadmanager::startNextDownload()
     connect(currentDownload, SIGNAL(readyRead()),
             SLOT(downloadReadyRead()));
 
-    //DEBUG
-    qWarning()<<"Téléchargement :"<< url.toEncoded().constData();
+
     downloadTimer.start();
 }
 

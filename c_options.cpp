@@ -128,7 +128,7 @@ void C_options::on_pushButton_clicked()
 
 
     QSqlQuery query;
-    query.exec("INSERT INTO `dvdflix`.`stockage`(ID, stockage_lieu) VALUES ('','"+lieuStock+"')");
+    if(lieuStock.length()>1) query.exec("INSERT INTO `dvdflix`.`stockage`(ID, stockage_lieu) VALUES ('','"+lieuStock+"')");
 
 
     /**
@@ -147,24 +147,10 @@ void C_options::on_pushButton_clicked()
     }
     else
     {
-
-
-  /*      this->update(nom_utilisateur, mdp, adresse, port.toInt());
-
-        this->upd_param = QSqlDatabase::addDatabase("QMYSQL","aaa");
-        upd_param.setHostName(adresse);
-        upd_param.setDatabaseName("dvdflix");
-        upd_param.setUserName(nom_utilisateur);
-        upd_param.setPassword(mdp);
-        upd_param.setPort(port.toInt());
-        bool ok = upd_param.open();
-*/
         //sql names
         QString tempoPath = ui->txt_tempo->text();
         QString hardPath = ui->txt_fixe->text();
-        //DEBUG
-        qWarning()<<"codep :"<<codeP;
-        qWarning()<<"code LU  :"<<m_codeParentalLu;
+
         if(codeP  == m_codeParentalLu && codeP.length() ==4)
         {
             /* création de la Regex */
@@ -172,9 +158,6 @@ void C_options::on_pushButton_clicked()
             if( nouveauCodeP.contains(Exp)){
                 QSqlQuery c(upd_param);
                 c.exec("UPDATE `param` SET `codeParental` = '"+nouveauCodeP+"' WHERE `ID` = 1;");
-
-                //DEBUG
-                qDebug()<<"Code parental modifié";
             }else{
                 qWarning()<<"erreur de format";
                 ui->error_list->setText("Le code parental doit etre de 4 chiffres");
@@ -187,24 +170,6 @@ void C_options::on_pushButton_clicked()
     }
 
 
-}
-
-void C_options::infoConnection()
-{
-  //  qDebug() << "Ok - ouverture de la base de donnée";
-  //  ui->error_list->setText("Connexion réussie");
-  //  disconnect(sql,SIGNAL(connected()),this,SLOT(infoConnection()));
-
-
-
-}
-
-void C_options::infoDeconnection()
-{
-  //  qDebug() << "KO - ouverture de la base de donnée échec";
-  //  ui->error_list->setText("Connexion non réussie");
-  //  disconnect(sql,SIGNAL(connected()),this,SLOT(infoConnection()));
-  //  disconnect(sql,SIGNAL(disconnected()),this,SLOT(infoDeconnection()));
 }
 
 void C_options::setSql(C_MySQLManager *value)
@@ -296,14 +261,11 @@ void C_options::on_pushButton_modifier_clicked()
 
     if(adrdbSecu.length()>5 && portdbSecu.length()>0){
         ofstream f;
-
         QDir::setCurrent(qApp->applicationDirPath());
         f.open("dvdflix.ini");
-
         f<<adrdbSecu.toLocal8Bit().constData()<<endl;
         f<<portdbSecu.toLocal8Bit().constData()<<endl;
         f.close();
-        //this->close();
         ui->txt_adresse->setText(adrdbSecu);
         ui->txt_port->setText(portdbSecu);
 

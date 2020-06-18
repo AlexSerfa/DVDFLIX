@@ -19,7 +19,6 @@ void C_biblio::addFilmLocal(int index, C_miniFilm *film)
 
 C_miniFilm * C_biblio::getFilmLocal(int index)
 {
-
     return min1[index];
 }
 

@@ -49,7 +49,6 @@ public:
 private slots:
     void on_pushButton_clicked();
 
-
     void on_pushButton_modifier_clicked();
 
     void on_pushButton_cheminTempo_clicked();
@@ -62,14 +61,8 @@ public slots:
      * @brief
      *
      */
-    void infoConnection();
-    /**
-     * @brief
-     *
-     */
     void update(QString nomUt, QString pass, QString adr, int port);
 
-    void infoDeconnection();
 private:
     Ui::C_options *ui;
     C_MySQLManager *sql;

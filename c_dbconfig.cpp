@@ -374,9 +374,7 @@ bool C_DbConfig::creation_tbl_param()
     QSqlQuery query;
     try {
         QString cheminTempo = qApp->applicationDirPath()+"/img_tempo";
-             QString cheminFixe = qApp->applicationDirPath()+"/lib_img";
-             qWarning()<<cheminTempo;
-             qWarning()<<cheminFixe;
+        QString cheminFixe = qApp->applicationDirPath()+"/lib_img";
         query.exec("CREATE TABLE IF NOT EXISTS `dvdflix`.`param` (ID INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,"
            "tempoPath TINYTEXT NOT NULL,"
            "hardPath TINYTEXT NOT NULL,"

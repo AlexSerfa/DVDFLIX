@@ -225,10 +225,8 @@ void C_MySQLManager::searchPersonne (QString nom, QString table){
     QSqlQuery requeteFilm;
     if(requeteActor.exec("SELECT * FROM "+table+" WHERE "+table+"."+table+"  LIKE '%"+nom+"%'" )){
         while(requeteActor.next()){
-            qWarning()<<"id mondial trouvé: "<<requeteActor.value(1);
             if(requeteFilm.exec("SELECT * FROM film WHERE id_film ="+ requeteActor.value(1).toString())){
                 while(requeteFilm.next()){
-                    qWarning()<<"filmtrouvé: "<<requeteFilm.value(1);
                     m_resultCounter++;
                     film->setTitre(requeteFilm.value("titre").toString());
                     C_miniFilm *min3 =new C_miniFilm();

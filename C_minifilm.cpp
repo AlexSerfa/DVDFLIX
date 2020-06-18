@@ -31,7 +31,10 @@ C_miniFilm::~C_miniFilm()
 }
 
 /**
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief gère le clique sur le bouton "details" et ouvre la fenetre de détails concernant le film
+ *          -recupère le genre du film dans la base de données
  *
  */
 void C_miniFilm::on_btn_details_clicked()
@@ -72,14 +75,8 @@ void C_miniFilm::on_btn_details_clicked()
      i++;
  }
 
- /**
-  * @TODO gérer le passage de la backdrop après téléchargement de l'image
-  */
  detail->addAffichePicture(this->getAffiche());
  connect(detail,SIGNAL(modifier()),this,SLOT(modification()));
-
-
-
 
 }
 
@@ -89,6 +86,8 @@ void C_miniFilm::on_btn_details_clicked()
 
 
 /**
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief retournourne le nombre de vote pour ce film
  *
  * @return QString
@@ -99,6 +98,8 @@ QString C_miniFilm::getVote() const
 }
 
 /**
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief stock le nombre de vote pour ce film
  *
  * @param vote
@@ -108,45 +109,92 @@ void C_miniFilm::setVote(const QString &vote)
     m_vote = vote;
 }
 
+/**
+ * @author: Mercier Laurent
+ * @date 01/05/2020
+ * @brief retourne la date d'enregistrement du film
+ *
+ * @return QString  date d'enregistrement
+ */
 QString C_miniFilm::getDateEnr() const
 {
     return m_date_enregistrement;
 }
 
+/**
+ * @author: Mercier Laurent
+ * @date 01/05/2020
+ * @brief stock la date d'enregistrement dans la base de données
+ *
+ * @param DateEnr   date d'enregistrement
+ */
 void C_miniFilm::setDateEnr(const QString &DateEnr)
 {
     m_date_enregistrement = DateEnr;
 }
 
+/**
+ * @author: Mercier Laurent
+ * @date 01/05/2020
+ * @brief definit si le film est un film local
+ *
+ * @param value true si local, false si distant
+ */
 void C_miniFilm::setLocal(bool value)
 {
     m_local=value;
 }
 
+/**
+ * @author: Mercier Laurent
+ * @date 01/05/2020
+ * @brief   retourne true si c'est un film local
+ *
+ * @return bool true si loca, false si distant
+ */
 bool C_miniFilm::getLocal() const
 {
     return m_local;
 }
 
+/**
+ * @author: Mercier Laurent
+ * @date 01/05/2020
+ * @brief   stock le lieu de stockage du film
+ *
+ * @param stock lieu de stockage
+ */
 void C_miniFilm::setStockage(QString stock)
 {
     m_stockage=stock;
 }
 
+/**
+ * @author: Mercier Laurent
+ * @date 01/05/2020
+ * @brief   retourne le lieux de stockage du film
+ *
+ * @return QString
+ */
 QString C_miniFilm::getStockage()
 {
     return m_stockage;
 }
 
+/**
+ * @author: Mercier Laurent
+ * @date 15/05/2020
+ * @brief propagation du signal de modification de la fiche de détails du film
+ *
+ */
 void C_miniFilm::modification()
 {
-   //DEBUG
-   // qWarning()<<"emission du signal de minifilm";
-
     emit modifier();
 }
 
 /**
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief retourne le lien pour le trailer du film
  *
  * @return QString
@@ -157,6 +205,8 @@ QString C_miniFilm::getVideo() const
 }
 
 /**
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief stock le lien du trailer du film
  *
  * @param video
@@ -167,6 +217,8 @@ void C_miniFilm::setVideo(const QString &video)
 }
 
 /**
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief retourne la date de réalisation du film
  *
  * @return QString
@@ -177,6 +229,8 @@ QString C_miniFilm::getRelease() const
 }
 
 /**
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief stock la date de réalisation du film
  *
  * @param release
@@ -187,6 +241,8 @@ void C_miniFilm::setRelease(const QString &release)
 }
 
 /**
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief retourne la popularité du film
  *
  * @return float
@@ -197,6 +253,8 @@ QString C_miniFilm::getPop() const
 }
 
 /**
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief stock la popularité du film
  *
  * @param pop
@@ -207,6 +265,8 @@ void C_miniFilm::setPop(QString pop)
 }
 
 /**
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief retourne le résumé du film
  *
  * @return QString
@@ -217,6 +277,8 @@ QString C_miniFilm::getResum() const
 }
 
 /**
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief stock le résumé du film
  *
  * @param resum
@@ -227,6 +289,8 @@ void C_miniFilm::setResum(const QString &resum)
 }
 
 /**
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief retourne le titre original du film
  *
  * @return QString
@@ -237,6 +301,8 @@ QString C_miniFilm::getTitreOri() const
 }
 
 /**
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief stock le titre original du film
  *
  * @param titreOri
@@ -247,6 +313,8 @@ void C_miniFilm::setTitreOri(const QString &titreOri)
 }
 
 /**
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief retourne le language du film
  *
  * @return QString
@@ -257,6 +325,8 @@ QString C_miniFilm::getLanguage() const
 }
 
 /**
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief stock le language du film
  *
  * @param language
@@ -267,6 +337,8 @@ void C_miniFilm::setLanguage(const QString &language)
 }
 
 /**
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief retourne l'identifiant en ligne du film
  *
  * @return int
@@ -277,6 +349,8 @@ int C_miniFilm::getId_online() const
 }
 
 /**
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief stock l'identifiant en ligne du film
  *
  * @param id_online
@@ -287,6 +361,8 @@ void C_miniFilm::setId_online(int id_online)
 }
 
 /**
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief retourne l'identifiant du film dans la database local
  *
  * @return int
@@ -297,6 +373,8 @@ int C_miniFilm::getIdLocal() const
 }
 
 /**
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief stock l'identifiant du film dans la database local
  *
  * @param idLocal
@@ -307,6 +385,8 @@ void C_miniFilm::setIdLocal(int idLocal)
 }
 
 /**
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief retourne le non du fichier de l'image arrière de la jacquette
  *
  * @return QString nom du fichier
@@ -317,6 +397,8 @@ QString C_miniFilm::getBackdrop() const
 }
 
 /**
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief   stock la valeur du nom de fichier de l'image arière de la jacquette
  *
  * @param backdrop  pointeur sur le nom de l'image
@@ -327,6 +409,8 @@ void C_miniFilm::setBackdrop(const QString &backdrop)
 }
 
 /**
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief stock la valeur du genre à l'index spécifié en paramètre
  *
  * @param index index du tableau des genre
@@ -338,6 +422,8 @@ void C_miniFilm::setGenres(int index,int genre)
 }
 
 /**
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief retourne la valeur du genre à l'index spécifié en paramètre
  *
  * @param index
@@ -349,6 +435,8 @@ int C_miniFilm::getGenre(int index)
 }
 
 /**
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief retourne l'information indiquant si c'est un film pour adulte
  *
  * @return bool true si film adulte, et false dans le cas contraire
@@ -359,6 +447,8 @@ bool C_miniFilm::getAdult() const
 }
 
 /**
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief stock l'information indiquant si c'est un film pour adulte
  *
  * @param adult true si film adulte, et false dans le cas contraire
@@ -368,6 +458,8 @@ void C_miniFilm::setAdult(bool adult)
     m_adult = adult;
 }
 /**
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief stockage et affichage dans le qwidget correspondant du titre du film
  *
  * @param titre titre du film
@@ -379,6 +471,8 @@ void C_miniFilm::setTitre(QString titre)
 }
 
 /**
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief
  *
  * @return QString
@@ -388,6 +482,8 @@ QString C_miniFilm::getTitre()
     return m_titre;
 }
 /**
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief affichage de la date dans le qwidget correspondant
  *
  * @param annee année de réalisation du film
@@ -399,6 +495,8 @@ void C_miniFilm::setAnnee(QString annee)
 }
 
 /**
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief Affichage du genre principal dans le qwidget correspondant
  *
  * @param genre genre principal de l'oeuvre
@@ -408,6 +506,8 @@ void C_miniFilm::setGenre(QString genre)
     ui->lbl_genre->setText(genre);
 }
 /**
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief stockage du nom du fichier de la face avant de la jacquette du film
  *
  * @param img nom du fichier
@@ -417,31 +517,47 @@ void C_miniFilm::setAffiche(QString img){
     m_Affiche=img;
 }
 /**
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief ajout de l'image dans le control correspondant
  *
  */
 void C_miniFilm::addAffiche(){
-  //  if(m_local){
-  //  ui->lbl_affiche->setPixmap(directoryHard + "/"+ m_Affiche);
-  //  }
-  //  else{
-    //DEBUG
-    qWarning()<<"affiche: "<<m_Affiche;
+
          ui->lbl_affiche->setPixmap(m_Affiche);
-  //  }
 }
 
+/**
+ * @author: Mercier Laurent
+ * @date 01/05/2020
+ * @brief   stock l'icone du film dans le membre
+ *
+ * @param img   chemin de l'image de l'icone
+ */
 void C_miniFilm::setIcone(QString img)
 {
     m_Icone=img;
     addIcone();
 }
+/**
+ * @author: Mercier Laurent
+ * @date 01/05/2020
+ * @brief retourne l'icone du film
+ *
+ * @return QString icone du film
+ */
 QString C_miniFilm::getIcone()
 {
         return m_Icone;
 }
 
 
+/**
+ * @author: Mercier Laurent
+ * @date 01/05/2020
+ * @brief ajout de l'icone definissant un film local ou distant
+ *
+ */
 void C_miniFilm::addIcone()
 {
 
@@ -449,6 +565,8 @@ void C_miniFilm::addIcone()
 }
 
 /**
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief retourne la note du film
  *
  * @return QString note du film
@@ -458,6 +576,8 @@ QString C_miniFilm::getNote() const
     return m_notation;
 }
 /**
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief stock la note du film
  *
  * @param note note du film
@@ -469,6 +589,8 @@ void C_miniFilm::setNote(QString note)
 }
 
 /**
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief retourne le nom du fichier de l'image de la face avant de la jacquette
  *
  * @return QString nom du fichier
