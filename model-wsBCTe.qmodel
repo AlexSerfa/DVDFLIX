@@ -155,7 +155,7 @@
                    </qlist>
                   </elements>
                   <last-modified>1588826821301</last-modified>
-                  <toolbarid>General</toolbarid>
+                  <toolbarid>Deployment</toolbarid>
                  </MDiagram>
                 </base-MDiagram>
                </MCanvasDiagram>
@@ -864,161 +864,161 @@
                                                   <qlist>
                                                    <item>
                                                     <MClassMember>
-                                                     <uid>{eb3f6202-adc1-46da-aa1d-788f2386c858}</uid>
+                                                     <uid>{df40aecc-dca2-4940-a5d1-a7f08adede24}</uid>
                                                      <type>1</type>
                                                      <declaration>-isHttpRedirect(): void</declaration>
                                                     </MClassMember>
                                                    </item>
                                                    <item>
                                                     <MClassMember>
-                                                     <uid>{3448751a-6b49-4c26-8321-00849cd6765b}</uid>
+                                                     <uid>{a91735d6-2908-476e-8493-1bee44e6df35}</uid>
                                                      <type>1</type>
                                                      <declaration>-m_numeroPage: int</declaration>
                                                     </MClassMember>
                                                    </item>
                                                    <item>
                                                     <MClassMember>
-                                                     <uid>{b6752bc1-0cac-430b-b264-d044bf172326}</uid>
+                                                     <uid>{b5991ba7-b2b8-4090-9a49-f3d2b6a4f2fc}</uid>
                                                      <type>1</type>
                                                      <declaration>-m_filename: QString</declaration>
                                                     </MClassMember>
                                                    </item>
                                                    <item>
                                                     <MClassMember>
-                                                     <uid>{ae634985-b636-4ae3-b2d8-d7f10cd42179}</uid>
+                                                     <uid>{39c87c39-3e8a-41c9-bf93-43df9505bdb0}</uid>
                                                      <type>1</type>
                                                      <declaration>-manager: QNetworkAccessManager</declaration>
                                                     </MClassMember>
                                                    </item>
                                                    <item>
                                                     <MClassMember>
-                                                     <uid>{bcb2781f-9239-4fcf-a303-7e14a02ff64a}</uid>
+                                                     <uid>{fd521574-2499-4628-842b-0ba7aeb902f9}</uid>
                                                      <type>1</type>
                                                      <declaration>-downloadQueue:QQueue&lt;QUrl&gt;</declaration>
                                                     </MClassMember>
                                                    </item>
                                                    <item>
                                                     <MClassMember>
-                                                     <uid>{5f1e4ec1-f969-40de-8757-2b76d210fd6a}</uid>
+                                                     <uid>{3011442b-cf43-45f7-88ea-7e8c3598dfb0}</uid>
                                                      <type>1</type>
                                                      <declaration>-fileNameQueue: QQueue&lt;QString&gt;</declaration>
                                                     </MClassMember>
                                                    </item>
                                                    <item>
                                                     <MClassMember>
-                                                     <uid>{93f2fe58-bc54-47ac-bafb-a79938102b22}</uid>
+                                                     <uid>{c38b08fc-4afe-47b4-86c2-b20750f32ee1}</uid>
                                                      <type>1</type>
                                                      <declaration>-*currentDownload: QNetworkReplay</declaration>
                                                     </MClassMember>
                                                    </item>
                                                    <item>
                                                     <MClassMember>
-                                                     <uid>{6100f7e1-4366-42c8-b64e-912d89e6a250}</uid>
+                                                     <uid>{b4fe00c9-bf55-4deb-9fcf-a3d24a073450}</uid>
                                                      <type>1</type>
                                                      <declaration>-output: QFile</declaration>
                                                     </MClassMember>
                                                    </item>
                                                    <item>
                                                     <MClassMember>
-                                                     <uid>{fbb7a22c-a74e-440a-b73b-aab6f465e830}</uid>
+                                                     <uid>{9ce828df-c7bc-497f-ad8f-46b86e1ddfab}</uid>
                                                      <type>1</type>
                                                      <declaration>-downloadTimer: QElapsedTimer</declaration>
                                                     </MClassMember>
                                                    </item>
                                                    <item>
                                                     <MClassMember>
-                                                     <uid>{af358c49-5cb4-4958-8aee-389c32c06aa5}</uid>
+                                                     <uid>{994304bb-6e8d-43b3-b11a-08d61d5b68ba}</uid>
                                                      <type>1</type>
                                                      <declaration>-startNextDownload(): void</declaration>
                                                     </MClassMember>
                                                    </item>
                                                    <item>
                                                     <MClassMember>
-                                                     <uid>{64538d1d-823c-4569-8c72-a3a95291f543}</uid>
+                                                     <uid>{915fa642-3589-4c9d-8d2e-d2cec13da306}</uid>
                                                      <type>1</type>
                                                      <declaration>-downloadFinished(): void</declaration>
                                                     </MClassMember>
                                                    </item>
                                                    <item>
                                                     <MClassMember>
-                                                     <uid>{fd699ebb-718c-4f7d-b011-a3b139f8b59c}</uid>
+                                                     <uid>{750336ac-9112-4b2e-84df-6ec923086044}</uid>
                                                      <type>1</type>
                                                      <declaration>-downloadReadyRead(): void</declaration>
                                                     </MClassMember>
                                                    </item>
                                                    <item>
                                                     <MClassMember>
-                                                     <uid>{de49a55d-a78e-4874-be23-9b11ecd14353}</uid>
+                                                     <uid>{dd67206b-8283-4f82-9bc2-46221a40038b}</uid>
                                                      <type>1</type>
                                                      <declaration>+C_downloadmanager(QObject *parent = nullptr): explicit</declaration>
                                                     </MClassMember>
                                                    </item>
                                                    <item>
                                                     <MClassMember>
-                                                     <uid>{5c5de2b1-f11a-4514-ab20-3b453d04f30b}</uid>
+                                                     <uid>{75262627-a1b3-432f-80a3-d2953f051e41}</uid>
                                                      <type>1</type>
                                                      <declaration>+formatUrl(QString film): QString</declaration>
                                                     </MClassMember>
                                                    </item>
                                                    <item>
                                                     <MClassMember>
-                                                     <uid>{257b6b50-1484-4b85-b0d0-5e360f3d767f}</uid>
+                                                     <uid>{933163fd-c826-422c-b031-9ab71ab0880f}</uid>
                                                      <type>1</type>
                                                      <declaration>+formatUrl(QString film, int page): QString</declaration>
                                                     </MClassMember>
                                                    </item>
                                                    <item>
                                                     <MClassMember>
-                                                     <uid>{6c4ae50c-6db8-4095-9185-b44e2a59d24d}</uid>
+                                                     <uid>{804b96ca-14bf-4a74-b67f-8f68ce60806f}</uid>
                                                      <type>1</type>
                                                      <declaration>+append(const QStringList &amp;url, QString filename): void</declaration>
                                                     </MClassMember>
                                                    </item>
                                                    <item>
                                                     <MClassMember>
-                                                     <uid>{e528e635-6fd3-47e1-a302-2866aed96fcd}</uid>
+                                                     <uid>{8b738642-9f45-4a66-908c-7cc833afe47c}</uid>
                                                      <type>1</type>
                                                      <declaration>+append(const QUrl &amp;url, QString filename): void</declaration>
                                                     </MClassMember>
                                                    </item>
                                                    <item>
                                                     <MClassMember>
-                                                     <uid>{dea6cd12-df54-4e93-9356-eef2ba03b019}</uid>
+                                                     <uid>{3339f218-bbcd-497f-8bdd-05edb32227c2}</uid>
                                                      <type>1</type>
                                                      <declaration>+saveFileName(const QUrl &amp;url): QString</declaration>
                                                     </MClassMember>
                                                    </item>
                                                    <item>
                                                     <MClassMember>
-                                                     <uid>{7f2e0c5b-d4ab-4e6a-b4b9-aa4e635de424}</uid>
+                                                     <uid>{45c3f3b7-567e-48da-831f-240b20582d4d}</uid>
                                                      <type>1</type>
                                                      <declaration>+setDlType(QString type): void</declaration>
                                                     </MClassMember>
                                                    </item>
                                                    <item>
                                                     <MClassMember>
-                                                     <uid>{8708ecd3-a236-4891-af23-1afef9067d09}</uid>
+                                                     <uid>{4f4bd95a-0e0d-42ee-96c6-f56fca768e8e}</uid>
                                                      <type>1</type>
                                                      <declaration>+m_uniqueFile: bool</declaration>
                                                     </MClassMember>
                                                    </item>
                                                    <item>
                                                     <MClassMember>
-                                                     <uid>{e03467ff-c22e-4061-b352-1e1aabedff48}</uid>
+                                                     <uid>{72d44554-96dd-45d7-be0f-dca40262e9eb}</uid>
                                                      <type>1</type>
                                                      <declaration>+finished(): void</declaration>
                                                     </MClassMember>
                                                    </item>
                                                    <item>
                                                     <MClassMember>
-                                                     <uid>{05271800-3e95-48e8-9579-28c9ad26f8f2}</uid>
+                                                     <uid>{cf1e201a-998a-454c-b2f4-0a32b0eb8faa}</uid>
                                                      <type>1</type>
                                                      <declaration>+emptyQueue(): void</declaration>
                                                     </MClassMember>
                                                    </item>
                                                    <item>
                                                     <MClassMember>
-                                                     <uid>{3561ca3e-f760-4cef-a4cc-e7da21677c02}</uid>
+                                                     <uid>{e597f107-d8c9-4531-a1d2-ef4eb8e934a0}</uid>
                                                      <type>1</type>
                                                      <declaration>+startCreateMini(): void</declaration>
                                                     </MClassMember>

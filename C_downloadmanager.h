@@ -48,7 +48,6 @@ public:
      * @param filename
      */
     void append(const QUrl &url,QString filename);
- //   void append(const QUrl &url, const QString filename);
     /**
      * @brief
      *
@@ -56,13 +55,7 @@ public:
      * @return QString
      */
     QString saveFileName(const QUrl &url);
-    /**
-     * @brief
-     *
-     * @param type
-     */
-    void setDlType(QString type);
-    bool m_uniqueFile;
+
 signals:
     /**
      * @brief
@@ -94,12 +87,11 @@ private:
     void reportRedirect();
     int m_numeroPage; /**< TODO: describe */
     QString m_tempoPath;
-    QString m_filename; /**< TODO: describe */
     QNetworkAccessManager manager; /**< TODO: describe */
     QQueue<QUrl> downloadQueue; /**< TODO: describe */
     QQueue<QString> fileNameQueue; /**< TODO: describe */
     QNetworkReply *currentDownload = nullptr; /**< TODO: describe */
-    QFile output; /**< TODO: describe */
+    QFile output; /**< nom du fichier à écrire sur le disque */
     QElapsedTimer downloadTimer; /**< TODO: describe */
 
 

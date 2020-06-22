@@ -55,21 +55,22 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
 
-    qWarning()<<this;
+
     C_DbConfig *Config = new C_DbConfig(this);
     Config->MainDbConfig();
     Config->~C_DbConfig();
     dvdtheque =new C_biblio();
     sql= new C_MySQLManager(this,dvdtheque);
     Secu.LireIni();
+     //on se connect a la db secu
     sql->connection("security",Secu.getBDdvdAdr(),Secu.getBDdvdPort(),Secu.getBDdvdUser(),Secu.getBDdvdPass());
-    Secu.connection(sql);
+    Secu.connection();
     ui->setupUi(this);
     imageChemin();
     //on connect les signaux de connection a la db
     connect(sql,SIGNAL(connected()),this,SLOT(status_dbConnectee()));
     connect(sql,SIGNAL(disconnected()),this,SLOT(status_dbDeconnectee()));
-    //on se connect a la db
+    //on se connect a la db dvdflix
 
     sql->connection(database,Secu.getDvdFlixAdr(),Secu.getDvdFlixPort(),Secu.getDvdFlixUser(),Secu.getDvdFlixPass());
     connect(sql,SIGNAL(modifier()),this, SLOT(on_btn_rechercher_clicked()));
@@ -280,8 +281,6 @@ void MainWindow::on_btn_rechercher_clicked()
 void MainWindow::getPageNumberJson(){
     //deconnection du signal de fin de telechargement
     disconnect(&m_dlmanager,SIGNAL(emptyQueue()),this,SLOT(getPageNumberJson()));
-    //DEBUG
-    //qWarning()<<"->getPageNumberJson()";
     // reset du compteur de page a dl
     m_pageNumber=0;
     //creation d'un qbyteArray pour le stockage des données lue
@@ -667,7 +666,6 @@ bool MainWindow::createMinifilm(){
                     }
                 }
             }
-
         }
     }
 
@@ -760,7 +758,7 @@ void MainWindow::on_btn_previous_clicked()
 void MainWindow::on_pushButton_clicked()
 {
     Secu.LireIni();
-    Secu.connection(sql);
+    Secu.connection();
     C_options *options = new  C_options(this,Secu.getDvdFlixAdr(),Secu.getDvdFlixPass(),Secu.getDvdFlixUser(),Secu.getDvdFlixPort(),codeParentLu,sql);
     options->show();
 }

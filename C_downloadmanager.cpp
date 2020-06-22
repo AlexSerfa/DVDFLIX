@@ -15,7 +15,6 @@ const QString defaultUrl = " https://api.themoviedb.org/3/"; /**< TODO: describe
  */
 C_downloadmanager::C_downloadmanager(QObject *parent)
     : QObject(parent)
-      ,m_uniqueFile(true)
       ,m_numeroPage(0)
 {
 
