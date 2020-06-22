@@ -11,8 +11,7 @@ const QString passSecu = "admin";
  * @fn c_bddsecu
  * @author: Jovanovic Milan
  * @date 15/05/2020
- * @brief
- *         création d'une nouvelle bdd sécurité
+ * @brief   Constructeur
  *
  *
  */
@@ -27,8 +26,6 @@ void C_bddSecu::LireIni()
 {
     ifstream f;
     QDir::setCurrent(qApp->applicationDirPath());
-    //DEBUG
-    qWarning()<<"appli path: "<<qApp->applicationDirPath();
     f.open("dvdflix.ini");
 
     string adr;
@@ -44,7 +41,7 @@ void C_bddSecu::LireIni()
     setBDdvdPass(passSecu);
     setBDdvdUser(userSecu);
 }
-void C_bddSecu::connection(C_MySQLManager *_sql)
+void C_bddSecu::connection()
 {
         QSqlQuery requete;
         requete.prepare("SELECT * FROM `bddsecu` WHERE `ID` = 1");

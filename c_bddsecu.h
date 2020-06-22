@@ -10,11 +10,6 @@
 #include <QSqlError>
 #include <QPluginLoader>
 
-/*
-const QString databaseSecu ="bbdsecu";
-const QString  userSecu = "root";
-const QString passSecu = "admin";
-*/
 
 class C_bddSecu
 {
@@ -22,7 +17,7 @@ public:
 
     C_bddSecu(C_MySQLManager *db=nullptr);
     void LireIni();
-    void connection(C_MySQLManager *_sql);
+    void connection();
 
     bool verifCodeParent(QString codeLu, QString codeSaisi);
 
