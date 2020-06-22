@@ -793,7 +793,6 @@ void MainWindow::on_btn_valideCodeparent_clicked()
     if(ui->txt_codeParent->text().count()==4){
         codeParentSaisi =ui->txt_codeParent->text();
         codeParentValid = Secu.verifCodeParent(codeParentLu,codeParentSaisi);
-        qWarning()<<codeParentValid;
         if(codeParentValid) ui->lbl_codeParentEtat->setText("Control parental inactif");
         ui->txt_codeParent->setText("");
         ui->txt_codeParent->setEnabled(true);

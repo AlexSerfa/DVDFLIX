@@ -199,18 +199,6 @@ void C_details::addLanguage(QString language)
     ui->txt_langue->setText(language);
 }
 
-/**
- * @fn addBackdropPicture(QPixmap picture)
- * @author: Mercier Laurent
- * @date 01/05/2020
- * @brief affichage de l'arrière de la jacquette
- *
- * @param picture
- */
-void C_details::addBackdropPicture(QPixmap picture)
-{
-
-}
 
 /**
  * @fn addBackdrop(QString backdrop)
@@ -417,8 +405,6 @@ C_miniFilm & C_details::getFilm()
 void C_details::modification()
 {
 
-    //DEBUG
-    qWarning()<<"SLOT modification de la classe c_detail";
     connect(this,SIGNAL(modifier()),m_film,SLOT(modification()));
     emit modifier();
 }

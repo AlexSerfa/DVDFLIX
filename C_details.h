@@ -24,7 +24,6 @@ public:
     void addTitre(QString titre);
     void addTitreOri(QString titreOri);
     void addLanguage(QString language);
-    void addBackdropPicture(QPixmap( picture));
     void addBackdrop(QString backdrop);
     void addAdult(bool value);
     void addNote(QString note);
@@ -55,15 +54,10 @@ private slots:
     void on_btn_enregistrer_clicked();
     void on_cbb_stockage_currentIndexChanged(const QString &arg1);
     void on_chk_adult_stateChanged(int arg1);
-
     void on_btn_acteur_clicked();
-
     void on_btn_metteurEnScene_clicked();
-
     void on_btn_realisateur_clicked();
-
     void on_btn_producteur_clicked();
-
     void on_btn_suppression_clicked();
 
 private:

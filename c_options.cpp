@@ -20,9 +20,6 @@
 
 #include <QLineEdit>
 #include <QIntValidator>
-#include <QValidator>
-#include <QRegExpValidator>
-#include <QIntValidator>
 
 
 using namespace std;
@@ -50,7 +47,7 @@ C_options::C_options(QWidget *parent , QString _dvdAd, QString _dvdPass,QString 
   ,sql()
   ,secu()
 {
-        sql = _sql;
+    sql = _sql;
     setDvdAdr(_dvdAd);
     setDvdPass(_dvdPass);
     setDvdUser(_dvdUser);
@@ -76,7 +73,6 @@ C_options::C_options(QWidget *parent , QString _dvdAd, QString _dvdPass,QString 
     f>>adr;
     cout<<adr<<endl;
     f>>prt;
-
 
     f.close();
 
@@ -289,18 +285,10 @@ void C_options::update(QString nomUt, QString pass, QString adr, int port)
     upd_secu.setPassword(passSecu);
     upd_secu.setPort(secu.getBDdvdPort());
     bool ok = upd_secu.open();
-    //DEBUG
-    qWarning()<<"adresse: "<<secu.getBDdvdAdr();
-    qWarning()<<"port: "<<secu.getBDdvdPort();
-    qWarning()<<"usser: "<<userSecu;
-    qWarning()<<"pass: "<<passSecu;
     if(ok){
-        qDebug()<<"connexion ok";
         QSqlQuery query(upd_secu);
         query.prepare("UPDATE `security`.`bddsecu` SET `utilisateurBdd` = '"+nomUt+"', `motDePasseBdd` = '"+pass+"', `adresse` = '"+adr+"', `port` =  '"+QString::number(port)+"' WHERE `bddsecu`.`ID` = 1;");
         query.exec();
-    }else{
-        qDebug()<<"connexion n'est pas OK";
     }
 }
 

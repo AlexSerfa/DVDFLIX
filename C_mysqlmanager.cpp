@@ -444,7 +444,7 @@ QString C_MySQLManager::getCodeParental()
 }
 
 /**
- * @brief
+ * @brief conversion d'une QString en QDate
  *
  * @param date
  * @return QDate

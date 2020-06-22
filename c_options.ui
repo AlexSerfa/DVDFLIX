@@ -37,7 +37,7 @@
      <x>30</x>
      <y>30</y>
      <width>321</width>
-     <height>381</height>
+     <height>411</height>
     </rect>
    </property>
    <layout class="QFormLayout" name="formLayout">
@@ -254,9 +254,6 @@ border-style: solid;</string>
       </property>
      </widget>
     </item>
-    <item row="8" column="1">
-     <widget class="QLineEdit" name="txt_lieuStockage"/>
-    </item>
     <item row="8" column="0">
      <widget class="QLabel" name="label_12">
       <property name="text">
@@ -264,13 +261,16 @@ border-style: solid;</string>
       </property>
      </widget>
     </item>
+    <item row="8" column="1">
+     <widget class="QLineEdit" name="txt_lieuStockage"/>
+    </item>
    </layout>
   </widget>
   <widget class="QLabel" name="error_list">
    <property name="geometry">
     <rect>
      <x>90</x>
-     <y>430</y>
+     <y>450</y>
      <width>191</width>
      <height>51</height>
     </rect>
