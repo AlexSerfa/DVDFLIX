@@ -14,10 +14,8 @@ public:
 
     void addFilmLocal(int index, C_miniFilm *film);
     C_miniFilm* getFilmLocal(int index);
-
     void addFilmOnline(int index,C_miniFilm *film);
     C_miniFilm* getFilmOnline(int index);
-
     void videMinifilm();
 
 signals:

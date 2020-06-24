@@ -66,6 +66,7 @@ MainWindow::MainWindow(QWidget *parent)
     sql->connection("security",Secu.getBDdvdAdr(),Secu.getBDdvdPort(),Secu.getBDdvdUser(),Secu.getBDdvdPass());
     Secu.connection();
     ui->setupUi(this);
+    //vérification que les chemins par defaut existe et créatio de ces dernier le ca échéant
     imageChemin();
     //on connect les signaux de connection a la db
     connect(sql,SIGNAL(connected()),this,SLOT(status_dbConnectee()));
@@ -74,18 +75,18 @@ MainWindow::MainWindow(QWidget *parent)
 
     sql->connection(database,Secu.getDvdFlixAdr(),Secu.getDvdFlixPort(),Secu.getDvdFlixUser(),Secu.getDvdFlixPass());
     connect(sql,SIGNAL(modifier()),this, SLOT(on_btn_rechercher_clicked()));
+    //on reucpère le code parental et les chemin à utilisé
     codeParentLu  = sql->getCodeParental();
     m_hardPath =sql->getHardPath();
     m_tempoPath = sql->getTempoPath();
+    //on tranmet le chemin temporaire a l'objet C_downloadManager
     m_dlmanager.setPath(m_tempoPath);
-
+    //on paramètre l'affiche graphique de l'interface
     ui->logoSearch->setPixmap(qApp->applicationDirPath()+"/lib_img/dvdFlixSearch.png");
     ui->logoSearch->setHidden(true);
-
     ui->cb_typeSearch->setHidden(true);
     ui->cb_typeSearch->setDisabled(true);
     ui->lbl_titre->setHidden(false);
-
     ui->lbl_logo->setPixmap(qApp->applicationDirPath()+"/lib_img/logo.png");
 
 }
@@ -96,6 +97,7 @@ MainWindow::MainWindow(QWidget *parent)
  */
 MainWindow::~MainWindow()
 {
+    //on restore les valeur par defaut et on supprime les image du dossier temporaire
     restoreValue();
     delete ui;
 }
@@ -160,6 +162,7 @@ void MainWindow::rechercheFilm(int value)
         sql->searchPersonne(ui->ln_titre->text(), "acteur");
         m_minifilmCountLocal = sql->getFilmCount();
     }
+    //si c'est un realisateur
     else if (value ==2)
     {
         sql->searchPersonne(ui->ln_titre->text(), "realis");
@@ -253,7 +256,9 @@ QString MainWindow::formatSearch()
 */
 void MainWindow::on_btn_rechercher_clicked()
 {
+    //reinitialisation des layouts
     initLayout();
+    //premiere anlyse du type de recherche demandé (local ou distante)
     int value;
     if(ui->rdb_rechDist->isChecked())value=0;
     if(ui->rdb_rechLoc->isChecked())value=ui->cb_typeSearch->currentIndex();
@@ -343,7 +348,7 @@ void MainWindow::getPageNumberJson(){
  * @date 07/04/2020
  *
  * @brief
- *- lecture des fichiers movie * .json
+ *- ecriture des fichiers movie * .json
  * -appel de la fonction jsonMerge()
  *
  * @warning signal connecté
