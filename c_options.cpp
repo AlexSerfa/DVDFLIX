@@ -55,6 +55,7 @@ C_options::C_options(QWidget *parent , QString _dvdAd, QString _dvdPass,QString 
     ui->setupUi(this);
     LectureInfoDB();
     m_codeParentalLu = code;
+    read();
 
  /**
 * @fn c_option
@@ -76,8 +77,8 @@ C_options::C_options(QWidget *parent , QString _dvdAd, QString _dvdPass,QString 
 
     f.close();
 
-    ui->txt_adresse->setText(QString::fromStdString(adr));
-    ui->txt_port->setText(QString::number(prt));
+    ui->txt_adrDbSecu->setText(QString::fromStdString(adr));
+    ui->txt_portDbSecu->setText(QString::number(prt));
 }
 
 C_options::~C_options()
@@ -92,10 +93,7 @@ C_options::~C_options()
 */
 void C_options::LectureInfoDB(){
 
-
-    qWarning()<<"LECTURE DB";
     setHardPath(sql->getHardPath());
-     qWarning()<<getHardPath();
     setTempoPath(sql->getTempoPath());
     setCodeParental(sql->getCodeParental());
     ui->txt_fixe->setText(getHardPath());
@@ -111,60 +109,10 @@ void C_options::LectureInfoDB(){
 void C_options::on_pushButton_clicked()
 {
 
-
-    QString nom_utilisateur = ui->txt_utilisateur->text();
-    QString mdp = ui->txt_mdp->text();
-    QString adresse = ui->txt_adresse->text();
-    QString port = ui->txt_port->text();
-    QString tempo = ui->txt_tempo->text();
-    QString fixe = ui->txt_fixe->text();
-    QString codeP = ui->txt_code->text();
-    QString nouveauCodeP = ui->txt_nCode->text();
     QString lieuStock = ui->txt_lieuStockage->text();
-
 
     QSqlQuery query;
     if(lieuStock.length()>1) query.exec("INSERT INTO `dvdflix`.`stockage`(ID, stockage_lieu) VALUES ('','"+lieuStock+"')");
-
-
-    /**
-      vérification si les champs sont vides
-    **/
-    if(
-            nom_utilisateur.length()<1 ||
-            mdp.length()<1 ||
-            adresse.length()<1 ||
-            port.length()<1 ||
-            tempo.length()<1 ||
-            fixe.length()<1
-            )
-    {
-        ui->error_list->setText("Veuillez remplir tous les champs");
-    }
-    else
-    {
-        //sql names
-        QString tempoPath = ui->txt_tempo->text();
-        QString hardPath = ui->txt_fixe->text();
-
-        if(codeP  == m_codeParentalLu && codeP.length() ==4)
-        {
-            /* création de la Regex */
-            QRegExp Exp ("^[0-9]{4}$");
-            if( nouveauCodeP.contains(Exp)){
-                QSqlQuery c(upd_param);
-                c.exec("UPDATE `param` SET `codeParental` = '"+nouveauCodeP+"' WHERE `ID` = 1;");
-            }else{
-                qWarning()<<"erreur de format";
-                ui->error_list->setText("Le code parental doit etre de 4 chiffres");
-            }
-
-        }
-            QSqlQuery q;
-            q.exec("UPDATE `param` SET `tempoPath` = '"+tempoPath+"' WHERE `ID` = 1;");
-            q.exec("UPDATE `param` SET `hardPath` = '"+hardPath+"' WHERE `ID` = 1;");
-    }
-
 
 }
 
@@ -262,10 +210,6 @@ void C_options::on_pushButton_modifier_clicked()
         f<<adrdbSecu.toLocal8Bit().constData()<<endl;
         f<<portdbSecu.toLocal8Bit().constData()<<endl;
         f.close();
-        ui->txt_adresse->setText(adrdbSecu);
-        ui->txt_port->setText(portdbSecu);
-
-
     }
 }
 /**
@@ -277,6 +221,22 @@ void C_options::on_pushButton_modifier_clicked()
  */
 void C_options::update(QString nomUt, QString pass, QString adr, int port)
 {
+  /*  secu.LireIni();
+    this->upd_secu = QSqlDatabase::addDatabase("QMYSQL","asd");
+    upd_secu.setHostName(secu.getBDdvdAdr());
+    upd_secu.setDatabaseName("security");
+    upd_secu.setUserName(userSecu);
+    upd_secu.setPassword(passSecu);
+    upd_secu.setPort(secu.getBDdvdPort());*/
+    bool ok = upd_secu.open();
+    if(ok){
+        QSqlQuery query(upd_secu);
+        query.prepare("UPDATE `security`.`bddsecu` SET `utilisateurBdd` = '"+nomUt+"', `motDePasseBdd` = '"+pass+"', `adresse` = '"+adr+"', `port` =  '"+QString::number(port)+"' WHERE `bddsecu`.`ID` = 1;");
+        query.exec();
+    }
+}
+void C_options::read()
+{
     secu.LireIni();
     this->upd_secu = QSqlDatabase::addDatabase("QMYSQL","asd");
     upd_secu.setHostName(secu.getBDdvdAdr());
@@ -287,11 +247,16 @@ void C_options::update(QString nomUt, QString pass, QString adr, int port)
     bool ok = upd_secu.open();
     if(ok){
         QSqlQuery query(upd_secu);
-        query.prepare("UPDATE `security`.`bddsecu` SET `utilisateurBdd` = '"+nomUt+"', `motDePasseBdd` = '"+pass+"', `adresse` = '"+adr+"', `port` =  '"+QString::number(port)+"' WHERE `bddsecu`.`ID` = 1;");
+        query.prepare("SELECT* FROM `security`.`bddsecu` WHERE `ID` = 1;");
         query.exec();
+        if( query.next()){
+         ui->txt_utilisateur->setText( query.value("utilisateurBdd").toString());
+         ui->txt_mdp->setText( query.value("MotDePasseBdd").toString());
+         ui->txt_adresse->setText( query.value("adresse").toString());
+         ui->txt_port->setText( query.value("port").toString());
+        }
     }
 }
-
 
 
 void C_options::TexteChemin(QLineEdit *champTexte){
@@ -328,3 +293,52 @@ void C_options::on_pushButton_cheminFixe_clicked()
 }
 
 
+
+void C_options::on_btn_enr_CP_clicked()
+{
+    QString codeP = ui->txt_code->text();
+    QString nouveauCodeP = ui->txt_nCode->text();
+    //sql names
+    QString tempoPath = ui->txt_tempo->text();
+    QString hardPath = ui->txt_fixe->text();
+
+    if(codeP  == m_codeParentalLu && codeP.length() ==4)
+    {
+        /* création de la Regex */
+        QRegExp Exp ("^[0-9]{4}$");
+        if( nouveauCodeP.contains(Exp)){
+            QSqlQuery c(upd_param);
+            c.exec("UPDATE `param` SET `codeParental` = '"+nouveauCodeP+"' WHERE `ID` = 1;");
+        }else{
+            qWarning()<<"erreur de format";
+            ui->error_list->setText("Le code parental doit etre de 4 chiffres");
+        }
+
+    }
+        QSqlQuery q;
+        q.exec("UPDATE `param` SET `tempoPath` = '"+tempoPath+"' WHERE `ID` = 1;");
+        q.exec("UPDATE `param` SET `hardPath` = '"+hardPath+"' WHERE `ID` = 1;");
+}
+
+void C_options::on_btn_enr_BD_dvd_clicked()
+{
+    QString nom_utilisateur = ui->txt_utilisateur->text();
+    QString mdp = ui->txt_mdp->text();
+    QString adresse = ui->txt_adresse->text();
+    QString port = ui->txt_port->text();
+    /**
+      vérification si les champs sont vides
+    **/
+    if(
+            nom_utilisateur.length()<1 ||
+            mdp.length()<1 ||
+            adresse.length()<1 ||
+            port.length()<1
+
+            )
+    {
+        ui->error_list->setText("Veuillez remplir tous les champs");
+    }else{
+        update(nom_utilisateur,mdp,adresse,port.toInt());
+    }
+}

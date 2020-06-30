@@ -62,6 +62,8 @@ QString C_downloadmanager::formatUrl(QString film,int page){
 }
 
 /**
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief Ajout de des fichiers à télégarger dans la queue
  *
  * @param urls   QUrl        url du fichier a telecharger
@@ -81,6 +83,8 @@ void C_downloadmanager::append(const QStringList &urls, QStringList &filename)
 }
 
 /**
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief Ajout de des fichiers à télégarger dans la queue
  *
  * @param url   QUrl        url du fichier a telecharger
@@ -103,6 +107,8 @@ void C_downloadmanager::append(const QUrl &url, QString filename)
 }
 
 /**
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief formatage du nom de fichier à partir de l'url
  *
  * @param url   QUrl    url du fichier à télécharger
@@ -131,6 +137,8 @@ QString C_downloadmanager::saveFileName(const QUrl &url)
 }
 
 /**
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief démarre le telechargement et nvoir du signal finished si la queue est vide
  *
  */
@@ -171,6 +179,8 @@ void C_downloadmanager::startNextDownload()
 
 
 /**
+ * @author: Mercier Laurent
+ * @date 01/05/2020
  * @brief   fermeture du fichier de sortie,
  *           emission du signal de création de minifilm si la queue et vide, demarrage du téléchérgement du fichier suivant dans lec as contraire
  *
@@ -213,9 +223,11 @@ void C_downloadmanager::downloadReadyRead()
 }
 
 /**
- * @brief
+ * @author: Mercier Laurent
+ * @date 01/05/2020
+ * @brief retourne un booléen si une redirection a lieu
  *
- * @return bool
+ * @return bool     flag de redirection
  */
 bool C_downloadmanager::isHttpRedirect() const
 {
@@ -225,7 +237,10 @@ bool C_downloadmanager::isHttpRedirect() const
 }
 
 /**
- * @brief
+ * @author: Mercier Laurent
+ * @date 01/05/2020
+ *
+ * @brief   repport de la redirection dans la console
  *
  */
 void C_downloadmanager::reportRedirect()

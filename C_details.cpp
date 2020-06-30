@@ -117,7 +117,9 @@ void C_details::idLocalDetail()
 }
 
 /**
- * @brief
+ * @author: Mercier Laurent
+ * @date 01/05/2020
+ * @brief   setteur de l'attribut m_film
  *
  * @param film
  */
@@ -448,7 +450,9 @@ void C_details::on_btn_enregistrer_clicked()
 }
 
 /**
- * @brief
+ * @author: Mercier Laurent
+ * @date 01/05/2020
+ * @brief   gestion du changement de selection sur le control cbb_stockage
  *
  * @param arg1
  */
@@ -456,7 +460,13 @@ void C_details::on_cbb_stockage_currentIndexChanged(const QString &arg1)
 {
     ui->txt_stock->setText(arg1);
 }
-
+/**
+ * @author: Mercier Laurent
+ * @date 01/05/2020
+ * @brief   gestion du control chk_adult
+ *
+ * @param arg1
+ */
 void C_details::on_chk_adult_stateChanged(int arg1)
 {
     if(ui->chk_adult->isChecked()){

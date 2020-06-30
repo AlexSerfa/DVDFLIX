@@ -141,6 +141,10 @@ private slots:
      */
     void on_rdb_rechDist_clicked();
 
+    void on_btn_credit_clicked();
+
+    void on_btn_aPropos_clicked();
+
 private:
     QGridLayout *grdt[21];              /*!< tableau des layou affichant les minifilms après une recherche*/
     C_biblio *dvdtheque;                /*!< objet de stockage des minifilms lors d'une recherche*/

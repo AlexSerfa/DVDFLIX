@@ -25,6 +25,8 @@
 #include <c_dbconfig.h>
 #include <C_censure.h>
 #include <c_biblio.h>
+#include <c_credit.h>
+#include <c_apropos.h>
 
 using namespace std;
 
@@ -831,4 +833,28 @@ void MainWindow::on_rdb_rechDist_clicked()
     ui->cb_typeSearch->setHidden(true);
     ui->cb_typeSearch->setDisabled(true);
     ui->lbl_titre->setHidden(false);
+}
+/**
+ * @fn on_btn_credit_clicked()
+ * @author: Mercier Laurent
+ * @date 29/06/2020
+ * @brief   gestion du click sur le bouton "crédits"
+ *
+ */
+void MainWindow::on_btn_credit_clicked()
+{
+    C_credit *crdt = new C_credit();
+    crdt->show();
+}
+/**
+ * @fn on_btn_aPropos_clicked()
+ * @author: Mercier Laurent
+ * @date 29/06/2020
+ * @brief   gestion du click sur le bouton "a propos"
+ *
+ */
+void MainWindow::on_btn_aPropos_clicked()
+{
+    C_aPropos *ap= new C_aPropos();
+    ap->show();
 }

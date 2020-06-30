@@ -202,6 +202,9 @@ void  C_MySQLManager::resetResultCounter()
 
 
 /**
+ * @fn getFimlCount()
+ * @author: Mercier Laurent
+ * @date 06/05/2020
  * @brief retourne le nombre de resultat trouvés lors d'une recherche dans la base de donnéees
  *
  * @return int  nombre de résultats trouvés
@@ -211,10 +214,13 @@ int C_MySQLManager::getFilmCount()
     return m_resultCounter;
 }
 /**
- * @brief
+ * @fn searchPersonne (QString nom, QString table)
+ * @author: Mercier Laurent
+ * @date 06/05/2020
+ * @brief recher d'une personne acteur, réalisateur, producteur, metteur en scène
  *
- * @param nom
- * @param table
+ * @param nom   nom a rechercher dans la base de données
+ * @param table     table ou doit etre faite la recherche
  */
 void C_MySQLManager::searchPersonne (QString nom, QString table){
 
@@ -427,6 +433,9 @@ bool C_MySQLManager::saveFilm(C_miniFilm &film, QString _date_enr, QString _stoc
 }
 
 /**
+ * @fn  getCodeParental()
+ * @author: Mercier Laurent
+ * @date 06/05/2020
  * @brief   retourne sous forme de QString le code parental enregistré dans la base de données
  *
  * @return QString  code parental
@@ -444,10 +453,13 @@ QString C_MySQLManager::getCodeParental()
 }
 
 /**
+ * @fn  QstringToQDate(QString date)
+ * @author: Mercier Laurent
+ * @date 06/05/2020
  * @brief conversion d'une QString en QDate
  *
- * @param date
- * @return QDate
+ * @param date  date sour forme QString
+ * @return QDate    date sousfrme de QDate
  */
 QDate C_MySQLManager::QstringToQDate(QString date){
 

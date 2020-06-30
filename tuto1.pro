@@ -21,8 +21,10 @@ SOURCES += \
     C_downloadmanager.cpp \
     C_minifilm.cpp \
     C_mysqlmanager.cpp \
+    c_apropos.cpp \
     c_bddsecu.cpp \
     c_biblio.cpp \
+    c_credit.cpp \
     c_dbconfig.cpp \
     c_detail_ajout.cpp \
     c_options.cpp \
@@ -35,8 +37,10 @@ HEADERS += \
     C_downloadmanager.h \
     C_minifilm.h \
     C_mysqlmanager.h \
+    c_apropos.h \
     c_bddsecu.h \
     c_biblio.h \
+    c_credit.h \
     c_dbconfig.h \
     c_detail_ajout.h \
     c_options.h \
@@ -46,6 +50,8 @@ FORMS += \
     C_censure.ui \
     C_details.ui \
     C_minifilm.ui \
+    c_apropos.ui \
+    c_credit.ui \
     c_detail_ajout.ui \
     c_options.ui \
     mainwindow.ui
@@ -70,12 +76,14 @@ DISTFILES += \
     dvd.ico \
     dvdflix.ini \
     img_tempo/dummy.txt \
+    lib_img/alexis.jpg \
     lib_img/censored.png \
     lib_img/dummy.txt \
     lib_img/dvdflixSearch.png \
     lib_img/home.png \
     lib_img/logo.png \
     lib_img/logodvdflix.png \
+    lib_img/milan.jpg \
     lib_img/noPicture.png \
     lib_img/online.png \
     model-wsBCTe.qmodel \

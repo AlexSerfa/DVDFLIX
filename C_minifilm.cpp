@@ -31,6 +31,7 @@ C_miniFilm::~C_miniFilm()
 }
 
 /**
+ * @fn on_btn_details_clicked()
  * @author: Mercier Laurent
  * @date 01/05/2020
  * @brief gère le clique sur le bouton "details" et ouvre la fenetre de détails concernant le film

@@ -55,6 +55,10 @@ private slots:
 
     void on_pushButton_cheminFixe_clicked();
 
+    void on_btn_enr_CP_clicked();
+
+    void on_btn_enr_BD_dvd_clicked();
+
 public slots:
 
     /**
@@ -80,6 +84,7 @@ private:
     QString m_nouveauCodeParental;
     void TexteChemin(QLineEdit *champTexte);
     void LectureInfoDB();
+    void read();
 };
 
 #endif // C_OPTIONS_H
